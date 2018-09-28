@@ -7,56 +7,74 @@
 namespace pgl
 {
     using glm::vec3;
-    using glm::ivec2;
+    using glm::vec2;
 
     class Mesh
     {
     public:
         
         /**
-        * Конструктор с заданными параметрами для создания меша.
-        * @param cVertices количество вершин
-        * @param cTriangles количество треугольных полигонов в меше
-        * @throws std::invalid_argument в случае, если хотя бы один из аргументов меньше или равен 0
+        * РЎРѕР·РґР°РµС‚ РєРІР°РґСЂР°С‚РЅСѓСЋ РїР»РѕСЃРєРѕСЃС‚СЊ СЃРѕ СЃС‚РѕСЂРѕРЅРѕР№ planeSize.
+        *
+        * @param divisions СЂР°Р·СЂРµС‰РµРЅРёРµ РїР»РѕСЃРєРѕСЃС‚Рё РІ РїРѕР»РёРіРѕРЅР°С…
+        * @param planeSize СЂР°Р·РјРµСЂ РѕРґРЅРѕРіРѕ РїРѕР»РёРіРѕРЅР°
+        * @return РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРѕР·РґР°РЅРЅС‹Р№ РјРµС€
+        */
+        static Mesh CreatePlane(size_t divisions, float planeSize);
+
+        /**
+        * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ СЃ Р·Р°РґР°РЅРЅС‹РјРё РїР°СЂР°РјРµС‚СЂР°РјРё РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РјРµС€Р°.
+        * @param cVertices РєРѕР»РёС‡РµСЃС‚РІРѕ РІРµСЂС€РёРЅ
+        * @param cTriangles РєРѕР»РёС‡РµСЃС‚РІРѕ С‚СЂРµСѓРіРѕР»СЊРЅС‹С… РїРѕР»РёРіРѕРЅРѕРІ РІ РјРµС€Рµ
+        * @throws std::invalid_argument РІ СЃР»СѓС‡Р°Рµ, РµСЃР»Рё С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ РёР· Р°СЂРіСѓРјРµРЅС‚РѕРІ РјРµРЅСЊС€Рµ РёР»Рё СЂР°РІРµРЅ 0
         */
         Mesh(size_t cVertices, size_t cTriangles);
 
         /**
-        * Конструктор копирования.
-        * @param m копируемый меш
+        * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєРѕРїРёСЂРѕРІР°РЅРёСЏ.
+        * @param m РєРѕРїРёСЂСѓРµРјС‹Р№ РјРµС€
         */
         Mesh(const Mesh &m);
+
+
+        /**
+        * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРµСЂРµРјРµС‰РµРЅРёСЏ.
+        * @param m РїРµСЂРµРјРµС‰Р°РµРјС‹Р№ РјРµС€
+        */
+        Mesh(Mesh &&m);
 
         ~Mesh();
 
         /**
-        * Сеттеры для инкапсулированных данных.
+        * РЎРµС‚С‚РµСЂС‹ РґР»СЏ РёРЅРєР°РїСЃСѓР»РёСЂРѕРІР°РЅРЅС‹С… РґР°РЅРЅС‹С….
         */
         vec3 &vertex(size_t i);
         vec3 &normal(size_t i);
-        ivec2 &uv(size_t i);
+        vec2 &uv(size_t i);
         uint32_t &triangle(size_t i);
         
         /**
-        * Геттеры для инкапсулированных данных.
+        * Р“РµС‚С‚РµСЂС‹ РґР»СЏ РёРЅРєР°РїСЃСѓР»РёСЂРѕРІР°РЅРЅС‹С… РґР°РЅРЅС‹С….
         */
         const vec3 &vertex(size_t i) const;
         const vec3 &normal(size_t i) const;
-        const ivec2 &uv(size_t i) const;
+        const vec2 &uv(size_t i) const;
         uint32_t triangle(size_t i) const;
 
         /**
-        * Геттеры для получения массивов данных.
+        * Р“РµС‚С‚РµСЂС‹ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РјР°СЃСЃРёРІРѕРІ РґР°РЅРЅС‹С….
         */
         const vec3 *vertices() const;
         const vec3 *normals() const;
-        const ivec2 *uv() const;
+        const vec2 *uv() const;
         const uint32_t *triangles() const;
 
+        // TODO: operator = (const &)
+        // TODO: operator = (const &&)
     private:
         vec3 *_vertices;
         vec3 *_normals;
-        ivec2 *_uv;
+        vec2 *_uv;
         uint32_t *_triangles;
         size_t _cVertices;
         size_t _cTriangles;

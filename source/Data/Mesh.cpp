@@ -5,6 +5,50 @@
 
 namespace pgl
 {
+    Mesh Mesh::CreatePlane(size_t divisions, float planeSize)
+    {
+        size_t size = divisions + 1;
+        size_t cVert = size * size;
+        size_t cTriangl = divisions * divisions * 6u;
+        Mesh plane(cVert, cTriangl);
+
+        float halfPlaneSize = 0.5f * planeSize;
+        float divisionSize = planeSize / divisions;
+        size_t triangleOff = 0;
+
+        for (size_t y = 0; y < size; ++y) {
+            vec3 *vLine = plane._vertices + y * size;
+            vec3 *nLine = plane._normals + y * size;
+            vec2 *uvLine = plane._uv + y * size;
+
+            for (size_t x = 0; x < size; ++x) {
+                // vLine[x] = vec3(x * divisionSize - halfPlaneSize, 0.0, y * divisionSize - halfPlaneSize);
+                vLine[x].x = x * divisionSize - halfPlaneSize;
+                vLine[x].y = 0.0;
+                vLine[x].z = y * divisionSize - halfPlaneSize;
+
+                nLine[x] = vec3(0.0f, 1.0f, 0.0f);
+                uvLine[x] = vec2((float)x / divisions, 1.0f - y / divisions);
+
+                if (x < divisions && y < divisions) {
+                    int tLeft  = y * size + x;
+                    int bLeft = (y + 1) * size + x;
+                    // ÐŸÑ€Ð°Ð²Ñ‹Ð¹ Ð²ÐµÑ€Ñ…Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸Ðº.
+                    plane._triangles[triangleOff   ]  = tLeft;
+                    plane._triangles[triangleOff + 1] = tLeft + 1;
+                    plane._triangles[triangleOff + 2] = bLeft + 1;
+                    // Ð›ÐµÐ²Ñ‹Ð¹ Ð½Ð¸Ð¶Ð½Ð¸Ð¹ Ñ‚Ñ€ÐµÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸Ðº.
+                    plane._triangles[triangleOff + 3] = tLeft;
+                    plane._triangles[triangleOff + 4] = bLeft + 1;
+                    plane._triangles[triangleOff + 5] = bLeft;
+                    triangleOff += 6;
+                }
+            }
+        }
+
+        return std::move(plane);
+    }
+
     Mesh::Mesh(size_t cVertices, size_t cTriangles) :
         _cVertices(cVertices),
         _cTriangles(cTriangles)
@@ -16,33 +60,56 @@ namespace pgl
             throw std::invalid_argument("The argument cTrianlges must be greater than 0.");
         }
 
-        // TODO: îáðàáîòàòü ñëó÷àé ïðè êîòîðîì ïàìÿòü âûäåëèòü íåâîçìîæíî. Èñêëþ÷åíèå std::bad_alloc() èëè nullptr.
-        _vertices = new vec3[_cVertices];
-        _normals = new vec3[_cVertices];
-        _uv = new ivec2[_cVertices];
+        // TODO: Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚Ð°Ñ‚ÑŒ ÑÐ»ÑƒÑ‡Ð°Ð¹ Ð¿Ñ€Ð¸ ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð¼ Ð¿Ð°Ð¼ÑÑ‚ÑŒ Ð²Ñ‹Ð´ÐµÐ»Ð¸Ñ‚ÑŒ Ð½ÐµÐ²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾. Ð˜ÑÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ std::bad_alloc() Ð¸Ð»Ð¸ nullptr.
+        _vertices  = new vec3[_cVertices];
+        _normals   = new vec3[_cVertices];
+        _uv        = new vec2[_cVertices];
         _triangles = new uint32_t[_cTriangles];
     }
 
-    Mesh::Mesh(const Mesh & m) :
+    Mesh::Mesh(const Mesh &m) :
         Mesh(m._cVertices, m._cTriangles)
     {
-        // Äëÿ âûïîëíåíèÿ â Visual Studio òðåáóåòñÿ îòêëþ÷åíèå ïðåäóïðåæäåíèÿ C4996.
+        // Ð”Ð»Ñ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ñ Ð² Visual Studio Ñ‚Ñ€ÐµÐ±ÑƒÐµÑ‚ÑÑ Ð¾Ñ‚ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ð¿Ñ€ÐµÐ´ÑƒÐ¿Ñ€ÐµÐ¶Ð´ÐµÐ½Ð¸Ñ C4996.
         std::copy(m._vertices, m._vertices + m._cVertices, _vertices);
         std::copy(m._normals, m._normals + m._cVertices, _normals);
         std::copy(m._uv, m._uv + m._cVertices, _uv);
         std::copy(m._triangles, m._triangles + m._cVertices, _triangles);
     }
 
+    Mesh::Mesh(Mesh &&m)
+    {
+        _cVertices  = m._cVertices;
+        _cTriangles = m._cTriangles;
+        m._cVertices  = 0u;
+        m._cTriangles = 0u;
+
+        _vertices  = m._vertices;
+        _normals   = m._normals;
+        _uv        = m._uv;
+        _triangles = m._triangles;
+
+        m._vertices  = nullptr;
+        m._normals   = nullptr;
+        m._uv        = nullptr;
+        m._triangles = nullptr;
+    }
+
     Mesh::~Mesh()
     {
-        delete[] _vertices;
-        delete[] _normals;
-        delete[] _uv;
-        delete[] _triangles;
+        if (_cVertices) {
+            delete[] _vertices;
+            delete[] _normals;
+            delete[] _uv;
+        }
+
+        if (_cTriangles) {
+            delete[] _triangles;
+        }
     }
 
     /**
-    * Ñåòòåðû äëÿ èíêàïñóëèðîâàííûõ äàííûõ.
+    * Ð¡ÐµÑ‚Ñ‚ÐµÑ€Ñ‹ Ð´Ð»Ñ Ð¸Ð½ÐºÐ°Ð¿ÑÑƒÐ»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ñ… Ð´Ð°Ð½Ð½Ñ‹Ñ….
     */
     vec3 & Mesh::vertex(size_t i)
     {
@@ -54,7 +121,7 @@ namespace pgl
         return _normals[i];
     }
 
-    ivec2 & Mesh::uv(size_t i)
+    vec2 & Mesh::uv(size_t i)
     {
         return _uv[i];
     }
@@ -65,7 +132,7 @@ namespace pgl
     }
 
     /**
-    * Ãåòòåðû äëÿ èíêàïñóëèðîâàííûõ äàííûõ.
+    * Ð“ÐµÑ‚Ñ‚ÐµÑ€Ñ‹ Ð´Ð»Ñ Ð¸Ð½ÐºÐ°Ð¿ÑÑƒÐ»Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ñ… Ð´Ð°Ð½Ð½Ñ‹Ñ….
     */
     const vec3 & Mesh::vertex(size_t i) const
     {
@@ -77,7 +144,7 @@ namespace pgl
         return _normals[i];
     }
 
-    const ivec2 & Mesh::uv(size_t i) const
+    const vec2 & Mesh::uv(size_t i) const
     {
         return _uv[i];
     }
@@ -88,7 +155,7 @@ namespace pgl
     }
 
     /**
-    * Ãåòòåðû äëÿ ïîëó÷åíèÿ ìàññèâîâ äàííûõ.
+    * Ð“ÐµÑ‚Ñ‚ÐµÑ€Ñ‹ Ð´Ð»Ñ Ð¿Ð¾Ð»ÑƒÑ‡ÐµÐ½Ð¸Ñ Ð¼Ð°ÑÑÐ¸Ð²Ð¾Ð² Ð´Ð°Ð½Ð½Ñ‹Ñ….
     */
     const vec3 * Mesh::vertices() const
     {
@@ -100,7 +167,7 @@ namespace pgl
         return _normals;
     }
 
-    const ivec2 * Mesh::uv() const
+    const vec2 * Mesh::uv() const
     {
         return _uv;
     }
