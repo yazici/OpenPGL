@@ -17,22 +17,19 @@ namespace pgl
         size_t triangleOff = 0;
 
         for (size_t y = 0; y < size; ++y) {
-            vec3 *vLine = plane._vertices + y * size;
-            vec3 *nLine = plane._normals + y * size;
-            vec2 *uvLine = plane._uv + y * size;
+            size_t line = y * size;
 
             for (size_t x = 0; x < size; ++x) {
-                // vLine[x] = vec3(x * divisionSize - halfPlaneSize, 0.0, y * divisionSize - halfPlaneSize);
-                vLine[x].x = x * divisionSize - halfPlaneSize;
-                vLine[x].y = 0.0;
-                vLine[x].z = y * divisionSize - halfPlaneSize;
+                plane._vertices[line + x] = vec3(x * divisionSize - halfPlaneSize,
+                                                 0.0,
+                                                 y * divisionSize - halfPlaneSize);
 
-                nLine[x] = vec3(0.0f, 1.0f, 0.0f);
-                uvLine[x] = vec2((float)x / divisions, 1.0f - y / divisions);
+                plane._normals[line + x] = vec3(0.0f, 1.0f, 0.0f);
+                plane._uv[line + x] = vec2((float)x / divisions, 1.0f - y / divisions);
 
                 if (x < divisions && y < divisions) {
-                    int tLeft  = y * size + x;
-                    int bLeft = (y + 1) * size + x;
+                    uint32_t tLeft = (uint32_t)(y * size + x);
+                    uint32_t bLeft = (uint32_t)((y + 1) * size + x);
                     // Правый верхний треугольник.
                     plane._triangles[triangleOff   ]  = tLeft;
                     plane._triangles[triangleOff + 1] = tLeft + 1;
@@ -49,63 +46,40 @@ namespace pgl
         return std::move(plane);
     }
 
-    Mesh::Mesh(size_t cVertices, size_t cTriangles) :
-        _cVertices(cVertices),
-        _cTriangles(cTriangles)
+    Mesh::Mesh(size_t cVertices, size_t cTriangles)
     {
-        if (0 >= _cVertices) {
+        if (0 >= cVertices) {
             throw std::invalid_argument("The argument cVertices must be greater than 0.");
         }
-        else if (0 >= _cTriangles) {
+        else if (0 >= cTriangles) {
             throw std::invalid_argument("The argument cTrianlges must be greater than 0.");
         }
 
-        // TODO: обработать случай при котором память выделить невозможно. Исключение std::bad_alloc() или nullptr.
-        _vertices  = new vec3[_cVertices];
-        _normals   = new vec3[_cVertices];
-        _uv        = new vec2[_cVertices];
-        _triangles = new uint32_t[_cTriangles];
+        _vertices.resize(cVertices, vec3(0.0f));
+        _normals.resize(cVertices, vec3(0.0f));
+        _uv.resize(cVertices, vec2(0.0f));
+        _triangles.resize(cTriangles, 0u);
     }
 
-    Mesh::Mesh(const Mesh &m) :
-        Mesh(m._cVertices, m._cTriangles)
+    Mesh::Mesh(const Mesh &m) 
     {
-        // Для выполнения в Visual Studio требуется отключение предупреждения C4996.
-        std::copy(m._vertices, m._vertices + m._cVertices, _vertices);
-        std::copy(m._normals, m._normals + m._cVertices, _normals);
-        std::copy(m._uv, m._uv + m._cVertices, _uv);
-        std::copy(m._triangles, m._triangles + m._cVertices, _triangles);
-    }
-
-    Mesh::Mesh(Mesh &&m)
-    {
-        _cVertices  = m._cVertices;
-        _cTriangles = m._cTriangles;
-        m._cVertices  = 0u;
-        m._cTriangles = 0u;
-
         _vertices  = m._vertices;
         _normals   = m._normals;
         _uv        = m._uv;
         _triangles = m._triangles;
+        
+    }
 
-        m._vertices  = nullptr;
-        m._normals   = nullptr;
-        m._uv        = nullptr;
-        m._triangles = nullptr;
+    Mesh::Mesh(Mesh &&m)
+    {
+        _vertices  = std::move(m._vertices);
+        _normals   = std::move(m._normals);
+        _uv        = std::move(m._uv);
+        _triangles = std::move(m._triangles);
     }
 
     Mesh::~Mesh()
     {
-        if (_cVertices) {
-            delete[] _vertices;
-            delete[] _normals;
-            delete[] _uv;
-        }
-
-        if (_cTriangles) {
-            delete[] _triangles;
-        }
     }
 
     /**
@@ -157,22 +131,22 @@ namespace pgl
     /**
     * Геттеры для получения массивов данных.
     */
-    const vec3 * Mesh::vertices() const
+    const vector<vec3> &Mesh::vertices() const
     {
         return _vertices;
     }
 
-    const vec3 * Mesh::normals() const
+    const vector<vec3> &Mesh::normals() const
     {
         return _normals;
     }
 
-    const vec2 * Mesh::uv() const
+    const vector<vec2> &Mesh::uv() const
     {
         return _uv;
     }
 
-    const uint32_t * Mesh::triangles() const
+    const vector<uint32_t> &Mesh::triangles() const
     {
         return _triangles;
     }

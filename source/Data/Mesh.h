@@ -2,12 +2,14 @@
 #define _DATA_MESH_H
 
 #include <stdint.h>
+#include <vector>
 #include <glm/glm.hpp>
 
 namespace pgl
 {
     using glm::vec3;
     using glm::vec2;
+    using std::vector;
 
     class Mesh
     {
@@ -64,20 +66,18 @@ namespace pgl
         /**
         * Геттеры для получения массивов данных.
         */
-        const vec3 *vertices() const;
-        const vec3 *normals() const;
-        const vec2 *uv() const;
-        const uint32_t *triangles() const;
+        const vector<vec3> &vertices() const;
+        const vector<vec3> &normals() const;
+        const vector<vec2> &uv() const;
+        const vector<uint32_t> &triangles() const;
 
         // TODO: operator = (const &)
         // TODO: operator = (const &&)
     private:
-        vec3 *_vertices;
-        vec3 *_normals;
-        vec2 *_uv;
-        uint32_t *_triangles;
-        size_t _cVertices;
-        size_t _cTriangles;
+        vector<vec3> _vertices;
+        vector<vec3> _normals;
+        vector<vec2> _uv;
+        vector<uint32_t> _triangles;
     };
 }
 
