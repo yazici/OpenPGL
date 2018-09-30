@@ -38,7 +38,6 @@ namespace pgl
         */
         Mesh(const Mesh &m);
 
-
         /**
         * Конструктор перемещения.
         * @param m перемещаемый меш
