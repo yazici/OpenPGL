@@ -1,7 +1,7 @@
 #ifndef _DATA_MESH_H
 #define _DATA_MESH_H
 
-#include <stdint.h>
+#include <GL/glew.h>
 #include <vector>
 #include <glm/glm.hpp>
 
@@ -19,7 +19,7 @@ namespace pgl
         * Создает квадратную плоскость со стороной planeSize.
         *
         * @param divisions разрещение плоскости в полигонах
-        * @param planeSize размер одного полигона
+        * @param planeSize размер плоскости
         * @return возвращает созданный меш
         */
         static Mesh CreatePlane(size_t divisions, float planeSize);
@@ -52,7 +52,7 @@ namespace pgl
         vec3 &vertex(size_t i);
         vec3 &normal(size_t i);
         vec2 &uv(size_t i);
-        uint32_t &triangle(size_t i);
+        GLuint &triangle(size_t i);
         
         /**
         * Геттеры для инкапсулированных данных.
@@ -60,15 +60,15 @@ namespace pgl
         const vec3 &vertex(size_t i) const;
         const vec3 &normal(size_t i) const;
         const vec2 &uv(size_t i) const;
-        uint32_t triangle(size_t i) const;
+        GLuint triangle(size_t i) const;
 
         /**
         * Геттеры для получения массивов данных.
         */
         const vector<vec3> &vertices() const;
         const vector<vec3> &normals() const;
-        const vector<vec2> &uv() const;
-        const vector<uint32_t> &triangles() const;
+        const vector<vec2> &uvs() const;
+        const vector<GLuint> &triangles() const;
 
         // TODO: operator = (const &)
         // TODO: operator = (const &&)
@@ -76,7 +76,7 @@ namespace pgl
         vector<vec3> _vertices;
         vector<vec3> _normals;
         vector<vec2> _uv;
-        vector<uint32_t> _triangles;
+        vector<GLuint> _triangles;
     };
 }
 

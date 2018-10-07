@@ -28,8 +28,8 @@ namespace pgl
                 plane._uv[line + x] = vec2((float)x / divisions, 1.0f - y / divisions);
 
                 if (x < divisions && y < divisions) {
-                    uint32_t tLeft = (uint32_t)(y * size + x);
-                    uint32_t bLeft = (uint32_t)((y + 1) * size + x);
+                    GLuint tLeft = (GLuint)(y * size + x);
+                    GLuint bLeft = (GLuint)((y + 1) * size + x);
                     // Правый верхний треугольник.
                     plane._triangles[triangleOff   ]  = tLeft;
                     plane._triangles[triangleOff + 1] = tLeft + 1;
@@ -100,7 +100,7 @@ namespace pgl
         return _uv[i];
     }
 
-    uint32_t & Mesh::triangle(size_t i)
+    GLuint & Mesh::triangle(size_t i)
     {
         return _triangles[i];
     }
@@ -123,7 +123,7 @@ namespace pgl
         return _uv[i];
     }
 
-    uint32_t Mesh::triangle(size_t i) const
+    GLuint Mesh::triangle(size_t i) const
     {
         return _triangles[i];
     }
@@ -141,12 +141,12 @@ namespace pgl
         return _normals;
     }
 
-    const vector<vec2> &Mesh::uv() const
+    const vector<vec2> &Mesh::uvs() const
     {
         return _uv;
     }
 
-    const vector<uint32_t> &Mesh::triangles() const
+    const vector<GLuint> &Mesh::triangles() const
     {
         return _triangles;
     }

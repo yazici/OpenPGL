@@ -1,5 +1,4 @@
 #include <stdexcept>
-#include <GL/glew.h>
 
 #include "VertexBuffer.h"
 
@@ -11,7 +10,7 @@ namespace pgl
 
     VertexBuffer::VertexBuffer(size_t size, const void * data) : VertexBuffer()
     {
-        Create(size, data);
+        create(size, data);
     }
 
     VertexBuffer::~VertexBuffer()
@@ -19,15 +18,16 @@ namespace pgl
         glDeleteBuffers(1, &_vbo);
     }
 
-    void VertexBuffer::Create(size_t size, const void * data)
+    void VertexBuffer::create(size_t size, const void * data)
     {
         if (_vbo) {
             throw std::runtime_error("The vertex buffer object has been created and can't be created again.");
         }
 
-        if (nullptr == data) {
+		// Если data == nullptr, то память будет выделена, а данные можно будет передать потом.
+        /*if (nullptr == data) {
             throw std::invalid_argument("You passed in a null pointer. The 'data' argument can't be a null pointer.");
-        }
+        }*/
 
         glGenBuffers(1, &_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -38,19 +38,19 @@ namespace pgl
 
         if ((size_t)loadSize != size) {
             glDeleteBuffers(1, &_vbo);
-            // FIXME: ��������� ���������� ��������� �� ������.
+            // FIXME: Придумать корректное сообщение об ошибке.
             throw std::runtime_error("OpenGL buffer size error. WTF?");
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 
-    void VertexBuffer::Bind() noexcept
+    void VertexBuffer::bind() const noexcept
     {
         glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     }
 
-    void VertexBuffer::UnBind() noexcept
+    void VertexBuffer::unbind() const noexcept
     {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }

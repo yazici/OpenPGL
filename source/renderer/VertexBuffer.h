@@ -1,7 +1,6 @@
 #ifndef _RENDERER_VERTEXBUFFER_H
 #define _RENDERER_VERTEXBUFFER_H
 
-#include <stdint.h>
 #include <GL/glew.h>
 
 namespace pgl
@@ -16,16 +15,18 @@ namespace pgl
 
         VertexBuffer(size_t size, const void *data);
     
+		VertexBuffer(const VertexBuffer &v) = delete;
+
         ~VertexBuffer();
 
-        void Create(size_t size, const void *data);
+        void create(size_t size, const void *data);
 
-        void Bind() noexcept;
+        void bind() const noexcept;
 
-        void UnBind() noexcept;
+        void unbind() const noexcept;
 
     private:
-        uint32_t _vbo;
+        GLuint _vbo;
     };
 }
 
