@@ -19,8 +19,8 @@ namespace pgl
 		IndexBuffer(const vector<GLuint> &indx);
 
 		/**
-		* @param indx массив в котором определены индексы.
-		* @param size размер массива.
+		* @param indx массив в котором определены индексы
+		* @param size размер массива
 		*/
 		IndexBuffer(const GLuint *indx, size_t size);
 
@@ -38,8 +38,8 @@ namespace pgl
 		/**
 		* Метод, с помощью котрого инициализируется объект.
 		*
-		* @param indx массив в котором определены индексы.
-		* @param size размер массива.
+		* @param indx массив в котором определены индексы
+		* @param size размер массива
 		*/
 		void create(const GLuint *indx, size_t size);
 
