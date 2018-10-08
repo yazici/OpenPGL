@@ -12,21 +12,45 @@ namespace pgl
     {
 	public:
 		IndexBuffer();
-		
+
+		/**
+		* @param indx вектор, в котором определены идексы
+		*/
 		IndexBuffer(const vector<GLuint> &indx);
-		
+
+		/**
+		* @param indx массив в котором определены индексы.
+		* @param size размер массива.
+		*/
 		IndexBuffer(const GLuint *indx, size_t size);
 
 		IndexBuffer(const IndexBuffer &i) = delete;
 
 		~IndexBuffer();
 
+		/**
+		* Метод, с помощью котрого инициализируется объект.
+		*
+		* @param indx вектор, в котором определены идексы
+		*/
 		void create(const vector<GLuint> &indx);
 
+		/**
+		* Метод, с помощью котрого инициализируется объект.
+		*
+		* @param indx массив в котором определены индексы.
+		* @param size размер массива.
+		*/
 		void create(const GLuint *indx, size_t size);
 
+		/**
+		* Метод, делающий объект текущим.
+		*/
 		void bind() const noexcept;
 
+		/**
+		* Метод, делающий объект не текущим.
+		*/
 		void unbind() const noexcept;
 
 		size_t size() const noexcept;
