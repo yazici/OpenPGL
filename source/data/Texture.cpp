@@ -52,7 +52,7 @@ namespace pgl
 
 		_h = h;
 		_w = w;
-		_data.assign(data, data + (w * h));
+		_data.assign(data, data + (w * h * 4));
 
 		glGenTextures(1, &_tex);
 		glBindTexture(GL_TEXTURE_2D, _tex);
