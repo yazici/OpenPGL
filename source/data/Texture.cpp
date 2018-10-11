@@ -15,13 +15,13 @@ namespace pgl
 	Texture::Texture(const std::vector<GLubyte>& data, int w, int h) :
 		Texture()
 	{
-		Create(data, w, h);
+		create(data, w, h);
 	}
 
 	Texture::Texture(const GLubyte* data, int w, int h) :
 		Texture()
 	{
-		Create(data, w, h);
+		create(data, w, h);
 	}
 
 	Texture::~Texture()
@@ -29,16 +29,16 @@ namespace pgl
 		glDeleteTextures(1, &_tex);
 	}
 
-	void Texture::Create(const std::vector<GLubyte> &data, int w, int h)
+	void Texture::create(const std::vector<GLubyte> &data, int w, int h)
 	{
 		if (data.size() != w * h) {
 			throw std::runtime_error("The Size of the data must be equal w * h.");
 		}
 
-		Create(data.data(), w, h);
+		create(data.data(), w, h);
 	}
 
-	void Texture::Create(const GLubyte *data, int w, int h)
+	void Texture::create(const GLubyte *data, int w, int h)
 	{
 		if (_tex) {
 			throw std::runtime_error("The texture object has been created and cannot be created again.");
@@ -64,23 +64,23 @@ namespace pgl
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
-	GLint Texture::Width() const noexcept
+	GLint Texture::width() const noexcept
 	{
 		return _w;
 	}
 
-	GLint Texture::Height() const noexcept
+	GLint Texture::height() const noexcept
 	{
 		return _h;
 	}
 
-	void Texture::Bind(GLint slot) const noexcept
+	void Texture::bind(GLint slot) const noexcept
 	{
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, _tex);
 	}
 
-	void Texture::Unbind() const noexcept
+	void Texture::unbind() const noexcept
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

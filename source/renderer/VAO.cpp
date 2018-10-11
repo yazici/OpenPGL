@@ -7,7 +7,7 @@ namespace pgl
 {
 	VertexObject::VertexObject(const Mesh & mesh)
 	{
-		glGenVertexArrays(1, &_vao);
+		/*glGenVertexArrays(1, &_vao);
 		glBindVertexArray(_vao);
 		_vbos.resize(3);
 		
@@ -25,7 +25,7 @@ namespace pgl
 		_vbos[2].unbind();
 
 		_indices.create(mesh.triangles());
-		glBindVertexArray(0);
+		glBindVertexArray(0);*/
 	}
 
 	VertexObject::~VertexObject()

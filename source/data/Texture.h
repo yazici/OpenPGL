@@ -53,7 +53,7 @@ namespace pgl
 		* @param w ширина текстуры
 		* @param h высота текстуры
 		*/
-		void Create(const std::vector<GLubyte>& data, int w, int h);
+		void create(const std::vector<GLubyte>& data, int w, int h);
 
 		/**
 		* Метод, инициализирующий текстуру
@@ -69,7 +69,7 @@ namespace pgl
 		* @param w ширина текстуры
 		* @param h высота текстуры
 		*/
-		void Create(const GLubyte* data, int w, int h);
+		void create(const GLubyte* data, int w, int h);
 
 		/**
 		* Метод, делающий текстуру текущей.
@@ -77,16 +77,16 @@ namespace pgl
 		* @param slot (текстурный слот) необходим для определния слота,
 		* к которому будет подключаться текстура
 		*/
-		void Bind(GLint slot = 0) const noexcept;
+		void bind(GLint slot = 0) const noexcept;
 
 		/**
 		* Метод, делающий текстуру не текущей.
 		*/
-		void Unbind() const noexcept;
+		void unbind() const noexcept;
 
-		GLint Width() const noexcept;
+		GLint width() const noexcept;
 
-		GLint Height() const noexcept;
+		GLint height() const noexcept;
 
 	private:
 		std::vector<GLubyte> _data;
