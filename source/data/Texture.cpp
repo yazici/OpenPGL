@@ -18,7 +18,6 @@ namespace pgl
         wrapS(WrapS),
         wrapT(WrapT)
     {
-        
     }
 
     Texture::Texture() :
