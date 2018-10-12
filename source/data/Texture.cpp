@@ -1,87 +1,95 @@
-#include <stdexcept>
+//
+//  Texture.cpp
+//  project
+//
+//  Created by Асиф Мамедов on 12.10.2018.
+//  Copyright © 2018 Asif Mamedov. All rights reserved.
+//
 
-#include "Texture.h"
+#include "Texture.hpp"
+
+#include <algorithm>
 
 namespace pgl
 {
-	Texture::Texture() : 
-		_w(0), 
-		_h(0), 
-		_tex(0)
-	{
+    TextureParameter::TextureParameter(GLenum MinFilter, GLenum MagFilter, GLenum WrapS, GLenum WrapT) :
+        minFilter(MinFilter),
+        magFilter(MagFilter),
+        wrapS(WrapS),
+        wrapT(WrapT)
+    {
+        
+    }
 
-	}
+    Texture::Texture() :
+        _texture(0),
+        _width(0),
+        _height(0),
+        _srotageFormat(PixelFormat::BLACK_WHITE),
+        _dataFormat(PixelFormat::BLACK_WHITE),
+        _data(nullptr)
+    {
+    }
 
-	Texture::Texture(const std::vector<GLubyte>& data, int w, int h) :
-		Texture()
-	{
-		create(data, w, h);
-	}
+    Texture::Texture(GLuint width, GLuint height, PixelFormat storFrom, PixelFormat dataForm, TextureParameter texParam, const void* data) :
+        Texture(create(width, height, storFrom, dataForm, texParam, data))
+    {
+    }
 
-	Texture::Texture(const GLubyte* data, int w, int h) :
-		Texture()
-	{
-		create(data, w, h);
-	}
-
-	Texture::~Texture()
-	{
-		glDeleteTextures(1, &_tex);
-	}
-
-	void Texture::create(const std::vector<GLubyte> &data, int w, int h)
-	{
-		if (data.size() != w * h) {
-			throw std::runtime_error("The Size of the data must be equal w * h.");
-		}
-
-		create(data.data(), w, h);
-	}
-
-	void Texture::create(const GLubyte *data, int w, int h)
-	{
-		if (_tex) {
-			throw std::runtime_error("The texture object has been created and cannot be created again.");
-		} else if (nullptr == data) {
-			throw std::invalid_argument("You passed in a null pointer. The 'data' argument can't be a null pointer.");
-		} else if (0 >= w) {
-			throw std::invalid_argument("The argument w must be greater than 0.");
-		} else if (0 >= h) {
-			throw std::invalid_argument("The argument h must be greater than 0.");
-		}
-
-		_h = h;
-		_w = w;
-		_data.assign(data, data + (w * h * 4));
-
-		glGenTextures(1, &_tex);
-		glBindTexture(GL_TEXTURE_2D, _tex);
-		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, w, h);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, _data.data());
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	}
-
-	GLint Texture::width() const noexcept
-	{
-		return _w;
-	}
-
-	GLint Texture::height() const noexcept
-	{
-		return _h;
-	}
-
-	void Texture::bind(GLint slot) const noexcept
-	{
-		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_2D, _tex);
-	}
-
-	void Texture::unbind() const noexcept
-	{
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+    Texture::Texture(Texture&& texture)
+    {
+        std::swap(_data, texture._data);
+        _dataFormat = texture._dataFormat;
+        _srotageFormat = texture._srotageFormat;
+        _texture = texture._texture;
+        _height = texture._height;
+        _width = texture._width;
+    }
+    
+    Texture Texture::create(GLuint width, GLuint height, pgl::PixelFormat storFrom, pgl::PixelFormat dataForm, pgl::TextureParameter texParam, const void *data)
+    {
+        Texture texture;
+        
+        texture._width = width;
+        texture._height = height;
+        
+        std::memcpy(texture._data, data, width * height);
+        
+        glGenTextures(1, &texture._texture);
+        glBindTexture(GL_TEXTURE_2D, texture._texture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, (GLenum) dataForm, width, height);
+        
+        // TODO: параметр type функции glTexSubImage2D не указан при копировании текстуры.
+        // Пока что будет стоять GL_UNSIGNED_BYTE, но в дальнейшем нужно дать пользователю
+        // возможность выбирать тип.
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, (GLenum)storFrom, GL_UNSIGNED_BYTE, data);
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texParam.magFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texParam.minFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texParam.wrapS);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texParam.wrapT);
+        
+        return texture;
+    }
+    
+    void Texture::bind(GLint slot) const noexcept
+    {
+        glActiveTexture(GL_TEXTURE0 + slot);
+        glBindTexture(GL_TEXTURE_2D, _texture);
+    }
+    
+    void Texture::unbind() const noexcept
+    {
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    
+    GLuint Texture::width() const noexcept
+    {
+        return _width;
+    }
+    
+    GLuint Texture::height() const noexcept
+    {
+        return _height;
+    }
 }
