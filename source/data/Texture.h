@@ -63,7 +63,7 @@ namespace pgl
         * @param texParam параметры настройки необходимые для создания текструы
         * @param data массив в котором находится текстура
         */
-        Texture(GLuint width, GLuint height, PixelFormat storFrom, PixelFormat dataForm, TextureParameter texParam, const void* data);
+        Texture(GLuint width, GLuint height, PixelFormat storFrom, PixelFormat dataForm, TextureParameter texParam, GLenum dataType,const void* data);
         //Texture(const Texture&) = delete;
         Texture(Texture&& texture);
 
@@ -77,7 +77,7 @@ namespace pgl
         * @param texParam параметры настройки необходимые для создания текструы
         * @param data массив в котором находится текстура
         */
-        static Texture create (GLuint width, GLuint height, PixelFormat storFrom, PixelFormat dataForm, TextureParameter texParam, const void* data);
+        static Texture create (GLuint width, GLuint height, PixelFormat storFrom, PixelFormat dataForm, TextureParameter texParam, GLenum dataType, const void* data);
 
         /**
         * Метод который делает текстуру активной и задаёт ей текструный слот.
@@ -99,7 +99,7 @@ namespace pgl
         GLuint _height;
         PixelFormat _srotageFormat;
         PixelFormat _dataFormat;
-        GLuint _texture;
+        GLuint _handle;
     };
 }
 
