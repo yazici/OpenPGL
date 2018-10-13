@@ -1,5 +1,5 @@
-#ifndef _RENDERER_VAO_H
-#define _RENDERER_VAO_H
+#ifndef _RENDERER_VERTEXOBJECT_H
+#define _RENDERER_VERTEXOBJECT_H
 
 #include <stdint.h>
 #include <vector>
@@ -47,4 +47,4 @@ namespace pgl
     };
 }
 
-#endif // !_RENDERER_VAO_H
+#endif // !_RENDERER_VERTEXOBJECT_H

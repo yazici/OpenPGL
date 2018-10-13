@@ -56,7 +56,7 @@ namespace pgl
 		size_t size() const noexcept;
 
 	private:
-		GLuint _ebo;
+		GLuint _handle;
 		size_t _countIndices;
     };
 }

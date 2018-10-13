@@ -11,22 +11,27 @@ namespace pgl
     {
     public:
         
-        VertexBuffer();
-
-        VertexBuffer(size_t size, const void *data);
-    
-		VertexBuffer(const VertexBuffer &v) = delete;
+		static VertexBuffer *create(size_t size, GLenum usage = GL_STATIC_DRAW, const void *data = nullptr);
 
         ~VertexBuffer();
+		
+		void newData(size_t size, GLenum usage = GL_STATIC_DRAW, const void *data = nullptr);
 
-        void create(size_t size, const void *data);
-
+		void updateData(size_t offset, size_t size, const void *data);
+			
         void bind() const noexcept;
 
         void unbind() const noexcept;
 
+	private:
+
+		VertexBuffer();
+
+		VertexBuffer(const VertexBuffer &v) = delete;
+
     private:
-        GLuint _vbo;
+        GLuint _handle;
+		size_t _size;
     };
 }
 

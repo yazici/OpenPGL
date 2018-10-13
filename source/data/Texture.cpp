@@ -6,7 +6,7 @@
 //  Copyright © 2018 Asif Mamedov. All rights reserved.
 //
 
-#include "Texture.hpp"
+#include "Texture.h"
 
 #include <algorithm>
 
