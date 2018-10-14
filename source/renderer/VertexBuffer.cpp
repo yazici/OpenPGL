@@ -48,7 +48,7 @@ namespace pgl
 		}
 	}
 
-	void VertexBuffer::updateData(size_t offset, size_t size, const void *data)
+	void VertexBuffer::updateData(size_t offset, size_t len, const void *data)
 	{
 		assert(_handle);
 
@@ -57,7 +57,7 @@ namespace pgl
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, _handle);
-		glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+		glBufferSubData(GL_ARRAY_BUFFER, offset, len, data);
 		// FIXME: Проверка на ошибки.
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}

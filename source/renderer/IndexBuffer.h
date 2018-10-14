@@ -44,15 +44,19 @@ namespace pgl
 		void create(const GLuint *indx, size_t size);
 
 		/**
-		* Метод, делающий объект текущим.
+		* Делает буфер текущим.
 		*/
 		void bind() const noexcept;
 
 		/**
-		* Метод, делающий объект не текущим.
+		* Делает буфер не текущим.
 		*/
 		void unbind() const noexcept;
 
+		/**
+		* Возвращает количество индексов хранящихся в буфере.
+		* @return количество индексов
+		*/
 		size_t size() const noexcept;
 
 	private:
