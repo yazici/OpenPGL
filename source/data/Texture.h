@@ -106,6 +106,7 @@ namespace pgl
         
         string_view name() const noexcept;
         void name(string_view name);
+        
     protected:
         GLubyte* _data;
         GLuint _width;
