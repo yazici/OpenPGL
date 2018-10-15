@@ -3,6 +3,10 @@
 
 #include <GL/glew.h>
 
+#include <string>
+
+using namespace std;
+
 namespace pgl
 {
     /**
@@ -49,57 +53,65 @@ namespace pgl
     {
     public:
         /**
-        * Конструктор по умолчанию.
-        */
+         * Конструктор по умолчанию.
+         */
         Texture();
-
+        
         /**
-        * Конструктор.
-        *
-        * @param width ширина текстуры
-        * @param height высота текстуры
-        * @param storFrom тип текстуры которая хранится в массиве data
-        * @param dataForm тип текструры которуя хочет создать пользователь
-        * @param texParam параметры настройки необходимые для создания текструы
-        * @param data массив в котором находится текстура
-        */
-        Texture(GLuint width, GLuint height, PixelFormat storFrom, PixelFormat dataForm, TextureParameter texParam, GLenum dataType,const void* data);
-        //Texture(const Texture&) = delete;
+         * Конструктор.
+         *
+         * @param name имя текстуры
+         * @param width ширина текстуры
+         * @param height высота текстуры
+         * @param format формат в котором представляется пиксель в массиве
+         * @param data указатель на массив данных
+         */
+        Texture(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        
+        /**
+         * Конструктор.
+         *
+         * @param width ширина текстуры
+         * @param height высота текстуры
+         * @param format формат в котором представляется пиксель в массиве
+         * @param data указатель на массив данных
+         */
+        Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        
         Texture(Texture&& texture);
-
+        
         /**
-        * Статическая функция необходимая для создания текструы.
-        *
-        * @param width ширина текстуры
-        * @param height высота текстуры
-        * @param storFrom тип текстуры которая хранится в массиве data
-        * @param dataForm тип текструры которуя хочет создать пользователь
-        * @param texParam параметры настройки необходимые для создания текструы
-        * @param data массив в котором находится текстура
-        */
-        static Texture create (GLuint width, GLuint height, PixelFormat storFrom, PixelFormat dataForm, TextureParameter texParam, GLenum dataType, const void* data);
-
+         * Функция предназначенная для создания текструы.
+         *
+         * @param name имя текстуры
+         * @param width ширина текстуры
+         * @param height высота текстуры
+         * @param format формат в котором представляется пиксель в массиве
+         * @param data указатель на массив данных
+         */
+        static Texture create(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        
         /**
-        * Метод который делает текстуру активной и задаёт ей текструный слот.
-        * По умолчанию слот 0-ой.
-        */
-        void bind(GLint slot = 0) const noexcept;
-
-        /**
-        * Метод который делает текстуру не активной.
-        */
-        void unbind() const noexcept;
-
-        GLuint width() const noexcept;
-        GLuint height() const noexcept;
-
+         * Функция предназначенная для создания текструы.
+         *
+         * @param width ширина текстуры
+         * @param height высота текстуры
+         * @param format формат в котором представляется пиксель в массиве
+         * @param data указатель на массив данных
+         */
+        static Texture create(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        
+        uint32_t width() const noexcept;
+        uint32_t height() const noexcept;
+        
+        string_view name() const noexcept;
+        void name(string_view name);
     protected:
-        void* _data;
+        GLubyte* _data;
         GLuint _width;
         GLuint _height;
-        PixelFormat _srotageFormat;
-        PixelFormat _dataFormat;
-        GLuint _handle;
+        string _name;
+        PixelFormat _format;
     };
 }
 
