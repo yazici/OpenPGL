@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 
-#include "VAO.h"
+#include "VertexObject.h"
 #include "../data/Mesh.h"
 
 namespace pgl

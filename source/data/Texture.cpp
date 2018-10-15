@@ -1,3 +1,10 @@
+//
+//  Texture.cpp
+//  project
+//
+//  Created by Асиф Мамедов on 12.10.2018.
+//  Copyright © 2018 Asif Mamedov. All rights reserved.
+//
 #include "Texture.h"
 
 #include <algorithm>

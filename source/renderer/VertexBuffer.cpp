@@ -1,53 +1,70 @@
 #include <stdexcept>
+#include <cassert>
 
 #include "VertexBuffer.h"
 
 namespace pgl
 {
-    VertexBuffer::VertexBuffer() : _vbo(0u)
+	VertexBuffer * VertexBuffer::create(size_t size, GLenum usage, const void *data)
+	{
+		VertexBuffer *vbo = new VertexBuffer();
+		glGenBuffers(1, &(vbo->_handle));
+
+		try {
+			vbo->newData(size, usage, data);
+		} catch (const std::runtime_error &e) {
+			delete vbo;
+			std::rethrow_exception(std::current_exception());
+		}
+
+		return vbo;
+	}
+
+	VertexBuffer::VertexBuffer() : 
+		_handle(0),
+		_size(0)
+	{
+	}
+
+	VertexBuffer::~VertexBuffer()
     {
+        glDeleteBuffers(1, &_handle);
     }
+	
+	void VertexBuffer::newData(size_t size, GLenum usage, const void *data)
+	{
+		assert(_handle);
 
-    VertexBuffer::VertexBuffer(size_t size, const void * data) : VertexBuffer()
-    {
-        create(size, data);
-    }
+		_size = size;
+		glBindBuffer(GL_ARRAY_BUFFER, _handle);
+		glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 
-    VertexBuffer::~VertexBuffer()
-    {
-        glDeleteBuffers(1, &_vbo);
-    }
+		int bufferSize = 0;
+		glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &bufferSize);
 
-    void VertexBuffer::create(size_t size, const void * data)
-    {
-        if (_vbo) {
-            throw std::runtime_error("The vertex buffer object has been created and can't be created again.");
-        }
+		if ((size_t)bufferSize != size) {
+			// FIXME: Пояснение к исключению можно сделать понятнее.
+			throw std::runtime_error("OpenGL can't create a buffer with this size.");
+		}
+	}
 
-		// Если data == nullptr, то память будет выделена, а данные можно будет передать потом.
-        /*if (nullptr == data) {
-            throw std::invalid_argument("You passed in a null pointer. The 'data' argument can't be a null pointer.");
-        }*/
+	void VertexBuffer::updateData(size_t offset, size_t len, const void *data)
+	{
+		assert(_handle);
 
-        glGenBuffers(1, &_vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-        glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		if (!data) {
+			throw std::invalid_argument("Argument 'data' can't be null pointer.");
+		}
 
-        int loadSize = 0;
-        glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &loadSize);
-
-        if ((size_t)loadSize != size) {
-            glDeleteBuffers(1, &_vbo);
-            // FIXME: Придумать корректное сообщение об ошибке.
-            throw std::runtime_error("OpenGL buffer size error. WTF?");
-        }
-
+		glBindBuffer(GL_ARRAY_BUFFER, _handle);
+		glBufferSubData(GL_ARRAY_BUFFER, offset, len, data);
+		// FIXME: Проверка на ошибки.
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-    void VertexBuffer::bind() const noexcept
+	void VertexBuffer::bind() const noexcept
     {
-        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, _handle);
     }
 
     void VertexBuffer::unbind() const noexcept
