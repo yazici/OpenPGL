@@ -52,9 +52,6 @@ namespace pgl
     class Texture
     {
     public:
-        /**
-         * Конструктор по умолчанию.
-         */
         Texture();
         
         /**
