@@ -17,6 +17,9 @@ namespace pgl
 		* @return возвращает карту высот.
 		*/
         virtual HeightMap Generate(int w, int h) const = 0; 
+	
+	protected:
+		int _seed;
     };
 }
 
