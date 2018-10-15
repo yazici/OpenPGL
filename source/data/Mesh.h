@@ -18,29 +18,29 @@ namespace pgl
         /**
         * Создает квадратную плоскость со стороной planeSize.
         *
-        * @param divisions разрещение плоскости в полигонах
-        * @param planeSize размер плоскости
-        * @return возвращает созданный меш
+        * @param divisions разрещение плоскости в полигонах.
+        * @param planeSize размер плоскости.
+        * @return возвращает созданный меш.
         */
         static Mesh CreatePlane(size_t divisions, float planeSize);
 
         /**
         * Конструктор с заданными параметрами для создания меша.
-        * @param cVertices количество вершин
-        * @param cTriangles количество треугольных полигонов в меше
-        * @throws std::invalid_argument в случае, если хотя бы один из аргументов меньше или равен 0
+        * @param cVertices количество вершин.
+        * @param cTriangles количество треугольных полигонов в меше.
+        * @throws std::invalid_argument в случае, если хотя бы один из аргументов меньше или равен 0.
         */
         Mesh(size_t cVertices, size_t cTriangles);
 
         /**
         * Конструктор копирования.
-        * @param m копируемый меш
+        * @param m копируемый меш.
         */
         Mesh(const Mesh &m);
 
         /**
         * Конструктор перемещения.
-        * @param m перемещаемый меш
+        * @param m перемещаемый меш.
         */
         Mesh(Mesh &&m);
 
