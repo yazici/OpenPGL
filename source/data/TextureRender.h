@@ -38,8 +38,7 @@ namespace pgl
          * Выделеннуя в GPU память нельзя будет изменить.
          *
          * @param texture текстура которую нужно выводить
-         * @param storFrom формат хранения текстуры
-         * (всевозможные внутренние форматы хранения можно посмотреть тут: 'https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexStorage2D.xhtml')
+         * @param storFrom формат хранения текстуры (все фозможные внутренние форматы хранения можно посмотреть тут: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexStorage2D.xhtml)
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
@@ -50,6 +49,8 @@ namespace pgl
         // TODO: определить поведение конструктора копирования.
         TextureRender(const TextureRender&) = default;
         
+        ~TextureRender();
+        
         /**
          * Функция преднаязначенная для создание объектов типа TextureRender.
          *
@@ -57,15 +58,15 @@ namespace pgl
          * Выделеннуя в GPU память нельзя будет изменить.
          *
          * @param texture текстура которую нужно выводить
-         * @param storFrom формат хранения текстуры
-         * (всевозможные внутренние форматы хранения можно посмотреть тут: 'https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexStorage2D.xhtml')
+         * @param storFrom формат хранения текстуры (все фозможные внутренние форматы хранения можно посмотреть тут: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexStorage2D.xhtml)
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
         static TextureRender create(Texture texture, PixelFormat storFrom, uint32_t width, uint32_t height);
         
+        
         /**
-        * Метод который делает текстуру активной и задаёт ей текструный слот.
+         * Метод который делает текстуру активной и задаёт ей текструный слот.
          *
          * @param slot текстурный слот.
          */
