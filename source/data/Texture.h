@@ -48,9 +48,13 @@ namespace pgl
         RGBA = GL_RGBA8,
         BLACK_WHITE = GL_R8
     };
-
+    
+    class TextureRender;
+    
     class Texture
     {
+        friend class TextureRender;
+        
     public:
         Texture();
         
@@ -63,7 +67,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        Texture(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr);
         
         /**
          * Конструктор.
@@ -73,9 +77,14 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr);
         
         Texture(Texture&& texture);
+        
+        // TODO: определиться как будет работать конструктор копирования.
+        Texture(const Texture&) = default;
+        
+        ~Texture();
         
         /**
          * Функция предназначенная для создания текструы.
@@ -86,7 +95,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        static Texture create(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr);
         
         /**
          * Функция предназначенная для создания текструы.
@@ -96,7 +105,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        static Texture create(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr);
         
         uint32_t width() const noexcept;
         uint32_t height() const noexcept;
@@ -110,6 +119,7 @@ namespace pgl
         GLuint _height;
         string _name;
         PixelFormat _format;
+        TextureParameter _parametr;
     };
 }
 

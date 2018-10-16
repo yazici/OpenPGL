@@ -11,6 +11,10 @@
 
 namespace pgl
 {
+    TextureParameter::TextureParameter(GLenum MinFilter, GLenum MagFilter, GLenum WrapS, GLenum WrapT)
+    {
+    }
+    
     Texture::Texture() :
         _data(nullptr),
         _width(0),
@@ -20,40 +24,53 @@ namespace pgl
     {
     }
     
-    Texture::Texture(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data) :
-        Texture(create(name, width, height, format, data))
+    Texture::Texture(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr) :
+        Texture(create(name, width, height, format, data, parametr))
     {
     }
     
-    Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data) :
-        Texture (create(width, height, format, data))
+    Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr) :
+        Texture (create(width, height, format, data, parametr))
     {
     }
     
-    Texture::Texture(Texture&& texture)
+    Texture::Texture(Texture&& texture) :
+        _data(texture._data),
+        _width(texture._width),
+        _height(texture._height),
+        _name(texture._name),
+        _format(texture._format),
+        _parametr(texture._parametr)
     {
-        std::swap(_data, texture._data);
-        _width = texture._width;
-        _height = texture._height;
-        _name = texture._name;
-        _format = texture._format;
+        texture._data = nullptr;
     }
     
-    Texture Texture::create(std::string name, uint32_t width, uint32_t height, pgl::PixelFormat format, const uint8_t* data)
+    Texture Texture::create(std::string name, uint32_t width, uint32_t height, pgl::PixelFormat format, const uint8_t* data, TextureParameter parametr)
     {
         Texture texture;
+        
         texture._name = name;
         texture._width = width;
         texture._height = height;
         texture._format = format;
+        texture._parametr = parametr;
         texture._data = new GLubyte [width * height];
+        
         memcpy(texture._data, data, width * height);
+        
         return texture;
     }
     
-    Texture Texture::create(uint32_t width, uint32_t height, pgl::PixelFormat format, const uint8_t* data )
+    Texture::~Texture()
     {
-        return create("no name", width, height, format, data);
+        if (_data) {
+            delete [] _data;
+        }
+    }
+    
+    Texture Texture::create(uint32_t width, uint32_t height, pgl::PixelFormat format, const uint8_t* data, TextureParameter parametr)
+    {
+        return create("no name", width, height, format, data, parametr);
     }
     
     uint32_t Texture::width() const noexcept
