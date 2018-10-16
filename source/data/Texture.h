@@ -67,7 +67,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr);
+        Texture(string name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data);
         
         /**
          * Конструктор.
@@ -77,7 +77,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr);
+        Texture(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data);
         
         Texture(Texture&& texture);
         
@@ -95,7 +95,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr);
+        static Texture create(string name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data);
         
         /**
          * Функция предназначенная для создания текструы.
@@ -105,7 +105,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr);
+        static Texture create(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data);
         
         uint32_t width() const noexcept;
         uint32_t height() const noexcept;

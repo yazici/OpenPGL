@@ -24,13 +24,13 @@ namespace pgl
     {
     }
     
-    Texture::Texture(string name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr) :
-        Texture(create(name, width, height, format, data, parametr))
+    Texture::Texture(string name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data) :
+        Texture(create(name, width, height, format, parametr, data))
     {
     }
     
-    Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data, TextureParameter parametr) :
-        Texture (create(width, height, format, data, parametr))
+    Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data) :
+        Texture (create(width, height, format, parametr, data))
     {
     }
     
@@ -45,7 +45,7 @@ namespace pgl
         texture._data = nullptr;
     }
     
-    Texture Texture::create(std::string name, uint32_t width, uint32_t height, pgl::PixelFormat format, const uint8_t* data, TextureParameter parametr)
+    Texture Texture::create(std::string name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data)
     {
         Texture texture;
         
@@ -68,9 +68,9 @@ namespace pgl
         }
     }
     
-    Texture Texture::create(uint32_t width, uint32_t height, pgl::PixelFormat format, const uint8_t* data, TextureParameter parametr)
+    Texture Texture::create(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data)
     {
-        return create("no name", width, height, format, data, parametr);
+        return create("no name", width, height, format, parametr, data);
     }
     
     uint32_t Texture::width() const noexcept
