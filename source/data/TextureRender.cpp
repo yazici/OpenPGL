@@ -11,25 +11,25 @@
 namespace pgl
 {
     TextureRender::TextureRender() :
-    _handler(0),
-    _width(0),
-    _height(0),
-    _locked(false),
-    _sorageFormat(PixelFormat::BLACK_WHITE)
+        _handler(0),
+        _width(0),
+        _height(0),
+        _locked(false),
+        _sorageFormat(PixelFormat::BLACK_WHITE)
     {
     }
     
     TextureRender::TextureRender(Texture texture, PixelFormat storFrom, uint32_t width, uint32_t height) :
-    TextureRender(create(texture, storFrom, width, height))
+        TextureRender(create(texture, storFrom, width, height))
     {
     }
     
     TextureRender::TextureRender(TextureRender&& textureRender) :
-    _handler(textureRender._height),
-    _width(textureRender._width),
-    _height(textureRender._height),
-    _locked(textureRender._locked),
-    _sorageFormat(textureRender._sorageFormat)
+        _handler(textureRender._height),
+        _width(textureRender._width),
+        _height(textureRender._height),
+        _locked(textureRender._locked),
+        _sorageFormat(textureRender._sorageFormat)
     {
         textureRender._height = 0;
     }
