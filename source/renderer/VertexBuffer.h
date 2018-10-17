@@ -5,29 +5,34 @@
 
 namespace pgl
 {
-    class Mesh;
+	class Mesh;
 
-    class VertexBuffer
-    {
-    public:
-        
-        VertexBuffer();
+	class VertexBuffer
+	{
+	public:
 
-        VertexBuffer(size_t size, const void *data);
-    
+		static VertexBuffer *create(size_t size, GLenum usage = GL_STATIC_DRAW, const void *data = nullptr);
+
+		~VertexBuffer();
+
+		void newData(size_t size, GLenum usage = GL_STATIC_DRAW, const void *data = nullptr);
+
+		void updateData(size_t offset, size_t size, const void *data);
+
+		void bind() const noexcept;
+
+		void unbind() const noexcept;
+
+	private:
+
+		VertexBuffer();
+
 		VertexBuffer(const VertexBuffer &v) = delete;
 
-        ~VertexBuffer();
-
-        void create(size_t size, const void *data);
-
-        void bind() const noexcept;
-
-        void unbind() const noexcept;
-
-    private:
-        GLuint _vbo;
-    };
+	private:
+		GLuint _handle;
+		size_t _size;
+	};
 }
 
 #endif //!_RENDERER_VERTEXBUFFER_H
