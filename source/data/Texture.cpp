@@ -20,17 +20,17 @@ namespace pgl
         _width(0),
         _height(0),
         _name("no name"),
-        _format(PixelFormat::BLACK_WHITE)
+        _format(Texture::BLACK_WHITE)
     {
     }
     
-    Texture::Texture(string name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data) :
-        Texture(create(name, width, height, format, parametr, data))
+    Texture::Texture(string name, uint32_t width, uint32_t height, GLenum format, TextureParameter parametr, GLenum dataType, const uint8_t* data) :
+        Texture(create(name, width, height, format, parametr, dataType, data))
     {
     }
     
-    Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data) :
-        Texture (create(width, height, format, parametr, data))
+    Texture::Texture(uint32_t width, uint32_t height, GLenum format, TextureParameter parametr, GLenum dataType, const uint8_t* data) :
+        Texture (create(width, height, format, parametr, dataType, data))
     {
     }
     
@@ -40,7 +40,8 @@ namespace pgl
         _height(texture._height),
         _name(texture._name),
         _format(texture._format),
-        _parametr(texture._parametr)
+        _parametr(texture._parametr),
+        _dataType(texture._dataType)
     {
         memcpy(_data, texture._data, _width * _height);
     }
@@ -51,12 +52,13 @@ namespace pgl
         _height(texture._height),
         _name(texture._name),
         _format(texture._format),
-        _parametr(texture._parametr)
+        _parametr(texture._parametr),
+        _dataType(texture._dataType)
     {
         texture._data = nullptr;
     }
     
-    Texture Texture::create(std::string name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data) 
+    Texture Texture::create(std::string name, uint32_t width, uint32_t height, GLenum format, TextureParameter parametr, GLenum dataType, const uint8_t* data)
     {
         Texture texture;
         
@@ -65,6 +67,7 @@ namespace pgl
         texture._height = height;
         texture._format = format;
         texture._parametr = parametr;
+        texture._dataType = dataType;
         texture._data = new GLubyte [width * height];
         
         memcpy(texture._data, data, width * height);
@@ -79,9 +82,9 @@ namespace pgl
         }
     }
     
-    Texture Texture::create(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, const uint8_t* data)
+    Texture Texture::create(uint32_t width, uint32_t height, GLenum format, TextureParameter parametr, GLenum dataType, const uint8_t* data)
     {
-        return create("no name", width, height, format, parametr, data);
+        return create("no name", width, height, format, parametr, dataType, data);
     }
     
     uint32_t Texture::width() const noexcept

@@ -29,6 +29,18 @@ namespace pgl
     class TextureRender
     {
     public:
+        
+        /**
+         * Определяет внутренний размер (в зависимости от количиства
+         * инициализированных каналов и их размера) буфера в котором будт хранится текстура.
+         */
+        enum : GLenum
+        {
+            RGB = GL_RGB8,
+            RGBA = GL_RGBA8,
+            BLACK_WHITE = GL_R8
+        };
+        
         TextureRender();
         TextureRender(TextureRender&& texureRender);
         
@@ -40,11 +52,10 @@ namespace pgl
          *
          * @param texture текстура которую нужно выводить
          * @param storFrom формат хранения текстуры
-         *  (все возможные внутренние форматы хранения можно посмотреть тут: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexStorage2D.xhtml)
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        TextureRender(Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height);
+        TextureRender(Texture& texture, GLenum storFrom, uint32_t width, uint32_t height);
         
         // TODO: определить поведение конструктора копирования.
         TextureRender(const TextureRender&) = default;
@@ -59,11 +70,10 @@ namespace pgl
          *
          * @param texture текстура которую нужно выводить
          * @param storFrom формат хранения текстуры
-         *  (все возможные внутренние форматы хранения можно посмотреть тут: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexStorage2D.xhtml)
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        static TextureRender create(Texture texture, PixelFormat storFrom, uint32_t width, uint32_t height);
+        static TextureRender create(Texture texture, GLenum storFrom, uint32_t width, uint32_t height);
         
         /**
          * Метод который делает текстуру активной и задаёт ей текструный слот.
@@ -97,14 +107,14 @@ namespace pgl
          *
          * @param texture текстура которую нужно загрузить
          */
-        void updateData(const Texture& texture);
+        void updateData(const Texture& texture) noexcept;
         
     private:
         GLuint _handler;
         GLuint _width;
         GLuint _height;
         bool _locked;
-        PixelFormat _sorageFormat;
+        GLenum _sorageFormat;
     };
 }
 
