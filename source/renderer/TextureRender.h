@@ -9,7 +9,7 @@
 #ifndef _TEXTURE_RENDER_H
 #define _TEXTURE_RENDER_H
 
-#include "data/Texture.h"
+#include "../data/Texture.h"
 
 namespace pgl
 {
@@ -70,7 +70,7 @@ namespace pgl
          *
          * @param slot текстурный слот.
          */
-        void bind (int slot = 0) const noexcept;
+        void bind(int slot = 0) const noexcept;
         
         /**
          * Метод, делающий текстуру не активной.
