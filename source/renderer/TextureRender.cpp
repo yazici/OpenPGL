@@ -1,8 +1,8 @@
 //
 //  TextureRender.cpp
-//  PGL
+//  createNoise
 //
-//  Created by Асиф Мамедов on 16.10.2018.
+//  Created by Асиф Мамедов on 19.10.2018.
 //  Copyright © 2018 Asif Mamedov. All rights reserved.
 //
 
@@ -19,19 +19,19 @@ namespace pgl
     {
     }
     
-    TextureRender::TextureRender(Texture texture, PixelFormat storFrom, uint32_t width, uint32_t height) :
-        TextureRender(create(texture, storFrom, width, height))
-    {
-    }
-    
     TextureRender::TextureRender(TextureRender&& textureRender) :
-        _handler(textureRender._height),
+        _handler(textureRender._handler),
         _width(textureRender._width),
         _height(textureRender._height),
-        _locked(textureRender._locked),
+        _locked(false),
         _sorageFormat(textureRender._sorageFormat)
     {
-        textureRender._height = 0;
+        textureRender._handler = 0;
+    }
+    
+    TextureRender::TextureRender(Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height) :
+        TextureRender(create(texture, storFrom, width, height))
+    {
     }
     
     TextureRender::~TextureRender()
@@ -41,24 +41,24 @@ namespace pgl
         }
     }
     
-    TextureRender TextureRender::create(Texture texture, PixelFormat storFrom,  uint32_t width, uint32_t height)
+    TextureRender TextureRender::create(Texture texture, PixelFormat storFrom, uint32_t width, uint32_t height)
     {
         TextureRender textureRender;
         
+        glGenTextures(1, &textureRender._handler);
         textureRender._width = width;
         textureRender._height = height;
         textureRender._locked = false;
         textureRender._sorageFormat = storFrom;
         
-        glGenTextures(1, &textureRender._handler);
         glBindTexture(GL_TEXTURE_2D, textureRender._handler);
-        glTexStorage2D(GL_TEXTURE_2D, 1, (GLenum)storFrom, width, height);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, (GLenum) texture._format, GL_UNSIGNED_BYTE, texture._data);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, width, height);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, texture._data);
         
-        glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture._parametr.magFilter);
-        glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture._parametr.minFilter);
-        glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, texture._parametr.wrapS);
-        glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture._parametr.wrapT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture._parametr.magFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture._parametr.minFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture._parametr.wrapS);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture._parametr.wrapT);
         
         return textureRender;
     }
@@ -105,12 +105,12 @@ namespace pgl
     {
         if (_locked && _handler) {
             glBindTexture(GL_TEXTURE_2D, _handler);
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, (GLenum) texture._format, GL_UNSIGNED_BYTE, texture._data);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, GL_RED, GL_UNSIGNED_BYTE, texture._data);
             
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture._parametr.magFilter);
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture._parametr.minFilter);
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, texture._parametr.wrapS);
-            glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture._parametr.wrapT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture._parametr.magFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture._parametr.minFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture._parametr.wrapS);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture._parametr.wrapT);
         }
     }
 }

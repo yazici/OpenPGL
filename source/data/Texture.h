@@ -1,5 +1,5 @@
-#ifndef _RENDERER_TEXTURE_H
-#define _RENDERER_TEXTURE_H
+#ifndef _TEXTURE_H
+#define _TEXTURE_H
 
 #include <GL/glew.h>
 
@@ -44,9 +44,9 @@ namespace pgl
     */
     enum class PixelFormat : GLenum
     {
-        RGB = GL_RGB8,
-        RGBA = GL_RGBA8,
-        BLACK_WHITE = GL_R8
+        RGB = GL_RGB,
+        RGBA = GL_RGBA,
+        BLACK_WHITE = GL_RED
     };
     
     class TextureRender;
@@ -81,8 +81,7 @@ namespace pgl
         
         Texture(Texture&& texture);
         
-        // TODO: определиться как будет работать конструктор копирования.
-        Texture(const Texture&) = default;
+        Texture(const Texture&);
         
         ~Texture();
         
