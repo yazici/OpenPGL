@@ -15,7 +15,7 @@ namespace pgl
         _width(0),
         _height(0),
         _locked(false),
-        _sorageFormat(PixelFormat::BLACK_WHITE)
+        _sorageFormat(TextureRender::BLACK_WHITE)
     {
     }
     
@@ -29,7 +29,7 @@ namespace pgl
         textureRender._handler = 0;
     }
     
-    TextureRender::TextureRender(Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height) :
+    TextureRender::TextureRender(Texture& texture, GLenum storFrom, uint32_t width, uint32_t height) :
         TextureRender(create(texture, storFrom, width, height))
     {
     }
@@ -41,7 +41,7 @@ namespace pgl
         }
     }
     
-    TextureRender TextureRender::create(Texture texture, PixelFormat storFrom, uint32_t width, uint32_t height)
+    TextureRender TextureRender::create(Texture texture, GLenum storFrom, uint32_t width, uint32_t height)
     {
         TextureRender textureRender;
         
@@ -52,8 +52,8 @@ namespace pgl
         textureRender._sorageFormat = storFrom;
         
         glBindTexture(GL_TEXTURE_2D, textureRender._handler);
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, width, height);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, texture._data);
+        glTexStorage2D(GL_TEXTURE_2D, 1, storFrom, width, height);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, texture._format, texture._dataType, texture._data);
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture._parametr.magFilter);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture._parametr.minFilter);
@@ -101,11 +101,11 @@ namespace pgl
         _locked = false;
     }
     
-    void TextureRender::updateData(const Texture &texture)
+    void TextureRender::updateData(const Texture &texture) noexcept
     {
         if (_locked && _handler) {
             glBindTexture(GL_TEXTURE_2D, _handler);
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, GL_RED, GL_UNSIGNED_BYTE, texture._data);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, texture._format, texture._dataType, texture._data);
             
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture._parametr.magFilter);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture._parametr.minFilter);
