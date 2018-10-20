@@ -10,16 +10,29 @@ namespace pgl
     public:
 
 		/**
+		* Конструктор сохраняет семя генерации. Если seed равен 0, то семя  выбирается случайным
+		* образом. Алгоритмы должны использовать семя при генерации объектов. Алгоритм инициализированный
+		* одиним и тем же семенем должен выдавать такой же результат.
+		*/
+		MapGenerator(unsigned int seed);
+
+		/**
 		* Генерирует карту высот размером w*h.
 		* 
 		* @param w ширина карты.
 		* @param h высота карты.
 		* @return возвращает карту высот.
 		*/
-        virtual HeightMap Generate(int w, int h) const = 0; 
+        virtual HeightMap generate(int w, int h) const = 0; 
 	
+		/**
+		* Метод возвращает семя генерации.
+		* @param семя генерации.
+		*/
+		unsigned int seed() const noexcept;
+
 	protected:
-		int _seed;
+		unsigned int _seed;
     };
 }
 
