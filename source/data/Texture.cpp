@@ -3,19 +3,20 @@
 //  project
 //
 //  Created by Асиф Мамедов on 12.10.2018.
-//  Copyright © 2018 Asif Mamedov. All rights reserved.
+//  Copyright © 2018 PCG. All rights reserved.
 //
 #include "Texture.h"
 
-#include <algorithm>
+#include <string_view>
+
+#include <exception>
 
 namespace pgl
 {
-    TextureParameter::TextureParameter(GLenum MinFilter, GLenum MagFilter, GLenum WrapS, GLenum WrapT)
-    {
-    }
     
-    Texture::Texture() : 
+    using namespace std;
+    
+    Texture::Texture() :
         _data(nullptr),
         _width(0),
         _height(0),
@@ -24,24 +25,72 @@ namespace pgl
     {
     }
     
-    Texture::Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data) :
-        Texture(create(name, width, height, format, parametr, dataType, data))
+    /**
+     * Функция определяет размерность пикселя.
+     *
+     * @param format формат пикселя
+     * @return размер пикселя
+     */
+    size_t pixelSizeof (Texture::PixelFormat format)
+    {
+        size_t size = 1;
+        
+        switch (format) {
+            case Texture::PixelFormat::RGB : {
+                size = 3;
+                break;
+            }
+                
+            case Texture::PixelFormat::RGBA : {
+                size = 4;
+                break;
+            }
+                
+            case Texture::PixelFormat::BLACK_WHITE : {
+                size = 1;
+                break;
+            }
+                
+            case Texture::PixelFormat::BGR : {
+                size = 3;
+                break;
+            }
+                
+            case Texture::PixelFormat::BGRA : {
+                size = 4;
+                break;
+            }
+        }
+        
+        return size;
+    }
+    
+    Texture::Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format) :
+        Texture(create(name, width, height, format, nullptr))
     {
     }
     
-    Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data) :
-        Texture (create(width, height, format, parametr, dataType, data))
+    Texture::Texture(uint32_t width, uint32_t height, PixelFormat format) :
+        Texture("no name", width, height, format)
+    {
+    }
+    
+    Texture::Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data) :
+        Texture(create(name, width, height, format, data))
+    {
+    }
+    
+    Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data) :
+        Texture (create(width, height, format, data))
     {
     }
     
     Texture::Texture(const Texture& texture) :
-        _data(new GLubyte [texture._width * texture._height]),
+        _data(new GLubyte [texture._width * texture._height * pixelSizeof(texture._format)]),
         _width(texture._width),
         _height(texture._height),
         _name(texture._name),
-        _format(texture._format),
-        _parametr(texture._parametr),
-        _dataType(texture._dataType)
+        _format(texture._format)
     {
         memcpy(_data, texture._data, _width * _height);
     }
@@ -51,14 +100,12 @@ namespace pgl
         _width(texture._width),
         _height(texture._height),
         _name(texture._name),
-        _format(texture._format),
-        _parametr(texture._parametr),
-        _dataType(texture._dataType)
+        _format(texture._format)
     {
         texture._data = nullptr;
     }
     
-    Texture Texture::create(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data)
+    Texture Texture::create(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data)
     {
         Texture texture;
         
@@ -66,13 +113,41 @@ namespace pgl
         texture._width = width;
         texture._height = height;
         texture._format = format;
-        texture._parametr = parametr;
-        texture._dataType = dataType;
-        texture._data = new GLubyte [width * height];
+        texture._data = new GLubyte [width * height * pixelSizeof(format)];
         
-        memcpy(texture._data, data, width * height);
+        if (data) {
+            memcpy(texture._data, data, width * height * pixelSizeof(format));
+        }
         
         return texture;
+    }
+    
+    Texture Texture::create(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data)
+    {
+        return create("no name", width, height, format, data);
+    }
+    
+    void Texture::data(const uint8_t *ptrData, uint32_t width, uint32_t height)
+    {
+        if (!ptrData) {
+            throw invalid_argument("pointer is zero");
+        }
+        
+        size_t sizeFormat = pixelSizeof(_format);
+        
+        if (width * height != _width * _height)
+        {
+            if (_data) {
+                delete [] _data;
+            }
+            
+            _width = width;
+            _height = height;
+            
+            _data = new GLubyte[width * height * sizeFormat];
+        }
+        
+        memcpy(_data, ptrData, width * height * sizeFormat);
     }
     
     Texture::~Texture()
@@ -80,11 +155,6 @@ namespace pgl
         if (_data) {
             delete [] _data;
         }
-    }
-    
-    Texture Texture::create(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data)
-    {
-        return create("no name", width, height, format, parametr, dataType, data);
     }
     
     uint32_t Texture::width() const noexcept
@@ -105,5 +175,10 @@ namespace pgl
     void Texture::name(std::string_view name)
     {
         _name = name;
+    }
+    
+    Texture::PixelFormat Texture::pixelFormat() const noexcept
+    {
+        return _format;
     }
 }

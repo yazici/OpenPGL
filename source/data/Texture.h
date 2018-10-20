@@ -1,3 +1,11 @@
+//
+//  Texture.h
+//  project
+//
+//  Created by Асиф Мамедов on 12.10.2018.
+//  Copyright © 2018 PCG. All rights reserved.
+//
+
 #ifndef _TEXTURE_H
 #define _TEXTURE_H
 
@@ -9,36 +17,6 @@ using namespace std;
 
 namespace pgl
 {
-    /**
-    * Структура предназначена для использования, в случае если
-    * пользователю при создании текстуры нужно указать настройки
-    * для её создания.
-    *
-    * @property minFilter используется для определения того каким
-    *   способом накладывать текстуру на поверхность которая больше
-    *   самой текстуры. Для определения того какой цвет выдать пикселю
-    *   необходимо указать какой алгоритм использовать (к примеру GL_NEAREST)
-    * @property magFilter используется для определения того каким
-    *   способом накладывать текстуру на поверхность меньшую или равную
-    *   самой текстуре. Для определения того какой цвет выдать пикселю
-    *   необходимо указать какой алгоритм использовать (к примеру GL_NEAREST)
-    * @property wrapS необходим для определения того каким образом нужно
-    *   отрисовывать текстуру по оси s в случе если текстурные координаты выйдут
-    *   за пределы 0 или 1 (к примеру GL_REPEAT)
-    * @property wrapT необходим для поределения того каким образом нужно
-    *   отрисовывать текстуру по оси t в случе если текстурные координаты выйдут
-    *   за пределы 0 или 1 (к примеру GL_REPEAT)
-    */
-    struct TextureParameter
-    {
-        GLenum minFilter;
-        GLenum magFilter;
-        GLenum wrapS;
-        GLenum wrapT;
-
-        TextureParameter(GLenum MinFilter = GL_LINEAR, GLenum MagFilter = GL_LINEAR, GLenum WrapS = GL_REPEAT, GLenum WrapT = GL_REPEAT);
-    };
-    
     class TextureRender;
     
     class Texture
@@ -76,6 +54,26 @@ namespace pgl
         Texture();
         
         /**
+         * Конструктор выделяющий текстуру нужного размера.
+         *
+         *
+         * @param name имя текстуры
+         * @param width ширина текстуры
+         * @param height высота текстуры
+         * @param format формат в котором представляется пиксель в массиве
+         */
+        Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format);
+        
+        /**
+         * Конструктор выделяющий текстуру нужного размера.
+         *
+         * @param width ширина текстуры
+         * @param height высота текстуры
+         * @param format формат в котором представляется пиксель в массиве
+         */
+        Texture(uint32_t width, uint32_t height, PixelFormat format);
+        
+        /**
          * Конструктор.
          *
          * @param name имя текстуры
@@ -84,7 +82,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data);
+        Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
         
         /**
          * Конструктор.
@@ -94,7 +92,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data);
+        Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
         
         Texture(Texture&& texture);
         
@@ -111,7 +109,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data);
+        static Texture create(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
         
         /**
          * Функция предназначенная для создания текструы.
@@ -121,22 +119,31 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data);
+        static Texture create(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        
+        // TODO: Нужно ли добавить возможность выбирать тип пикселя при обновлении данных.
+        /**
+         * Метод предназначенный для обновления данных текстуры.
+         *
+         * @param ptrData указатель на массив с текстурой
+         * @param width ширина текстуры
+         * @param height высота текстуры
+         */
+        void data(const uint8_t* ptrData, uint32_t width, uint32_t height);
         
         uint32_t width() const noexcept;
         uint32_t height() const noexcept;
+        PixelFormat pixelFormat() const noexcept;
         
         string_view name() const noexcept;
         void name(string_view name);
         
     protected:
         GLubyte* _data;
-        GLenum _dataType;
         GLuint _width;
         GLuint _height;
         string _name;
         PixelFormat _format;
-        TextureParameter _parametr;
     };
 }
 
