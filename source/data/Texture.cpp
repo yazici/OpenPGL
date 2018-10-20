@@ -15,7 +15,7 @@ namespace pgl
     {
     }
     
-    Texture::Texture() :
+    Texture::Texture() : 
         _data(nullptr),
         _width(0),
         _height(0),
