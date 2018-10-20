@@ -22,6 +22,7 @@ namespace pgl
     class Texture
     {
         friend class TextureRender;
+        friend class HeightMap;
         
     public:
         

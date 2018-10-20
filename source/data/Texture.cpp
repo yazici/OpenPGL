@@ -135,8 +135,7 @@ namespace pgl
         
         size_t sizeFormat = pixelSizeof(_format);
         
-        if (width * height != _width * _height)
-        {
+        if (width * height != _width * _height) {
             if (_data) {
                 delete [] _data;
             }
