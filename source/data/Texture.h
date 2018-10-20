@@ -50,13 +50,27 @@ namespace pgl
         /**
          * Объединение определяющее формат данных пикселя.
          */
-        enum : GLenum
+        enum PixelFormat : GLenum
         {
             RGB = GL_RGB,
             RGBA = GL_RGBA,
             BLACK_WHITE = GL_RED,
             BGR = GL_BGR,
             BGRA = GL_BGRA
+        };
+        
+        /**
+         * Объединение определяющее тип данных в массиве.
+         */
+        enum DataType : GLenum
+        {
+            UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+            UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+            UNSIGNED_INT = GL_UNSIGNED_INT,
+            BYTE = GL_BYTE,
+            SHORT = GL_SHORT,
+            INT = GL_INT,
+            FLOAT = GL_FLOAT
         };
         
         Texture();
@@ -70,7 +84,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(string name, uint32_t width, uint32_t height, GLenum format, TextureParameter parametr, GLenum dataType, const uint8_t* data);
+        Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data);
         
         /**
          * Конструктор.
@@ -80,7 +94,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(uint32_t width, uint32_t height, GLenum format, TextureParameter parametr, GLenum dataType, const uint8_t* data);
+        Texture(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data);
         
         Texture(Texture&& texture);
         
@@ -97,7 +111,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(string name, uint32_t width, uint32_t height, GLenum format, TextureParameter parametr, GLenum dataType, const uint8_t* data);
+        static Texture create(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data);
         
         /**
          * Функция предназначенная для создания текструы.
@@ -107,7 +121,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(uint32_t width, uint32_t height, GLenum format, TextureParameter parametr, GLenum dataType, const uint8_t* data);
+        static Texture create(uint32_t width, uint32_t height, PixelFormat format, TextureParameter parametr, DataType dataType, const uint8_t* data);
         
         uint32_t width() const noexcept;
         uint32_t height() const noexcept;
@@ -121,7 +135,7 @@ namespace pgl
         GLuint _width;
         GLuint _height;
         string _name;
-        GLenum _format;
+        PixelFormat _format;
         TextureParameter _parametr;
     };
 }

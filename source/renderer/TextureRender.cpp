@@ -3,7 +3,7 @@
 //  createNoise
 //
 //  Created by Асиф Мамедов on 19.10.2018.
-//  Copyright © 2018 Asif Mamedov. All rights reserved.
+//  Copyright © 2018 PGC. All rights reserved.
 //
 
 #include "TextureRender.h"
@@ -29,7 +29,7 @@ namespace pgl
         textureRender._handler = 0;
     }
     
-    TextureRender::TextureRender(Texture& texture, GLenum storFrom, uint32_t width, uint32_t height) :
+    TextureRender::TextureRender(const Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height) :
         TextureRender(create(texture, storFrom, width, height))
     {
     }
@@ -41,7 +41,7 @@ namespace pgl
         }
     }
     
-    TextureRender TextureRender::create(Texture texture, GLenum storFrom, uint32_t width, uint32_t height)
+    TextureRender TextureRender::create(const Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height)
     {
         TextureRender textureRender;
         
@@ -52,6 +52,7 @@ namespace pgl
         textureRender._sorageFormat = storFrom;
         
         glBindTexture(GL_TEXTURE_2D, textureRender._handler);
+        
         glTexStorage2D(GL_TEXTURE_2D, 1, storFrom, width, height);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, texture._format, texture._dataType, texture._data);
         

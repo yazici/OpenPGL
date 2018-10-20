@@ -1,9 +1,8 @@
 //
-//  TextureRender.hpp
-//  PGL
+//  Texture.h
 //
 //  Created by Асиф Мамедов on 16.10.2018.
-//  Copyright © 2018 Asif Mamedov. All rights reserved.
+//  Copyright © 2018 PGC. All rights reserved.
 //
 
 #ifndef _TEXTURE_RENDER_H
@@ -34,7 +33,7 @@ namespace pgl
          * Определяет внутренний размер (в зависимости от количиства
          * инициализированных каналов и их размера) буфера в котором будт хранится текстура.
          */
-        enum : GLenum
+        enum PixelFormat: GLenum
         {
             RGB = GL_RGB8,
             RGBA = GL_RGBA8,
@@ -55,7 +54,7 @@ namespace pgl
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        TextureRender(Texture& texture, GLenum storFrom, uint32_t width, uint32_t height);
+        TextureRender(const Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height);
         
         // TODO: определить поведение конструктора копирования.
         TextureRender(const TextureRender&) = default;
@@ -73,7 +72,7 @@ namespace pgl
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        static TextureRender create(Texture texture, GLenum storFrom, uint32_t width, uint32_t height);
+        static TextureRender create(const Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height);
         
         /**
          * Метод который делает текстуру активной и задаёт ей текструный слот.
