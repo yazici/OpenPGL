@@ -11,11 +11,10 @@ namespace pgl
 
 		DiamondSquare(float roughnes, int seed = 0);
 
-		HeightMap Generate(int w, int h) const;
+		HeightMap generate(int w, int h) const;
 
 	private:
 		float _roughness;
-		int _seed;
 	};
 }
 
