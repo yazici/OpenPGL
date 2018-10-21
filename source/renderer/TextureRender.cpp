@@ -3,13 +3,17 @@
 //  createNoise
 //
 //  Created by Асиф Мамедов on 19.10.2018.
-//  Copyright © 2018 PGC. All rights reserved.
+//  Copyright © 2018 PCG. All rights reserved.
 //
 
 #include "TextureRender.h"
 
 namespace pgl
 {
+    TextureParameter::TextureParameter(GLenum MinFilter, GLenum MagFilter, GLenum WrapS, GLenum WrapT)
+    {
+    }
+    
     TextureRender::TextureRender() :
         _handler(0),
         _width(0),
@@ -17,6 +21,12 @@ namespace pgl
         _locked(false),
         _sorageFormat(TextureRender::BLACK_WHITE)
     {
+    }
+    
+    TextureRender::TextureRender(PixelFormat storFrom, uint32_t width, uint32_t height) :
+        TextureRender(create(storFrom, width, height))
+    {
+        
     }
     
     TextureRender::TextureRender(TextureRender&& textureRender) :
@@ -29,8 +39,8 @@ namespace pgl
         textureRender._handler = 0;
     }
     
-    TextureRender::TextureRender(const Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height) :
-        TextureRender(create(texture, storFrom, width, height))
+    TextureRender::TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height) :
+        TextureRender(create(texture, storFrom, parametr, width, height))
     {
     }
     
@@ -41,7 +51,21 @@ namespace pgl
         }
     }
     
-    TextureRender TextureRender::create(const Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height)
+    TextureRender TextureRender::create(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height)
+    {
+        TextureRender textureRender = create(storFrom, width, height);
+        
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, texture._format, GL_UNSIGNED_BYTE, texture._data);
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parametr.magFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parametr.minFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, parametr.wrapS);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, parametr.wrapT);
+        
+        return textureRender;
+    }
+    
+    TextureRender TextureRender::create(TextureRender::PixelFormat storFrom, uint32_t width, uint32_t height)
     {
         TextureRender textureRender;
         
@@ -52,14 +76,7 @@ namespace pgl
         textureRender._sorageFormat = storFrom;
         
         glBindTexture(GL_TEXTURE_2D, textureRender._handler);
-        
         glTexStorage2D(GL_TEXTURE_2D, 1, storFrom, width, height);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, texture._format, texture._dataType, texture._data);
-        
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture._parametr.magFilter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture._parametr.minFilter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture._parametr.wrapS);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture._parametr.wrapT);
         
         return textureRender;
     }
@@ -102,16 +119,17 @@ namespace pgl
         _locked = false;
     }
     
-    void TextureRender::updateData(const Texture &texture) noexcept
+    void TextureRender::updateData(const Texture &texture, TextureParameter parametr) noexcept
     {
         if (_locked && _handler) {
             glBindTexture(GL_TEXTURE_2D, _handler);
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, texture._format, texture._dataType, texture._data);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, texture._format, GL_UNSIGNED_BYTE, texture._data);
             
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture._parametr.magFilter);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture._parametr.minFilter);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture._parametr.wrapS);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture._parametr.wrapT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parametr.magFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parametr.minFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, parametr.wrapS);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, parametr.wrapT);
+
         }
     }
 }

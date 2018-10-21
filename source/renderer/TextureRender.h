@@ -2,7 +2,7 @@
 //  Texture.h
 //
 //  Created by Асиф Мамедов on 16.10.2018.
-//  Copyright © 2018 PGC. All rights reserved.
+//  Copyright © 2018 PCG. All rights reserved.
 //
 
 #ifndef _TEXTURE_RENDER_H
@@ -12,6 +12,45 @@
 
 namespace pgl
 {
+    
+    /**
+     * Структура предназначена для использования, в случае если
+     * пользователю при создании текстуры нужно указать настройки
+     * для её создания.
+     *
+     * @property minFilter используется для определения того каким
+     *   способом накладывать текстуру на поверхность которая больше
+     *   самой текстуры. Для определения того какой цвет выдать пикселю
+     *   необходимо указать какой алгоритм использовать (к примеру GL_NEAREST)
+     * @property magFilter используется для определения того каким
+     *   способом накладывать текстуру на поверхность меньшую или равную
+     *   самой текстуре. Для определения того какой цвет выдать пикселю
+     *   необходимо указать какой алгоритм использовать (к примеру GL_NEAREST)
+     * @property wrapS необходим для определения того каким образом нужно
+     *   отрисовывать текстуру по оси s в случе если текстурные координаты выйдут
+     *   за пределы 0 или 1 (к примеру GL_REPEAT)
+     * @property wrapT необходим для поределения того каким образом нужно
+     *   отрисовывать текстуру по оси t в случе если текстурные координаты выйдут
+     *   за пределы 0 или 1 (к примеру GL_REPEAT)
+     */
+    struct TextureParameter
+    {
+        GLenum minFilter;
+        GLenum magFilter;
+        GLenum wrapS;
+        GLenum wrapT;
+        
+        /**
+         * Конструктор.
+         *
+         * @param MinFilter способом налажения текстуры на поверхность которая больше самой текстуры
+         * @param MagFilter способом налажения текстуры на поверхность меньшую или равную самой текстуре
+         * @param WrapS отрисовка по оси s в случие выхода за пределы 0 или 1
+         * @param WrapT отрисовка по оси t в случие выхода за пределы 0 или 1
+         */
+        TextureParameter(GLenum MinFilter = GL_LINEAR, GLenum MagFilter = GL_LINEAR, GLenum WrapS = GL_REPEAT, GLenum WrapT = GL_REPEAT);
+    };
+    
     /**
      * Данный класс отвечает за отрисовку объекта Texture.
      *
@@ -41,6 +80,19 @@ namespace pgl
         };
         
         TextureRender();
+        
+        /**
+         * Конструктор выделяющий необходимое количество памяти для текстуры в GPU.
+         *
+         * Примечание !!!
+         * Выделеннуя в GPU память нельзя будет изменить.
+         *
+         * @param storFrom формат хранения текстуры
+         * @param width ширина текстуры.
+         * @param height высота текстуры
+         */
+        TextureRender(PixelFormat storFrom, uint32_t width, uint32_t height);
+        
         TextureRender(TextureRender&& texureRender);
         
         /**
@@ -54,10 +106,9 @@ namespace pgl
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        TextureRender(const Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height);
+        TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
         
-        // TODO: определить поведение конструктора копирования.
-        TextureRender(const TextureRender&) = default;
+        TextureRender(const TextureRender&) = delete;
         
         ~TextureRender();
         
@@ -72,7 +123,18 @@ namespace pgl
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        static TextureRender create(const Texture& texture, PixelFormat storFrom, uint32_t width, uint32_t height);
+        static TextureRender create(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
+        
+        /**
+         * Функция преднаязначенная для создание объектов типа TextureRender.
+         * В данном случае, при создании объекта будет только выделяться память в GPU под текстуру.
+         * Для того что бы в дальнейшем в этот объект загрузить текстуру воспользуйтесь методом updateData.
+         *
+         * @param storFrom формат хранения текстуры
+         * @param width ширина текстуры.
+         * @param height высота текстуры
+         */
+        static TextureRender create(PixelFormat storFrom, uint32_t width, uint32_t height);
         
         /**
          * Метод который делает текстуру активной и задаёт ей текструный слот.
@@ -105,15 +167,16 @@ namespace pgl
          * Что бы это сделать не забудте заблокировать объект.
          *
          * @param texture текстура которую нужно загрузить
+         * @param parametr настройки отображения текстуры
          */
-        void updateData(const Texture& texture) noexcept;
+        void updateData(const Texture& texture, TextureParameter parametr = TextureParameter()) noexcept;
         
     private:
         GLuint _handler;
         GLuint _width;
         GLuint _height;
         bool _locked;
-        GLenum _sorageFormat;
+        PixelFormat _sorageFormat;
     };
 }
 

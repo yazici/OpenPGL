@@ -3,8 +3,8 @@
 namespace pgl
 {
 	HeightMap::HeightMap(int w, int h, const uint8_t * data) :
-		_map(w, h, Texture::BLACK_WHITE, GL_UNSIGNED_BYTE, data);
-	{
+        _map(w, h, Texture::PixelFormat::BLACK_WHITE, data)
+    {
 	}
 
 	HeightMap::HeightMap(const HeightMap & hm) :
