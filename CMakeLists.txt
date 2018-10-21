@@ -5,9 +5,27 @@ project(OpenPGL VERSION ${OPENPGL_VERSION} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 # Подключение библиотек
+set(LIBRARY_SDL2_DIR ${CMAKE_SOURCE_DIR}/library/sdl2/lib)
+set(LIBRARY_GLEW_DIR ${CMAKE_SOURCE_DIR}/library/glew/lib)
+if(WIN32)
+    set(WIN32_EXECUTABLE true)
+    link_libraries(opengl32.lib)
+    link_libraries(${LIBRARY_GLEW_DIR}/x86/glew32.lib)
+    link_libraries(${LIBRARY_SDL2_DIR}/x86/SDL2main.lib 
+                   ${LIBRARY_SDL2_DIR}/x86/SDL2.lib)
+elseif(APPLE)
+    message("MacOS is not supported.")
+endif()
 
 # Указываем путь к заголовочным файлам.
-include_directories(source)
+set(HEADER_GLEW_DIR    ${CMAKE_SOURCE_DIR}/library/glew/include)
+set(HEADER_SDL2_DIR    ${CMAKE_SOURCE_DIR}/library/sdl2/include)
+set(HEADER_GLM_DIR     ${CMAKE_SOURCE_DIR}/library/glm/include)
+set(HEADER_OPENPGL_DIR ${CMAKE_SOURCE_DIR}/source)
+include_directories(${HEADER_OPENPGL_DIR} 
+                    ${HEADER_GLEW_DIR}
+                    ${HEADER_SDL2_DIR}
+                    ${HEADER_GLM_DIR})
 
 # Поиск заголовочных файлов и файлов с исходным кодом.
 file(GLOB SOURCE_RENDERER  RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/renderer/*.cpp)
