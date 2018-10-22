@@ -37,7 +37,7 @@ namespace pgl
                 float amplitude = _persistence;
                 
                 for(uint8_t oct = 0; oct < _octave; oct++ ) {
-                    glm::vec2 p (x * freq, y * freq);
+                    vec2 p (x * freq, y * freq);
                     p += _shift;
                     p += _seed;
                     sum += glm::simplex(p) * amplitude;
