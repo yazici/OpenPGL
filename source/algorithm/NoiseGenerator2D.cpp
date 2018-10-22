@@ -28,29 +28,28 @@ namespace pgl
     {
         HeightMap map (w, h);
         
-        for (size_t i = 0; i < w; i++) {
-            for (size_t j = 0; j < h; j++) {
+        for(int i = 0; i < w; i++) {
+            for(int j = 0 ; j < h; j++) {
                 float x = (1.0f / (w - 1)) * i;
                 float y = (1.0f / (h - 1)) * j;
                 float sum = 0.0f;
                 float freq = _lacunarity;
                 float amplitude = _persistence;
                 
-                for (uint8_t oct = 0; oct < _octave; oct++) {
-                    vec2 p (x * freq, y * freq);
+                for(uint8_t oct = 0; oct < _octave; oct++ ) {
+                    glm::vec2 p (x * freq, y * freq);
                     p += _shift;
-                    
-                    sum += glm::simplex(p + vec2(_seed)) * amplitude;
+                    p += _seed;
+                    sum += glm::simplex(p) * amplitude;
                     
                     // Полученное значение приводится от 0 до 1
                     float result = (sum + _surfaceDepth) / 2.0f;
                     result = (result > 1.0f ? 1.0f : (result < 0.0 ? 0.0 : result));
-                    
-                    map.depth(x, y, (GLubyte) ( result * 255 ));
-                    
+                    map.depth(i, j, (GLubyte) ( result * 255 ));
                     freq *= _lacunarity;
                     amplitude *= _persistence;
                 }
+                
             }
         }
         
