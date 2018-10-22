@@ -20,7 +20,7 @@ namespace pgl
 		* 
 		* @return возвращается указатель на созданный объект.
 		*/
-		static VertexBuffer *create(size_t size, GLenum usage = GL_STATIC_DRAW, const void *data = nullptr);
+		static VertexBuffer *create(size_t size, const void *data = nullptr, GLenum usage = GL_STATIC_DRAW);
 
 		/**
 		* Деструктор объекта. Вызывает операцию очищения буфера данных.

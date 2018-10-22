@@ -5,7 +5,7 @@
 
 namespace pgl
 {
-	VertexBuffer * VertexBuffer::create(size_t size, GLenum usage, const void *data)
+	VertexBuffer * VertexBuffer::create(size_t size, const void *data, GLenum usage)
 	{
 		VertexBuffer *vbo = new VertexBuffer();
 		glGenBuffers(1, &(vbo->_handle));

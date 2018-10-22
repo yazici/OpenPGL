@@ -33,7 +33,7 @@ namespace pgl
          * @param surfaceDepth влияет на уровень поверхности над уровнем воды
          * @param octave количество суммирований волн (чем больше octave тем реалистичней результат)
          */
-        NoiseGenerator2D(int seed = 0, float lacunarity = 2.0f, float persistence = 0.5f, float surfaceDepth = 0.0f, uint8_t octave = 1, vec2 shift = {0.0f, 0.0f});
+        NoiseGenerator2D(float lacunarity = 2.0f, float persistence = 0.5f, float surfaceDepth = 0.0f, uint8_t octave = 1, vec2 shift = {0.0f, 0.0f}, int seed = 0);
         
         /**
          * Генерирует карту высот размером w*h.
