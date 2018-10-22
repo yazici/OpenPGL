@@ -6,8 +6,8 @@
 //  Copyright © 2018 PCG. All rights reserved.
 //
 
-#ifndef _TEXTURE_H
-#define _TEXTURE_H
+#ifndef _DATA_TEXTURE_H
+#define _DATA_TEXTURE_H
 
 #include <GL/glew.h>
 
@@ -148,4 +148,4 @@ namespace pgl
     };
 }
 
-#endif // !_RENDERER_TEXTURE_H
+#endif // !_DATA_TEXTURE_H

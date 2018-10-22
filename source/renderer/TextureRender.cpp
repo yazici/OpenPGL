@@ -26,7 +26,6 @@ namespace pgl
     TextureRender::TextureRender(PixelFormat storFrom, uint32_t width, uint32_t height) :
         TextureRender(create(storFrom, width, height))
     {
-        
     }
     
     TextureRender::TextureRender(TextureRender&& textureRender) :

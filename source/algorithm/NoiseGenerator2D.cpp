@@ -15,16 +15,16 @@ namespace pgl
     using glm::vec2;
     
     NoiseGenerator2D::NoiseGenerator2D(int seed, float lacunarity, float persistence, float surfaceDepth, uint8_t octave, vec2 shift) :
+        MapGenerator(seed),
         _lacunarity(lacunarity),
         _persistence(persistence),
         _surfaceDepth(surfaceDepth),
         _octave(octave),
         _shift(shift)
     {
-        _seed = seed;
     }
     
-    HeightMap NoiseGenerator2D::Generate(int w, int h) const
+    HeightMap NoiseGenerator2D::generate(int w, int h) const
     {
         HeightMap map (w, h);
         

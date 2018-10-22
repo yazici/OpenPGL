@@ -7,8 +7,8 @@
 //
 
 
-#ifndef NOISE_GENERATOR_2D_H
-#define NOISE_GENERATOR_2D_H
+#ifndef _ALGORITHM_NOISE_GENERATOR_2D_H
+#define _ALGORITHM_NOISE_GENERATOR_2D_H
 
 #include "../data/HeightMap.h"
 
@@ -46,7 +46,7 @@ namespace pgl
          * @param h высота карты.
          * @return возвращает карту высот.
          */
-        HeightMap Generate(int w, int h) const override;
+        HeightMap generate(int w, int h) const override;
         
     protected:
         float _lacunarity;
@@ -58,4 +58,4 @@ namespace pgl
 }
 
 
-#endif // !NOISE_GENERATOR_2D_H
+#endif // !_ALGORITHM_NOISE_GENERATOR_2D_H

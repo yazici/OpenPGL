@@ -1,12 +1,12 @@
 //
-//  Texture.h
+//  TextureRender.h
 //
 //  Created by Асиф Мамедов on 16.10.2018.
 //  Copyright © 2018 PCG. All rights reserved.
 //
 
-#ifndef _TEXTURE_RENDER_H
-#define _TEXTURE_RENDER_H
+#ifndef _RENDERER_TEXTURE_RENDER_H
+#define _RENDERER_TEXTURE_RENDER_H
 
 #include "../data/Texture.h"
 
@@ -180,4 +180,4 @@ namespace pgl
     };
 }
 
-#endif // !_TEXTURE_RENDER_H
+#endif // !_RENDERER_TEXTURE_RENDER_H

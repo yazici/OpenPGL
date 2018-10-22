@@ -27,7 +27,7 @@ namespace pgl
 	
 		/**
 		* Метод возвращает семя генерации.
-		* @param семя генерации.
+		* @return семя генерации.
 		*/
 		unsigned int seed() const noexcept;
 
