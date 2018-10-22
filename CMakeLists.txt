@@ -5,16 +5,24 @@ project(OpenPGL VERSION ${OPENPGL_VERSION} LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 # Подключение библиотек
-set(LIBRARY_SDL2_DIR ${CMAKE_SOURCE_DIR}/library/sdl2/lib)
-set(LIBRARY_GLEW_DIR ${CMAKE_SOURCE_DIR}/library/glew/lib)
+
 if(WIN32)
     set(WIN32_EXECUTABLE true)
+    
+    set(LIBRARY_SDL2_DIR ${CMAKE_SOURCE_DIR}/library/sdl2/lib)
+    set(LIBRARY_GLEW_DIR ${CMAKE_SOURCE_DIR}/library/glew/lib)
+    set(LIBRARY_GLEW ${LIBRARY_GLEW_DIR}/x86/glew32.lib)
+    set(LIBRARY_SDL2 "${LIBRARY_SDL2_DIR}/x86/SDL2main.lib
+                      ${LIBRARY_SDL2_DIR}/x86/SDL2.lib")
+
     link_libraries(opengl32.lib)
-    link_libraries(${LIBRARY_GLEW_DIR}/x86/glew32.lib)
-    link_libraries(${LIBRARY_SDL2_DIR}/x86/SDL2main.lib 
-                   ${LIBRARY_SDL2_DIR}/x86/SDL2.lib)
+    link_libraries(${LIBRARY_GLEW})
+    link_libraries(${LIBRARY_SDL2})
 elseif(APPLE)
-    message("MacOS is not supported.")
+    #message("MacOS is not supported.")
+    find_library(LIBRARY_SDL2 SDL2)
+    find_library(LIBRARY_GLEW GLEW)
+    find_library(LIBRARY_OPENGL opengl)
 endif()
 
 # Указываем путь к заголовочным файлам.
@@ -37,6 +45,8 @@ file(GLOB HEADER_ALGORITHM RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/algorit
 file(GLOB SOURCE_MAIN      RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/Main.cpp)
 
 # Группировка файлов по папкам.
+message(${SOURCE_ALGORITHM})
+message(${HEADER_ALGORITHM})
 source_group("renderer"  FILES ${SOURCE_RENDERER}  ${HEADER_RENDERER})
 source_group("data"      FILES ${SOURCE_DATA}      ${HEADER_DATA})
 source_group("algorithm" FILES ${SOURCE_ALGORITHM} ${HEADER_ALGORITHM})
@@ -48,3 +58,7 @@ add_executable(${PROJECT_NAME}
     ${SOURCE_ALGORITHM} 
     # Заголовочные файлы
     ${HEADER_RENDERER}  ${HEADER_DATA}     ${HEADER_ALGORITHM})
+
+if(APPLE)
+    target_link_libraries(${PROJECT_NAME} ${LIBRARY_SDL2} ${LIBRARY_GLEW} ${LIBRARY_OPENGL})
+endif()
