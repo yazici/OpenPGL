@@ -11,7 +11,7 @@ namespace pgl
 		glGenBuffers(1, &(vbo->_handle));
 
 		try {
-			vbo->newData(size, usage, data);
+			vbo->newData(size, data, usage);
 		} catch (const std::runtime_error &e) {
 			delete vbo;
 			std::rethrow_exception(std::current_exception());
@@ -31,18 +31,22 @@ namespace pgl
         glDeleteBuffers(1, &_handle);
     }
 	
-	void VertexBuffer::newData(size_t size, GLenum usage, const void *data)
+	void VertexBuffer::newData(size_t size, const void *data, GLenum usage)
 	{
 		assert(_handle);
 
+		if (0 == size) {
+			throw std::invalid_argument("New buffer size can't be zero.");
+		}
+
 		_size = size;
 		glBindBuffer(GL_ARRAY_BUFFER, _handle);
-		glBufferData(GL_ARRAY_BUFFER, size, data, usage);
+		glBufferData(GL_ARRAY_BUFFER, _size, data, usage);
 
 		int bufferSize = 0;
 		glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &bufferSize);
 
-		if ((size_t)bufferSize != size) {
+		if ((size_t)bufferSize != _size) {
 			// FIXME: Пояснение к исключению можно сделать понятнее.
 			throw std::runtime_error("OpenGL can't create a buffer with this size.");
 		}
@@ -64,6 +68,7 @@ namespace pgl
 
 	void VertexBuffer::bind() const noexcept
     {
+		assert(_handle);
         glBindBuffer(GL_ARRAY_BUFFER, _handle);
     }
 

@@ -36,7 +36,7 @@ namespace pgl
 		* @param data указатель на данные, которые будут скопированы в буфер данных.
 		* Если указатель NULL, то буфер указанного размера size все равно будет создан.
 		*/
-		void newData(size_t size, GLenum usage = GL_STATIC_DRAW, const void *data = nullptr);
+		void newData(size_t size, const void *data = nullptr, GLenum usage = GL_STATIC_DRAW);
 
 		/**
 		* Обновляет данные в созданом буфере. Обновлению подлежат только данные, которые

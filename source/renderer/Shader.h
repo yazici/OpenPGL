@@ -32,10 +32,15 @@ namespace pgl
 	private:
 
 		/**
-		* Компилирует шейдер.
+		* Компилирует шейдер с заданным исходным кодом.
+		* @param source исходный код шейдера.
 		*/
 		void Compile(const string_view &source);
 
+		/**
+		* Загружает исходный код из файла.
+		* @param path путь к файлу с исходным кодом.
+		*/	 
 		string LoadFromFile(const string_view &path);
 
 	private:
