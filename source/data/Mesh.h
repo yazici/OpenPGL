@@ -2,8 +2,8 @@
 #define _DATA_MESH_H
 
 #include <GL/glew.h>
-#include <vector>
 #include <glm/glm.hpp>
+#include <vector>
 
 namespace pgl
 {

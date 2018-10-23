@@ -10,7 +10,6 @@
 #define _DATA_TEXTURE_H
 
 #include <GL/glew.h>
-
 #include <string>
 
 using namespace std;

@@ -45,8 +45,6 @@ file(GLOB HEADER_ALGORITHM RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/algorit
 file(GLOB SOURCE_MAIN      RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/Main.cpp)
 
 # Группировка файлов по папкам.
-message(${SOURCE_ALGORITHM})
-message(${HEADER_ALGORITHM})
 source_group("renderer"  FILES ${SOURCE_RENDERER}  ${HEADER_RENDERER})
 source_group("data"      FILES ${SOURCE_DATA}      ${HEADER_DATA})
 source_group("algorithm" FILES ${SOURCE_ALGORITHM} ${HEADER_ALGORITHM})

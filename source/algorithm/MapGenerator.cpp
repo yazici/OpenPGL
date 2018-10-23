@@ -1,7 +1,7 @@
 #include <random>
 #include <cassert>
 
-#include "MapGenerator.h"
+#include "algorithm/MapGenerator.h"
 
 namespace pgl
 {
