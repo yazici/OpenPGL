@@ -1,7 +1,8 @@
 #ifndef _ALGORITHM_DIAMONDSQUARE_H
 #define _ALGORITHM_DIAMONDSQUARE_H
 
-#include "MapGenerator.h"
+#include "algorithm/MapGenerator.h"
+#include "data/HeightMap.h"
 
 namespace pgl
 {
@@ -9,9 +10,17 @@ namespace pgl
 	{
 	public:
 
-		DiamondSquare(float roughnes, int seed = 0);
+		DiamondSquare(float roughness, unsigned int seed = 0);
 
 		HeightMap generate(int w, int h) const override;
+
+		HeightMap generate(int size) const;
+
+	private:
+
+		void square(int x, int y, float *map);
+
+		void diamond(int x, int y, float *map);
 
 	private:
 		float _roughness;

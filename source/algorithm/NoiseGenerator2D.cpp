@@ -26,17 +26,17 @@ namespace pgl
     
     HeightMap NoiseGenerator2D::generate(int w, int h) const
     {
-        HeightMap map (w, h);
+        HeightMap map(w, h);
         
-        for(int i = 0; i < w; i++) {
-            for(int j = 0 ; j < h; j++) {
+        for (int i = 0; i < w; i++) {
+            for (int j = 0 ; j < h; j++) {
                 float x = (1.0f / (w - 1)) * i;
                 float y = (1.0f / (h - 1)) * j;
                 float sum = 0.0f;
                 float freq = _lacunarity;
                 float amplitude = _persistence;
                 
-                for(uint8_t oct = 0; oct < _octave; oct++ ) {
+                for (uint8_t oct = 0; oct < _octave; oct++) {
                     vec2 p (x * freq, y * freq);
                     p += _shift;
                     p += _seed;
