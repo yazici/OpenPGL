@@ -19,7 +19,7 @@ namespace pgl
         * Создает квадратную плоскость со стороной planeSize.
         *
         * @param divisions разрещение плоскости в полигонах.
-        * @param planeSize размер плоскости.
+        * @param planeSize размер стороны плоскости.
         * @return возвращает созданный меш.
         */
         static Mesh CreatePlane(size_t divisions, float planeSize);
@@ -48,6 +48,7 @@ namespace pgl
 
         /**
         * Сеттеры для инкапсулированных данных.
+        * @param i индекс данных.
         */
         vec3 &vertex(size_t i);
         vec3 &normal(size_t i);
@@ -56,6 +57,7 @@ namespace pgl
         
         /**
         * Геттеры для инкапсулированных данных.
+        * @param i индекс данных.
         */
         const vec3 &vertex(size_t i) const;
         const vec3 &normal(size_t i) const;
@@ -71,7 +73,9 @@ namespace pgl
         const vector<GLuint> &triangles() const;
 
         // TODO: operator = (const &)
+        Mesh &operator =(const Mesh &m);
         // TODO: operator = (const &&)
+        Mesh &operator =(const Mesh &&m);
     private:
         vector<vec3> _vertices;
         vector<vec3> _normals;

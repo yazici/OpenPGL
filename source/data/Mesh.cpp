@@ -150,4 +150,28 @@ namespace pgl
     {
         return _triangles;
     }
+
+    Mesh &Mesh::operator =(const Mesh &m)
+    {
+        if (&m != this) {
+            _vertices  = m._vertices;
+            _normals   = m._normals;
+            _uv        = m._uv;
+            _triangles = m._triangles;
+        }
+
+        return *this;
+    }
+
+    Mesh &Mesh::operator =(const Mesh &&m)
+    {
+        if (&m != this) {
+            _vertices  = std::move(m._vertices);
+            _normals   = std::move(m._normals);
+            _uv        = std::move(m._uv);
+            _triangles = std::move(m._triangles);    
+        }
+
+        return *this;
+    }
 }
