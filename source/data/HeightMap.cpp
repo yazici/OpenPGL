@@ -6,7 +6,7 @@
 //
 
 #include <cassert>
-#include "data/HeightMap.h"
+#include "../data/HeightMap.h"
 
 namespace pgl
 {

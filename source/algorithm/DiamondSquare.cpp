@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include "algorithm/DiamondSquare.h"
+#include "../algorithm/DiamondSquare.h"
 
 namespace pgl
 {

@@ -11,7 +11,7 @@
 #include <string>
 #include <cstdint>
 
-#include "data/Texture.h"
+#include "../data/Texture.h"
 
 using namespace std;
 

@@ -1,8 +1,8 @@
 #ifndef _ALGORITHM_DIAMONDSQUARE_H
 #define _ALGORITHM_DIAMONDSQUARE_H
 
-#include "algorithm/MapGenerator.h"
-#include "data/HeightMap.h"
+#include "../algorithm/MapGenerator.h"
+#include "../data/HeightMap.h"
 
 namespace pgl
 {
