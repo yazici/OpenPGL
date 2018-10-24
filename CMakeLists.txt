@@ -8,14 +8,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 if(WIN32)
     set(WIN32_EXECUTABLE true)
-    
+    set(LIBRARY_OPENGL opengl32.lib)
     set(LIBRARY_SDL2_DIR ${CMAKE_SOURCE_DIR}/library/sdl2/lib)
     set(LIBRARY_GLEW_DIR ${CMAKE_SOURCE_DIR}/library/glew/lib)
     set(LIBRARY_GLEW ${LIBRARY_GLEW_DIR}/x86/glew32.lib)
     set(LIBRARY_SDL2 "${LIBRARY_SDL2_DIR}/x86/SDL2main.lib"
                      "${LIBRARY_SDL2_DIR}/x86/SDL2.lib")
 
-    link_libraries(opengl32.lib)
+    link_libraries(LIBRARY_OPENGL)
     link_libraries(${LIBRARY_GLEW})
     link_libraries(${LIBRARY_SDL2})
 elseif(APPLE)
@@ -26,14 +26,14 @@ elseif(APPLE)
 endif()
 
 # Указываем путь к заголовочным файлам.
-set(HEADER_GLEW_DIR    ${CMAKE_SOURCE_DIR}/library/glew/include)
-set(HEADER_SDL2_DIR    ${CMAKE_SOURCE_DIR}/library/sdl2/include)
-set(HEADER_GLM_DIR     ${CMAKE_SOURCE_DIR}/library/glm/include)
 set(HEADER_OPENPGL_DIR ${CMAKE_SOURCE_DIR}/source)
+include_directories(${HEADER_OPENPGL_DIR})
 
 if(WIN32)
-    include_directories(${HEADER_OPENPGL_DIR} 
-                        ${HEADER_GLEW_DIR}
+    set(HEADER_GLEW_DIR    ${CMAKE_SOURCE_DIR}/library/glew/include)
+    set(HEADER_SDL2_DIR    ${CMAKE_SOURCE_DIR}/library/sdl2/include)
+    set(HEADER_GLM_DIR     ${CMAKE_SOURCE_DIR}/library/glm/include)
+    include_directories(${HEADER_GLEW_DIR}
                         ${HEADER_SDL2_DIR}
                         ${HEADER_GLM_DIR})
 elseif(APPLE)
