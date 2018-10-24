@@ -41,9 +41,9 @@ namespace pgl
 		}
 	}
 
-	string Shader::LoadFromFile(const string_view & path)
+	string Shader::LoadFromFile(const string_view &path)
 	{
-		ifstream file(_path);
+		ifstream file(path.data());
 
 		if (!file) {
 			throw runtime_error("File can't be opened.");
