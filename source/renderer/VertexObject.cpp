@@ -7,29 +7,38 @@ namespace pgl
 {
 	VertexObject::VertexObject(const Mesh & mesh)
 	{
-		/*glGenVertexArrays(1, &_vao);
+		glGenVertexArrays(1, &_vao);
 		glBindVertexArray(_vao);
+
 		_vbos.resize(3);
-		
-		_vbos[0].create(mesh.vertices().size() * sizeof(vec3), mesh.vertices().data());
-		_vbos[0].bind();
+
+		_vbos[0]->create(mesh.vertices().size() * sizeof(vec3), mesh.vertices().data());
+		_vbos[0]->bind();
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-		
-		_vbos[1].create(mesh.normals().size() * sizeof(vec3), mesh.normals().data());
-		_vbos[1].bind();
+
+		_vbos[0]->create(mesh.vertices().size() * sizeof(vec3), mesh.vertices().data());
+		_vbos[0]->bind();
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+
+		_vbos[1]->create(mesh.normals().size() * sizeof(vec3), mesh.normals().data());
+		_vbos[1]->bind();
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-		_vbos[2].create(mesh.uvs().size() * sizeof(vec2), mesh.uvs().data());
-		_vbos[2].bind();
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-		_vbos[2].unbind();
 
-		_indices.create(mesh.triangles());
-		glBindVertexArray(0);*/
+		_vbos[2]->create(mesh.uvs().size() * sizeof(vec2), mesh.uvs().data());
+		_vbos[2]->bind();
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+		glBindVertexArray(0);
 	}
 
 	VertexObject::~VertexObject()
 	{
+		for (auto n : _vbos){
+			delete n;
+		}
+
 		glDeleteVertexArrays(1, &_vao);
 	}
 	
@@ -37,5 +46,14 @@ namespace pgl
 	{
 		glBindVertexArray(_vao);
 		glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
+
+		void VertexObject::addAtribute(const VaoOption& option, size_t size, const void *data)
+	{
+		glBindVertexArray(_vao);
+		VertexBuffer *vbo = VertexBuffer::create(size, data);
+		vbo->bind();
+		glVertexAttribPointer(option.index, option.size, option.type, option.normalized, option.stride, option.pointer);
+		_vbos.push_back(vbo);
 	}
 }

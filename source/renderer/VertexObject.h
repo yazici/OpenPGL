@@ -17,6 +17,8 @@ namespace pgl
     {
     public:
 
+		struct VaoOption;
+
         /**
         * Создает OpenGL объект, который описывает данные вершин и используется для рендера этих 
         * данных.
@@ -40,11 +42,37 @@ namespace pgl
         void draw() const;
         //void Draw(const Shader &shader);
 
+		void addAtribute(const VaoOption& option, size_t size, const void *data);
+
     private:
-        vector<VertexBuffer> _vbos;
+        vector<VertexBuffer*> _vbos;
         IndexBuffer _indices;
         uint32_t _vao;
     };
+
+	/**
+	* Структура предназначенная для описания данных
+	* в буфере.
+	*/
+	struct VertexObject::VaoOption
+	{
+		/**
+		* @field index индекс атрибута.
+		* @field size количество компонентов атрибута.
+		* @field type тип данных, которые будут помещены в буфер.
+		* @field normalized булева переменная (GL_FALSE или GL_TRUE).
+		* @field stride смещение байта между последовательными атрибутами.
+		* @field pointer.
+		*/
+
+		GLuint index;
+		GLuint size;
+		GLenum type;
+		GLboolean normalized;
+		GLsizei stride;
+		const GLvoid* pointer;
+
+	};
 }
 
 #endif // !_RENDERER_VERTEXOBJECT_H
