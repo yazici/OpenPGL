@@ -12,8 +12,6 @@
 
 namespace pgl
 {
-    
-    
     template<class T>
     class MatrixView
     {
