@@ -17,7 +17,6 @@ namespace pgl
 
 	void Shader::Compile(const string_view &source)
 	{
-		assert(_handle);
 		_handle = glCreateShader(_type);
 
 		if (!_handle) {
@@ -51,7 +50,8 @@ namespace pgl
 
 		auto buf = file.rdbuf();
 		auto size = buf->pubseekoff(0, file.end);
-		string source(size, '\0');
+		buf->pubseekoff(0, file.beg);
+		string source((unsigned int)size, '\0');
 		buf->sgetn(&source[0], size);
 
 		return source;

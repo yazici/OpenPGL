@@ -21,10 +21,10 @@ namespace pgl
 		glAttachShader(_handle, _fragment._handle);
 		glLinkProgram(_handle);
 
-		int status = 0;
+		GLint status = 0;
 		glGetProgramiv(_handle, GL_LINK_STATUS, &status);
 		
-		if (status) {
+		if (!status) {
 			glGetProgramiv(_handle, GL_INFO_LOG_LENGTH, &status);
 			string log(status, '\0');
 			glGetProgramInfoLog(_handle, status, nullptr, &log[0]);

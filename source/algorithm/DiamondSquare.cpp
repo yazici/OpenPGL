@@ -21,6 +21,7 @@ namespace pgl
     HeightMap DiamondSquare::generate(int size) const
     {
         float *map = new float[size * size];
+		return HeightMap(10, 10);
     }
 
     void square(int x, int y, float *map)
