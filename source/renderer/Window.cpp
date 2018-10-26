@@ -138,4 +138,9 @@ namespace pgl
         
         return buttonValue;
     }
+    
+    void Window::messege(const string_view& title, const string_view& text, MessegeBoxType mesType) const
+    {
+        SDL_ShowSimpleMessageBox(mesType, title.data(), text.data(), _window);
+    }
 }
