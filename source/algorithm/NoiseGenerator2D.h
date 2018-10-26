@@ -10,11 +10,10 @@
 #ifndef _ALGORITHM_NOISE_GENERATOR_2D_H
 #define _ALGORITHM_NOISE_GENERATOR_2D_H
 
-#include "../data/HeightMap.h"
-
-#include "MapGenerator.h"
-
 #include <glm/glm.hpp>
+
+#include "data/HeightMap.h"
+#include "algorithm/MapGenerator.h"
 
 namespace pgl
 {

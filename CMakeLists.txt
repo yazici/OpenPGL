@@ -15,11 +15,14 @@ if(WIN32)
     set(LIBRARY_SDL2 "${LIBRARY_SDL2_DIR}/x86/SDL2main.lib"
                      "${LIBRARY_SDL2_DIR}/x86/SDL2.lib")
 
-    link_libraries(LIBRARY_OPENGL)
+    link_libraries(${LIBRARY_OPENGL})
     link_libraries(${LIBRARY_GLEW})
     link_libraries(${LIBRARY_SDL2})
+
+    file(COPY ${LIBRARY_SDL2_DIR}/x86/sdl2.dll 
+              ${LIBRARY_GLEW_DIR}/x86/glew32.dll
+			  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug/)
 elseif(APPLE)
-    #message("MacOS is not supported.")
     find_library(LIBRARY_SDL2 SDL2)
     find_library(LIBRARY_GLEW GLEW)
     find_library(LIBRARY_OPENGL opengl)
@@ -47,7 +50,7 @@ file(GLOB SOURCE_DATA       RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/data/*
 file(GLOB HEADER_DATA       RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/data/*.h)
 file(GLOB SOURCE_ALGORITHM  RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/algorithm/*.cpp)
 file(GLOB HEADER_ALGORITHM  RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/algorithm/*.h)
-file(GLOB SOURCE_CONTEINERS RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/data/conteiners/*.cpp)
+file(GLOB SOURCE_CONTEINERS RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/data/conteiners/*.inl)
 file(GLOB HEADER_CONTEINERS RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/data/conteiners/*.h)
 file(GLOB SOURCE_MAIN       RELATIVE ${CMAKE_CURRENT_BINARY_DIR} ./source/Main.cpp)
 
@@ -57,14 +60,14 @@ source_group("data"       FILES ${SOURCE_DATA}       ${HEADER_DATA})
 source_group("algorithm"  FILES ${SOURCE_ALGORITHM}  ${HEADER_ALGORITHM})
 source_group("conteiners" FILES ${SOURCE_CONTEINERS} ${HEADER_CONTEINERS})
 
-
 # Сборка решения.
 add_executable(${PROJECT_NAME}
     # Файлы исходного кода
     ${SOURCE_MAIN}      ${SOURCE_RENDERER} ${SOURCE_DATA}
-    ${SOURCE_ALGORITHM} 
+    ${SOURCE_ALGORITHM} ${SOURCE_CONTEINERS}
     # Заголовочные файлы
-    ${HEADER_RENDERER}  ${HEADER_DATA}     ${HEADER_ALGORITHM})
+    ${HEADER_RENDERER}  ${HEADER_DATA}     ${HEADER_ALGORITHM}
+	${HEADER_CONTEINERS})
 
 if(APPLE)
     target_link_libraries(${PROJECT_NAME} ${LIBRARY_SDL2} ${LIBRARY_GLEW} ${LIBRARY_OPENGL})
