@@ -5,6 +5,11 @@
 
 namespace pgl
 {
+	MapGenerator::MapGenerator() :
+		MapGenerator(0)
+	{
+	}
+
 	MapGenerator::MapGenerator(unsigned int seed) :
 		_seed(seed)
 	{

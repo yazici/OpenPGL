@@ -8,7 +8,7 @@
 #ifndef _RENDERER_TEXTURE_RENDER_H
 #define _RENDERER_TEXTURE_RENDER_H
 
-#include "../data/Texture.h"
+#include "data/Texture.h"
 
 namespace pgl
 {
