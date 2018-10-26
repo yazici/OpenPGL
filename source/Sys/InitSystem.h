@@ -50,6 +50,7 @@ namespace pgl::sys
          * Функция с помощью которой можно закинуть ошибку.
          */
         static void setSysError(const string_view& error) noexcept;
+        
     private:
         InitSystem();
         InitSystem(const InitSystem&) = delete;

@@ -123,7 +123,6 @@ namespace pgl
          */
         static Texture create(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
         
-        // TODO: Нужно ли добавить возможность выбирать тип пикселя при обновлении данных.
         /**
          * Метод предназначенный для обновления данных текстуры.
          *
