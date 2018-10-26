@@ -6,10 +6,12 @@
 //  Copyright © 2018 PCG. All rights reserved.
 //
 
-#include <exception>
+#include <stdexcept>
 
 namespace pgl
 {
+    using std::invalid_argument;
+    
     template<class T>
     class ArrayView
     {
