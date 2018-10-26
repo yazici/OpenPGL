@@ -12,6 +12,8 @@
 #include <GL/glew.h>
 #include <string>
 
+#include <data/conteiners/ArrayView.h>
+
 using namespace std;
 
 namespace pgl
@@ -137,6 +139,28 @@ namespace pgl
         
         string_view name() const noexcept;
         void name(string_view name);
+        
+        /**
+         * Методы, необходимые для получения срезки из массива,
+         * где хранится текстура.
+         *
+         * @param x индекс строки
+         * @throw возникает в случе если произошёл выход за границы срезки
+         * @return срезка
+         */
+        ArrayView<GLubyte> line(uint32_t x);
+        const ArrayView<GLubyte> line(uint32_t x) const;
+        
+        /**
+         * Метод с помощью которого можно получать доступ к отдельным тексклям.
+         *
+         * @param x индкс строки
+         * @param y индекс столбца
+         * @throw возникает в случе если произошёл выход за границы массива
+         * @return элемент текселя(зависит от представления в массиве)
+         */
+        GLubyte& at(uint32_t x, uint32_t y);
+        GLubyte at(uint32_t x, uint32_t y) const;
         
     protected:
         GLubyte* _data;

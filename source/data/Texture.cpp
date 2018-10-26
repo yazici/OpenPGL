@@ -180,4 +180,40 @@ namespace pgl
     {
         return _format;
     }
+    
+    ArrayView<GLubyte> Texture::line(uint32_t x)
+    {
+        if (x >= _width) {
+            throw invalid_argument("Crossing the array");
+        }
+        
+        return ArrayView<GLubyte> (_data +(_width * x), _data +(_width * x) + (_height - 1));;
+    }
+    
+    const ArrayView<GLubyte> Texture::line(uint32_t x) const
+    {
+        if (x >= _width) {
+            throw invalid_argument("Crossing the array");
+        }
+        
+        return ArrayView<GLubyte> (_data +(_width * x), _data +(_width * x) + (_height - 1));;
+    }
+    
+    GLubyte& Texture::at(uint32_t x, uint32_t y)
+    {
+        if (x >= _width || y >= _height) {
+            throw invalid_argument("Crossing the array");
+        }
+        
+        return _data[x * _width + y];
+    }
+    
+    GLubyte Texture::at(uint32_t x, uint32_t y) const
+    {
+        if (x >= _width || y >= _height) {
+            throw invalid_argument("Crossing the array");
+        }
+        
+        return _data[x * _width + y];
+    }
 }
