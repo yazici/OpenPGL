@@ -187,7 +187,7 @@ namespace pgl
             throw invalid_argument("Crossing the array");
         }
         
-        return ArrayView<GLubyte> (_data +(_width * x), _data +(_width * x) + (_height - 1));;
+        return ArrayView<GLubyte> (_data +(_width * x), _data +(_width * x) + (_height - 1));
     }
     
     const ArrayView<GLubyte> Texture::line(uint32_t x) const
@@ -196,7 +196,7 @@ namespace pgl
             throw invalid_argument("Crossing the array");
         }
         
-        return ArrayView<GLubyte> (_data +(_width * x), _data +(_width * x) + (_height - 1));;
+        return ArrayView<GLubyte> (_data +(_width * x), _data +(_width * x) + (_height - 1));
     }
     
     GLubyte& Texture::at(uint32_t x, uint32_t y)
