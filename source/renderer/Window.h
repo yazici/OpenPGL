@@ -16,13 +16,18 @@
 
 #include <iostream>
 
+#include <vector>
+
 #include <tuple>
+
+#include "Sys/InitSystem.h"
 
 namespace pgl
 {
     using std::string;
     using std::string_view;
     using std::tuple;
+    using pgl::sys::InitSystem;
     
     class Window
     {
@@ -117,18 +122,6 @@ namespace pgl
         uint32_t id() const noexcept;
         
         /**
-         * Функция предназначенная для вывода сообщеия.
-         *
-         * @param title титульник сообщения
-         * @param text текст передающий основную суть сообщения
-         * @param numButtons количество кнопок
-         * @param mesType тип сообщения
-         * @param ... названия кнопок типа 'const char*'
-         * @return номер нажатой кнопки
-         */
-        static int message(const char *titel, const char *text, Uint8 numButtons, MessegeBoxType mesType ...);
-        
-        /**
          * Метод предназначенная для вывода сообщеия (этот метод привязан к окну).
          *
          * @param title титульник сообщения
@@ -137,11 +130,15 @@ namespace pgl
          */
         void messege(const string_view& title, const string_view& text, MessegeBoxType mesType = MessegeBoxType::INFO) const;
         
+#include "Window.inl"
+        
     private:
         string _name;
         SDL_Window* _window;
         SDL_GLContext _context;
     };
+    
+
 }
 
 #endif // !_WINDOW_H_

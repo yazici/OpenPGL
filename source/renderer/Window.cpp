@@ -9,14 +9,11 @@
 
 #include <stdexcept>
 
-#include "Sys/InitSystem.h"
-
 namespace pgl
 {
     using namespace std;
     
     using std::runtime_error;
-    using pgl::sys::InitSystem;
     
     Window::Window(const string_view& name, int32_t w, int32_t h) :
         _name(name),
@@ -99,44 +96,6 @@ namespace pgl
     uint32_t Window::id() const noexcept
     {
         return SDL_GetWindowID(_window);
-    }
-    
-    int Window::message(const char *titel, const char *text, Uint8 numButtons, MessegeBoxType mesTypem, ...)
-    {
-        va_list ap;
-    
-        va_start(ap, &numButtons);
-        
-        SDL_MessageBoxButtonData* buttons = new SDL_MessageBoxButtonData [numButtons];
-        int buttonValue = 0;
-        
-        for (size_t i = 0; i < numButtons; i++, buttonValue++) {
-            
-            buttons[i].flags = (numButtons - i != 1 ? 0 : SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT);
-            buttons[i].buttonid = buttonValue;
-            buttons[i].text = va_arg(ap, const char*);
-        }
-        
-        SDL_MessageBoxData messageBoxData = {
-            
-            mesTypem,
-            nullptr,
-            titel,
-            text,
-            numButtons,
-            buttons,
-            nullptr
-        };
-        
-        if (SDL_ShowMessageBox(&messageBoxData, &buttonValue) < 0) {
-            cerr << "Error: " << InitSystem::getSysError() << endl;
-        }
-        
-        va_end(ap);
-        
-        delete [] buttons;
-        
-        return buttonValue;
     }
     
     void Window::messege(const string_view& title, const string_view& text, MessegeBoxType mesType) const

@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     
     win.clearColor(0.32f, 0.12f, 0.43f);
     
-    //Window::message("OpenPCG", "Open Procedural Generation Library ", 4, Window::MessegeBoxType::INFO, "Maxim", "Asif", "Lena", "Nastya");
+    Window::messege("OpenPCG", "Open Procedural Generation Library ", Window::MessegeBoxType::INFO, "Maxim", "Asif", "Lena", "Nastya");
     
     SDL_Event event;
     bool stay = true;
