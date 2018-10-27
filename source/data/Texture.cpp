@@ -140,11 +140,11 @@ namespace pgl
                 delete [] _data;
             }
             
-            _width = width;
-            _height = height;
-            
             _data = new GLubyte[width * height * sizeFormat];
         }
+        
+        _width = width;
+        _height = height;
         
         memcpy(_data, ptrData, width * height * sizeFormat);
     }
