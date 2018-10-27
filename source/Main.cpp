@@ -17,14 +17,14 @@ int main(int argc, char **argv)
     Window win("PGL", 800, 600);
     
     win.clearColor(0.32f, 0.12f, 0.43f);
-    win.clear();
-    win.present();
     
-    Window::message("OpenPCG", "Open Procedural Generation Library ", 4, Window::MessegeBoxType::INFO, "Maxim", "Asif", "Lena", "Nastya");
+    //Window::message("OpenPCG", "Open Procedural Generation Library ", 4, Window::MessegeBoxType::INFO, "Maxim", "Asif", "Lena", "Nastya");
     
     SDL_Event event;
     bool stay = true;
     
+	ShaderProgram s("shaders/rednerTexture.vert", "shaders/rednerTexture.frag");
+
     while (stay) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
