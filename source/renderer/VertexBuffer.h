@@ -10,14 +10,14 @@ namespace pgl
     public:
         
 		/**
-		* Метод создает буфер (vertex buffer object) для загрузки и хранения данных,
-		* предназначенных для рендера.
+		* Создает новое хранилище данных размером sizePerVertex * vertNum. Старое хранилище
+		* данных будет безвозвратно удалено.
 		*
-		* @param size размер буфера в байтах.
+		* @param sizePerVertex размер вершины.
+		* @param vertNum количество вершин.
 		* @param usage задает ожидаемый шаблон использования буфера данных.
 		* @param data указатель на данные, которые будут скопированы в буфер данных.
-		* Если указатель NULL, то буфер указанного размера size все равно будет создан.
-		* 
+		* Если указатель NULL, то буфер указанного размера sizePerVertex * vertNum все равно будет создан.
 		* @return возвращается указатель на созданный объект.
 		*/
 		static VertexBuffer *create(int sizePerVertex, int vertNum, const void *data = nullptr, GLenum usage = GL_STATIC_DRAW);
