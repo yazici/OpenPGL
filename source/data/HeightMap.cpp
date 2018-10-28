@@ -50,7 +50,7 @@ namespace pgl
 		return _height;
 	}
 
-	const Texture &HeightMap::texture() const
+	Texture HeightMap::texture() const
 	{
 		// TODO: На основе карты высот создать текстуру и вернуть ее.
 		return Texture();

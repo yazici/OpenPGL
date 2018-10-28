@@ -58,7 +58,7 @@ namespace pgl
         * Возвращает черно-белую текстуру, которая является картой высот.
         * @return текстура с картой высот.
         */
-		const Texture& texture() const;
+		Texture texture() const;
 
 	private:
 
