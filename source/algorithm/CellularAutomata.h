@@ -1,30 +1,27 @@
 #ifndef _ALGORITHM_CELLULARAUTOMATA_H
 #define _ALGORITHM_CELLULARAUTOMATA_H
 
+#include "MapGenerator.h"
+#include <functional>
+
+
 namespace pgl
 {
-	using namespace std;
-
-	class CellularAutomata
+	class CellularAutomata : public MapGenerator
 	{
-	private:
-		int *_map;
-		size_t _width;
-		size_t _height;
-		int _randomFillPercent;
-
 	public:
+		typedef std::function <int(int, int, HeightMap &)> COUNT_NEIGHBOURS;
 
-		CellularAutomata();
-		CellularAutomata(size_t width, size_t height);
-		~CellularAutomata();
+		CellularAutomata(unsigned int seed, unsigned int chance, unsigned int birth,
+			unsigned int death, unsigned int epoch, COUNT_NEIGHBOURS);
 
-		size_t width();
-		size_t height();
+		HeightMap generate(int w, int h) const = 0;
 
-		void randomFillMap();
-		void smoothMap(int count);
-		int calculateNeighbours(int x, int y);
+	private:
+		unsigned int _chance;
+		unsigned int _birth;
+		unsigned int _death;
+		unsigned int _epoch;
 	};
 }
 #endif // !_ALGORITHM_CELLULARAUTOMATA_H
