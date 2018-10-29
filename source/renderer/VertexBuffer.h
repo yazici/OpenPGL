@@ -10,17 +10,17 @@ namespace pgl
     public:
         
 		/**
-		* Метод создает буфер (vertex buffer object) для загрузки и хранения данных,
-		* предназначенных для рендера.
+		* Создает новое хранилище данных размером sizePerVertex * vertNum. Старое хранилище
+		* данных будет безвозвратно удалено.
 		*
-		* @param size размер буфера в байтах.
+		* @param sizePerVertex размер вершины.
+		* @param vertNum количество вершин.
 		* @param usage задает ожидаемый шаблон использования буфера данных.
 		* @param data указатель на данные, которые будут скопированы в буфер данных.
-		* Если указатель NULL, то буфер указанного размера size все равно будет создан.
-		* 
+		* Если указатель NULL, то буфер указанного размера sizePerVertex * vertNum все равно будет создан.
 		* @return возвращается указатель на созданный объект.
 		*/
-		static VertexBuffer *create(size_t size, const void *data = nullptr, GLenum usage = GL_STATIC_DRAW);
+		static VertexBuffer *create(int sizePerVertex, int vertNum, const void *data = nullptr, GLenum usage = GL_STATIC_DRAW);
 
 		/**
 		* Деструктор объекта. Вызывает операцию очищения буфера данных.
@@ -28,26 +28,26 @@ namespace pgl
         ~VertexBuffer();
 		
 		/**
-		* Создает новое хранилище данных заданого размера size. Старое хранилище
+		* Создает новое хранилище данных размером sizePerVertex * vertNum. Старое хранилище
 		* данных будет безвозвратно удалено.
 		*
-		* @param size размер буфера в байтах.
+		* @param sizePerVertex размер вершины.
+		* @param vertNum количество вершин.
 		* @param usage задает ожидаемый шаблон использования буфера данных.
 		* @param data указатель на данные, которые будут скопированы в буфер данных.
-		* Если указатель NULL, то буфер указанного размера size все равно будет создан.
+		* Если указатель NULL, то буфер указанного размера sizePerVertex * vertNum все равно будет создан.
 		*/
-		void newData(size_t size, const void *data = nullptr, GLenum usage = GL_STATIC_DRAW);
+		void newData(int sizePerVertex, int vertNum, const void *data = nullptr, GLenum usage = GL_STATIC_DRAW);
 
 		/**
 		* Обновляет данные в созданом буфере. Обновлению подлежат только данные, которые
-		* хранятся в буфере сам буфер не будет создан заного или перераспределен.
+		* хранятся в буфере, сам буфер не будет создан заного или перераспределен.
 		*
-		* @param offset смещение от начала буфера где начнется обновление данных.
-		* Измеряется в байтах.
-		* @param len количество байтов, подлежащих обновлению. 
+		* @param offset смещение в вершинах от начала буфера где начнется обновление данных.
+		* @param len количество вершин, подлежащих обновлению. 
 		* @param data указатель на данные, которые будут скопированы в буфер.
 		*/
-		void updateData(size_t offset, size_t len, const void *data);
+		void updateData(int offset, int len, const void *data);
 			
 		/**
 		* Привязывает буфер к цели GL_ARRAY_BUFFER. 
@@ -67,7 +67,9 @@ namespace pgl
 
     private:
         GLuint _handle;
-		size_t _size;
+		int _sizePerVertex;
+		int _vertNumber;
+		GLenum _usage;
     };
 }
 

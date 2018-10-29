@@ -38,6 +38,7 @@ namespace pgl
             BGR = GL_BGR,
             BGRA = GL_BGRA
         };
+
         
         /**
          * Объединение определяющее тип данных в массиве.
@@ -52,6 +53,42 @@ namespace pgl
             INT = GL_INT,
             FLOAT = GL_FLOAT
         };
+        
+        /**
+         * Класс необходимый для коректной работы с текселем.
+         */
+        class Texel
+        {
+        public:
+            
+            /**
+             * Конструктор.
+             *
+             * @param texel указатель на тексель
+             * @param format формат текселя
+             */
+            Texel(GLubyte* texel, PixelFormat format) :
+                _texel(texel),
+                _format(format)
+            {
+            }
+            
+            void red(GLubyte r);
+            void green(GLubyte g);
+            void blue(GLubyte b);
+            void alpha(GLubyte a);
+            
+            GLubyte red();
+            GLubyte green();
+            GLubyte blue();
+            GLubyte alpha();
+            
+            
+        private:
+            GLubyte* _texel;
+            PixelFormat _format;
+        };
+
         
         Texture();
         
@@ -158,13 +195,14 @@ namespace pgl
          * @throw возникает в случе если произошёл выход за границы массива
          * @return элемент текселя(зависит от представления в массиве)
          */
-        GLubyte& at(uint32_t x, uint32_t y);
-        GLubyte at(uint32_t x, uint32_t y) const;
+        Texel at(uint32_t x, uint32_t y);
+        const Texel at(uint32_t x, uint32_t y) const;
         
     protected:
         GLubyte* _data;
         GLuint _width;
         GLuint _height;
+        GLuint _bpp;
         string _name;
         PixelFormat _format;
     };

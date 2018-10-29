@@ -20,6 +20,7 @@ namespace pgl
         _data(nullptr),
         _width(0),
         _height(0),
+        _bpp(1),
         _name("no name"),
         _format(Texture::PixelFormat::BLACK_WHITE)
     {
@@ -89,6 +90,7 @@ namespace pgl
         _data(new GLubyte [texture._width * texture._height * pixelSizeof(texture._format)]),
         _width(texture._width),
         _height(texture._height),
+        _bpp(texture._bpp),
         _name(texture._name),
         _format(texture._format)
     {
@@ -99,6 +101,7 @@ namespace pgl
         _data(texture._data),
         _width(texture._width),
         _height(texture._height),
+        _bpp(texture._bpp),
         _name(texture._name),
         _format(texture._format)
     {
@@ -112,11 +115,12 @@ namespace pgl
         texture._name = name;
         texture._width = width;
         texture._height = height;
+        texture._bpp = pixelSizeof(format);
         texture._format = format;
-        texture._data = new GLubyte [width * height * pixelSizeof(format)];
+        texture._data = new GLubyte [width * height * texture._bpp];
         
         if (data) {
-            memcpy(texture._data, data, width * height * pixelSizeof(format));
+            memcpy(texture._data, data, width * height * texture._bpp);
         }
         
         return texture;
@@ -133,20 +137,18 @@ namespace pgl
             throw invalid_argument("pointer is zero");
         }
         
-        size_t sizeFormat = pixelSizeof(_format);
-        
         if (width * height != _width * _height) {
             if (_data) {
                 delete [] _data;
             }
             
-            _width = width;
-            _height = height;
-            
-            _data = new GLubyte[width * height * sizeFormat];
+            _data = new GLubyte[width * height * _bpp];
         }
         
-        memcpy(_data, ptrData, width * height * sizeFormat);
+        _width = width;
+        _height = height;
+        
+        memcpy(_data, ptrData, width * height * _bpp);
     }
     
     Texture::~Texture()
@@ -187,7 +189,7 @@ namespace pgl
             throw invalid_argument("Crossing the array");
         }
         
-        return ArrayView<GLubyte> (_data +(_width * x), _data +(_width * x) + (_height - 1));;
+        return ArrayView<GLubyte> (_data +(_width * x * _bpp), _data +(_width * x) + (_height * _bpp - 1));
     }
     
     const ArrayView<GLubyte> Texture::line(uint32_t x) const
@@ -196,24 +198,88 @@ namespace pgl
             throw invalid_argument("Crossing the array");
         }
         
-        return ArrayView<GLubyte> (_data +(_width * x), _data +(_width * x) + (_height - 1));;
+        return ArrayView<GLubyte> (_data +(_width * x * _bpp), _data +(_width * x) + (_height * _bpp - 1));
     }
     
-    GLubyte& Texture::at(uint32_t x, uint32_t y)
+    Texture::Texel Texture::at(uint32_t x, uint32_t y)
     {
         if (x >= _width || y >= _height) {
             throw invalid_argument("Crossing the array");
         }
         
-        return _data[x * _width + y];
+        return Texel(&_data[(x * _width + y) * _bpp], _format);
     }
     
-    GLubyte Texture::at(uint32_t x, uint32_t y) const
+    const Texture::Texel Texture::at(uint32_t x, uint32_t y) const
     {
         if (x >= _width || y >= _height) {
             throw invalid_argument("Crossing the array");
         }
         
-        return _data[x * _width + y];
+        return Texel(&_data[(x * _width + y) * _bpp], _format);
+    }
+    
+    void Texture::Texel::red(GLubyte r)
+    {
+        _texel[(_format == PixelFormat::BGR || _format == PixelFormat::BGRA ? 2 : 0)] = r;
+    }
+    
+    void Texture::Texel::green(GLubyte g)
+    {
+        if (_format == PixelFormat::BLACK_WHITE) {
+            throw runtime_error("Error pixel format BLACK_WHITE");
+        }
+        
+        _texel[1] = g;
+    }
+    
+    void Texture::Texel::blue(GLubyte b)
+    {
+        if (_format == PixelFormat::BLACK_WHITE) {
+            throw runtime_error("Error pixel format BLACK_WHITE");
+        }
+        
+        _texel[(_format == PixelFormat::BGR || _format == PixelFormat::BGRA ? 0 : 2)] = b;
+    }
+    
+    void Texture::Texel::alpha(GLubyte a)
+    {
+        if (_format == PixelFormat::BLACK_WHITE) {
+            throw runtime_error("Error pixel format BLACK_WHITE");
+        }
+        
+        _texel[3] = a;
+    }
+    
+    GLubyte Texture::Texel::red()
+    {
+        return _texel[(_format == PixelFormat::BGR || _format == PixelFormat::BGRA ? 2 : 0)];
+    }
+    
+    GLubyte Texture::Texel::green()
+    {
+        if (_format == PixelFormat::BLACK_WHITE) {
+            throw runtime_error("Error pixel format BLACK_WHITE");
+        }
+        
+        return _texel[1];
+    }
+    
+    GLubyte Texture::Texel::blue()
+    {
+        if (_format == PixelFormat::BLACK_WHITE) {
+            throw runtime_error("Error pixel format BLACK_WHITE");
+        }
+        
+        return _texel[(_format == PixelFormat::BGR || _format == PixelFormat::BGRA ? 0 : 2)];
+    }
+    
+    GLubyte Texture::Texel::alpha()
+    {
+        if (_format == PixelFormat::BLACK_WHITE) {
+            throw runtime_error("Error pixel format BLACK_WHITE");
+        }
+        
+        return _texel[3];
     }
 }

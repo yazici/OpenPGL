@@ -1,47 +1,45 @@
 #ifndef _RENDERER_INDEXBUFFER_H
 #define _RENDERER_INDEXBUFFER_H
 
-#include <vector>
 #include <GL/glew.h>
 
 namespace pgl
 {
-	using std::vector;
-
     class IndexBuffer
     {
 	public:
-		IndexBuffer();
 
 		/**
-		* @param indx вектор, в котором определены идексы
+		* Метод создает индексный буфер (element buffer object) для загрузки и хранения данных,
+		* предназначенных для рендера.
+		*
+		* @param number количество индексов.
+		* @param indx указатель на данные, которые будут скопированы.
+		* @param usage ожидаемый шаблон использования буфера данных.
+		* Если указатель NULL, то буфер все равно будет создан.
+		* @return возвращается указатель на созданный объект.
 		*/
-		IndexBuffer(const vector<GLuint> &indx);
-
-		/**
-		* @param indx массив в котором определены индексы
-		* @param size размер массива
-		*/
-		IndexBuffer(const GLuint *indx, size_t size);
-
-		IndexBuffer(const IndexBuffer &i) = delete;
-
+		static IndexBuffer *create(int number, const GLuint *indx = nullptr, GLenum usage = GL_STATIC_DRAW);
+		
 		~IndexBuffer();
 
 		/**
-		* Метод, с помощью котрого инициализируется объект.
-		*
-		* @param indx вектор, в котором определены идексы
+		* Создает новый буфер для хранения number индексов. Старый буфер данных будет безвозвратно удален.
+		* 
+		* @param number количество индексов.
+		* @param indx указатель на данные, которые будут скопированы.
+		* @param usage ожидаемый шаблон использования буфера данных.
 		*/
-		void create(const vector<GLuint> &indx);
+		void newData(int number, const GLuint *indx = nullptr, GLenum usage = GL_STATIC_DRAW);
 
 		/**
-		* Метод, с помощью котрого инициализируется объект.
-		*
-		* @param indx массив в котором определены индексы
-		* @param size размер массива
+		* Обновляет индексы в созданом буфере. Обновлению подлежат только данные.
+		* 
+		* @param offset смещение от начала буфера.
+		* @param len количество индексов, которые будут обновлены.
+		* @param data массив индексов.
 		*/
-		void create(const GLuint *indx, size_t size);
+		void updateData(int offset, int len, const void *data);
 
 		/**
 		* Делает буфер текущим.
@@ -57,11 +55,16 @@ namespace pgl
 		* Возвращает количество индексов хранящихся в буфере.
 		* @return количество индексов
 		*/
-		size_t size() const noexcept;
+		int size() const noexcept;
+
+	private:
+
+		IndexBuffer();
 
 	private:
 		GLuint _handle;
-		size_t _countIndices;
+		int _indexNumber;
+		GLenum _usage;
     };
 }
 
