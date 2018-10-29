@@ -7,6 +7,8 @@
 
 #include "renderer/Window.h"
 
+#include "data/Texture.h"
+
 using namespace pgl::sys;
 using namespace pgl;
 
