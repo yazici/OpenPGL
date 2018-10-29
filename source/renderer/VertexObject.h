@@ -8,6 +8,7 @@
 
 #include "renderer/IndexBuffer.h"
 #include "renderer/VertexBuffer.h"
+#include "renderer/ShaderProgram.h"
 
 namespace pgl
 {
@@ -56,9 +57,15 @@ namespace pgl
         */
         ~VertexObject();
 
+		void addIndexBuffer(IndexBuffer *ebo);
+
 		void addVertexBuffer(const std::string &n, VertexBuffer *buffer);
 
 		void addVertexBuffer(const std::string &n, VertexBuffer *buffer, const AttributeInfo &info);
+
+		void addAttributeInfo(const std::string &buffer, const AttributeInfo &attr);
+
+		void draw(const ShaderProgram &sp) const;
 
 	private:
 
