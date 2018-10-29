@@ -1,39 +1,20 @@
-#include <ctime>
+#include <random>
 #include <iostream>
 
 #include "CellularAutomata.h"
 
+
 namespace pgl
 {
 
-	CellularAutomata::CellularAutomata()
+	CellularAutomata::CellularAutomata(unsigned int seed, unsigned int chance, unsigned int birth,
+		unsigned int death, unsigned int epoch, COUNT_NEIGHBOURS)
 	{
-	}
-
-	CellularAutomata::CellularAutomata(size_t width, size_t height)
-	{
-		_width = width;
-		_height = height;
-
-		_map = new int[_width*_height];
-		randomFillMap();
-
-		smoothMap(5);
-	}
-
-	CellularAutomata::~CellularAutomata()
-	{
-		delete[] _map;
-	}
-
-	size_t CellularAutomata::width()
-	{
-		return _width;
-	}
-
-	size_t CellularAutomata::height()
-	{
-		return _height;
+		_seed = seed;
+		_chance = chance;
+		_birth = birth;
+		_death = death;
+		_epoch = epoch;
 	}
 
 	//рандомное заполнение карты
