@@ -10,18 +10,34 @@
 
 namespace pgl
 {
-	HeightMap::HeightMap(size_t w, size_t h, const uint8_t *data) :
-		_width(w),
-		_height(h),
-        _map(w, h, Texture::BLACK_WHITE, data)
+	HeightMap::HeightMap(size_t w, size_t h, const float *data)
 	{
+		_init(w, h, data);
 	}
 
-	HeightMap::HeightMap(const HeightMap &hm) :
-		_width(hm._width),
-		_height(hm._height),
-		_map(hm._map)
+	HeightMap::HeightMap(const HeightMap &hm)
 	{
+		_init(hm._width, hm._height, hm._map.data());
+	}
+
+	void HeightMap::_init(size_t w, size_t h, const float *data)
+	{
+		if (0 == w) {
+			throw std::invalid_argument("The width of map can't be zero.");
+		} else if (0 == h) {
+			throw std::invalid_argument("The height of map can't be zero.");
+		}
+
+		_width = w;
+		_height = h;
+
+		if (data) {
+			_map.assign(data, data + w * h);
+		} else {
+			_map.assign(w * h, 0.0f);
+		}
+		
+		assert(_map.size() == w * h);
 	}
 
 	size_t HeightMap::width() const noexcept
@@ -34,20 +50,19 @@ namespace pgl
 		return _height;
 	}
 
-	const Texture & HeightMap::texture() const
+	Texture HeightMap::texture() const
 	{
-		return _map;
+		// TODO: На основе карты высот создать текстуру и вернуть ее.
+		return Texture();
 	}
-    
-    uint8_t HeightMap::depth(size_t x, size_t y) const noexcept
-    {
-		assert(_map._data);
-        return _map._data[x * _map._width + y];
-    }
-    
-    void HeightMap::depth(size_t x, size_t y, uint8_t v) noexcept
-    {
-		assert(_map._data);
-        _map._data[x * _map._width + y] = v;
-    }
+
+	float HeightMap::depth(size_t x, size_t y) const noexcept
+	{
+		return _map[y * _width + x];
+	}
+
+	void HeightMap::depth(size_t x, size_t y, float v) noexcept
+	{
+		_map[y * _width + x] = v;
+	}
 }

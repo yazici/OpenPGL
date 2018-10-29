@@ -142,11 +142,11 @@ namespace pgl
                 delete [] _data;
             }
             
-            _width = width;
-            _height = height;
-            
             _data = new GLubyte[width * height * _bpp];
         }
+        
+        _width = width;
+        _height = height;
         
         memcpy(_data, ptrData, width * height * _bpp);
     }
@@ -189,7 +189,7 @@ namespace pgl
             throw invalid_argument("Crossing the array");
         }
         
-        return ArrayView<GLubyte> (_data + (_width * x), _data + (_width * x) + (_height - 1));;
+        return ArrayView<GLubyte> (_data +(_width * x * _bpp), _data +(_width * x) + (_height * _bpp - 1));
     }
     
     const ArrayView<GLubyte> Texture::line(uint32_t x) const
@@ -198,7 +198,7 @@ namespace pgl
             throw invalid_argument("Crossing the array");
         }
         
-        return ArrayView<GLubyte> (_data +(_width * x), _data +(_width * x) + (_height - 1));;
+        return ArrayView<GLubyte> (_data +(_width * x * _bpp), _data +(_width * x) + (_height * _bpp - 1));
     }
     
     Texture::Texel Texture::at(uint32_t x, uint32_t y)
