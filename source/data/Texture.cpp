@@ -9,7 +9,7 @@
 
 #include <string_view>
 
-#include <exception>
+#include <stdexcept>
 
 namespace pgl
 {
