@@ -52,8 +52,7 @@ namespace pgl
 
 	Texture HeightMap::texture() const
 	{
-        Texture texture(_width, _height, Texture::PixelFormat::BLACK_WHITE, &_map[0]);
-		return texture;
+		return Texture(_width, _height, Texture::PixelFormat::BLACK_WHITE, &_map[0]);
 	}
 
 	float HeightMap::depth(size_t x, size_t y) const noexcept

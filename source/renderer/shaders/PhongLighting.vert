@@ -22,7 +22,6 @@ void main()
     
     Color = Ld * Kd * max(dot(s, tnorm), 0.0f);
     Color = mix(Color, VertexColor, 0.5);
-    
     gl_Position = ProjectionMatrix * eyeCoord;
 }
 
