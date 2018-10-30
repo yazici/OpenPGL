@@ -1,8 +1,8 @@
 #version 410
 
 layout (location = 0) in vec3 VertexPosition;
-layout (location = 1) in vec3 VertexColor;
-layout (location = 2) in vec3 VertexNormalize;
+layout (location = 1) in vec3 VertexNormalize;
+layout (location = 3) in vec3 VertexColor;
 
 uniform vec4 LightPosition;
 uniform vec3 Ld;

@@ -43,11 +43,11 @@ auto createVao()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
     normal = VertexBuffer::create(sizeof(vec3), m.normals().size(), m.normals().data());
 //    normal = VertexBuffer::create(sizeof(vec3), sizeof(normalizeData)/sizeof(float), normalizeData);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
     ebo = IndexBuffer::create(m.triangles().size(), m.triangles().data());
 //    ebo = IndexBuffer::create(3, index);
     glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(1);
     return data;
 }
 
@@ -179,8 +179,8 @@ void compileShaders()
         throw runtime_error("Error create shader");
     }
     
-    string vertStringCode(readFile("/Users/asifmamedov/Desktop/ambient/ambient/basic.vert"));
-    string fragStringCode(readFile("/Users/asifmamedov/Desktop/ambient/ambient/basic.frag"));
+    string vertStringCode(readFile("/Users/asifmamedov/Desktop/PGL/OpenPGL/source/renderer/shaders/PhongLighting.vert"));
+    string fragStringCode(readFile("/Users/asifmamedov/Desktop/PGL/OpenPGL/source/renderer/shaders/PhongLighting.frag"));
     
     const char* vertCode = vertStringCode.c_str();
     const char* fragCode = fragStringCode.c_str();
