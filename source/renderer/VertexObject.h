@@ -43,7 +43,7 @@ namespace pgl
 	const AttributeInfo AttributeInfo::NORMAL   = {"normal",   1, 3, GL_FLOAT, GL_FALSE, 0, 0};
 	const AttributeInfo AttributeInfo::TEXCOORD = {"texCoord", 2, 2, GL_FLOAT, GL_FALSE, 0, 0};
 	const AttributeInfo AttributeInfo::COLOR    = {"color",    3, 3, GL_FLOAT, GL_FALSE, 0, 0};
-
+    
     class VertexObject
     {
     public:

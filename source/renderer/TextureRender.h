@@ -106,7 +106,7 @@ namespace pgl
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
+        TextureRender(const Texture texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
         
         TextureRender(const TextureRender&) = delete;
         
@@ -123,7 +123,7 @@ namespace pgl
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        static TextureRender create(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
+        static TextureRender create(const Texture texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
         
         /**
          * Функция преднаязначенная для создание объектов типа TextureRender.

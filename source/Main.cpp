@@ -8,6 +8,9 @@
 #include "renderer/Window.h"
 
 #include "data/Texture.h"
+#include "renderer/TextureRender.h"
+
+#include "algorithm/NoiseGenerator2D.h"
 
 using namespace pgl::sys;
 using namespace pgl;
@@ -20,16 +23,31 @@ int main(int argc, char **argv)
     
     win.clearColor(0.32f, 0.12f, 0.43f);
     
-    Window::messege("OpenPCG", "Open Procedural Generation Library ", Window::MessegeBoxType::INFO, "Maxim", "Asif", "Lena", "Nastya");
+    NoiseGenerator2D noisGen;
+    auto heightMap = noisGen.generate(500, 500);
     
-    SDL_Event event;
+    TextureParameter param = {
+        GL_LINEAR,
+        GL_LINEAR,
+        GL_REPEAT,
+        GL_REPEAT
+    };
+    
+    ShaderProgram program("/Users/asifmamedov/Desktop/PGL/OpenPGL/source/renderer/shaders/rednerTexture.vert", "/Users/asifmamedov/Desktop/PGL/OpenPGL/source/renderer/shaders/rednerTexture.frag");
+    
+    program.use();
+    
+    assert(!glGetError());
+    
+    TextureRender noiseTextureRender = TextureRender::create(heightMap.texture(), TextureRender::PixelFormat::BLACK_WHITE, param, 500, 500);
+    noiseTextureRender.bind();
+    
     bool stay = true;
+    SDL_Event event;
     
-	ShaderProgram s("shaders/rednerTexture.vert", "shaders/rednerTexture.frag");
-
     while (stay) {
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
+            if (event.type == SDL_QUIT || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                 stay = false;
             }
         }

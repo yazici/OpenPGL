@@ -67,7 +67,7 @@ namespace pgl
              * @param texel указатель на тексель
              * @param format формат текселя
              */
-            Texel(GLubyte* texel, PixelFormat format) :
+            Texel(GLfloat* texel, PixelFormat format) :
                 _texel(texel),
                 _format(format)
             {
@@ -78,14 +78,14 @@ namespace pgl
             void blue(GLubyte b);
             void alpha(GLubyte a);
             
-            GLubyte red();
-            GLubyte green();
-            GLubyte blue();
-            GLubyte alpha();
+            GLfloat red();
+            GLfloat green();
+            GLfloat blue();
+            GLfloat alpha();
             
             
         private:
-            GLubyte* _texel;
+            GLfloat* _texel;
             PixelFormat _format;
         };
 
@@ -121,7 +121,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const float* data);
         
         /**
          * Конструктор.
@@ -131,7 +131,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        Texture(uint32_t width, uint32_t height, PixelFormat format, const float* data);
         
         Texture(Texture&& texture);
         
@@ -148,7 +148,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        static Texture create(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const float* data);
         
         /**
          * Функция предназначенная для создания текструы.
@@ -158,7 +158,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        static Texture create(uint32_t width, uint32_t height, PixelFormat format, const uint8_t* data);
+        static Texture create(uint32_t width, uint32_t height, PixelFormat format, const float* data);
         
         /**
          * Метод предназначенный для обновления данных текстуры.
@@ -167,7 +167,7 @@ namespace pgl
          * @param width ширина текстуры
          * @param height высота текстуры
          */
-        void data(const uint8_t* ptrData, uint32_t width, uint32_t height);
+        void data(const float* ptrData, uint32_t width, uint32_t height);
         
         uint32_t width() const noexcept;
         uint32_t height() const noexcept;
@@ -184,8 +184,8 @@ namespace pgl
          * @throw возникает в случе если произошёл выход за границы срезки
          * @return срезка
          */
-        ArrayView<GLubyte> line(uint32_t x);
-        const ArrayView<GLubyte> line(uint32_t x) const;
+        ArrayView<GLfloat> line(uint32_t x);
+        const ArrayView<GLfloat> line(uint32_t x) const;
         
         /**
          * Метод с помощью которого можно получать доступ к отдельным тексклям.
@@ -199,7 +199,7 @@ namespace pgl
         const Texel at(uint32_t x, uint32_t y) const;
         
     protected:
-        GLubyte* _data;
+        GLfloat* _data;
         GLuint _width;
         GLuint _height;
         GLuint _bpp;

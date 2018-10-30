@@ -38,7 +38,7 @@ namespace pgl
         textureRender._handler = 0;
     }
     
-    TextureRender::TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height) :
+    TextureRender::TextureRender(const Texture texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height) :
         TextureRender(create(texture, storFrom, parametr, width, height))
     {
     }
@@ -50,11 +50,11 @@ namespace pgl
         }
     }
     
-    TextureRender TextureRender::create(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height)
+    TextureRender TextureRender::create(const Texture texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height)
     {
         TextureRender textureRender = create(storFrom, width, height);
         
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, texture._format, GL_UNSIGNED_BYTE, texture._data);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, texture._format, GL_FLOAT, texture._data);
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parametr.magFilter);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parametr.minFilter);
