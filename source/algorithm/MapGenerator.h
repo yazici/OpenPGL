@@ -1,6 +1,7 @@
 #ifndef _ALGORITHM_MAPGENERATOR_H
 #define _ALGORITHM_MAPGENERATOR_H
 
+#include "data/HeightMap.h"
 namespace pgl
 {
     class HeightMap;
