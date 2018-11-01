@@ -12,14 +12,33 @@ namespace pgl
 	public:
 		typedef std::function<int(int, int, HeightMap &)> CountNeighbours;
 
-		CellularAutomata(unsigned int seed, unsigned int chance, unsigned int birth,
-			unsigned int death, unsigned int epoch, CountNeighbours &func);
+		CellularAutomata(float chance, unsigned int birth, unsigned int death,
+			unsigned int epoch, CountNeighbours &funcunsigned, unsigned int seed = 0);
 
-		HeightMap generate(int w, int h) const = 0;
+		/**
+		* ћетод, который генерирует карту высот с помощью клеточного автомата.
+		*
+		* @param w ширина карты
+		* @param h высота карты
+		*
+		* @return карта высот.
+		*/
+		HeightMap generate(int w, int h);
+
+		/**
+		* ћетод, который считает количество соседей по окрестности фон Ќеймана.
+		*
+		* @param x координата по оси абсцисс
+		* @param y координата по оси ординат
+		* @param map карта высот
+		*
+		* @return количество соседей точки по окрестности фон Ќеймана.
+		*/
+		static int FonNeymanNeighbourhood(int x, int y, HeightMap &map);
 
 	private:
 		CountNeighbours _func;
-		unsigned int _chance;
+		float _chance;
 		unsigned int _birth;
 		unsigned int _death;
 		unsigned int _epoch;
