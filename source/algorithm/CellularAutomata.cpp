@@ -20,7 +20,7 @@ namespace pgl
 
 	int CellularAutomata::FonNeymanNeighbourhood(int x, int y, HeightMap &map)
 	{
-		int wallCount;
+		int wallCount = 0;
 
 		for (int neighbourY = y - 1; neighbourY <= y + 1; neighbourY++) {
 			if (x >= 0 && x < map.width() && neighbourY >= 0 && neighbourY < map.height()) {
