@@ -3,12 +3,15 @@
 
 #include <GL/glew.h>
 #include <map>
+#include <vector>
 #include <string>
 #include <string_view>
 
 #include "renderer/IndexBuffer.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/ShaderProgram.h"
+
+using namespace std;
 
 namespace pgl
 {
@@ -29,27 +32,22 @@ namespace pgl
 		static const AttributeInfo NORMAL;
 		static const AttributeInfo TEXCOORD;
 		static const AttributeInfo COLOR;
-		
-		std::string name;
+		static const AttributeInfo VERTEX;
+
+		string name;
 		GLuint index;
 		GLuint size;
 		GLenum type;
 		GLboolean normalized;
 		GLsizei stride;
 		GLsizei pointer;
-
 	};
-
-	const AttributeInfo AttributeInfo::POSITION = {"position", 0, 3, GL_FLOAT, GL_FALSE, 0, 0};
-	const AttributeInfo AttributeInfo::NORMAL   = {"normal",   1, 3, GL_FLOAT, GL_FALSE, 0, 0};
-	const AttributeInfo AttributeInfo::TEXCOORD = {"texCoord", 2, 2, GL_FLOAT, GL_FALSE, 0, 0};
-	const AttributeInfo AttributeInfo::COLOR    = {"color",    3, 3, GL_FLOAT, GL_FALSE, 0, 0};
     
     class VertexObject
     {
     public:
 
-		static VertexObject *create(const std::string_view &name);
+		static VertexObject *create(const string_view &name);
 
         /**
         * Освобождает выделенные ресурсы в том числе и загруженные при помощи функций OpenGL 
@@ -59,25 +57,30 @@ namespace pgl
 
 		void addIndexBuffer(IndexBuffer *ebo);
 
-		void addVertexBuffer(const std::string &n, VertexBuffer *buffer);
-
-		void addVertexBuffer(const std::string &n, VertexBuffer *buffer, const AttributeInfo &info);
-
-		void addAttributeInfo(const std::string &buffer, const AttributeInfo &attr);
+		void addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr);
+		void addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr1, const AttributeInfo &attr2);
+		void addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr1, const AttributeInfo &attr2, const AttributeInfo &attr3);
+		void addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr1, const AttributeInfo &attr2, const AttributeInfo &attr3, const AttributeInfo &attr4);
+		void addVertexBuffer(VertexBuffer *buffer, const vector<AttributeInfo> &attribs);
 
 		void draw(const ShaderProgram &sp) const;
+
+		void draw() const;
 
 	private:
 
 		VertexObject();
+		
+		void _addVertexBuffer(VertexBuffer *buffer);
+		void _addAttributeInfo(const AttributeInfo &attr);
 
     private:
 
-		std::map<std::string, VertexBuffer *> _vertexBuffers;
+		vector<VertexBuffer *> _vertexBuffers;
 
-		std::map<std::string, int> _attribLocation;
+		map<string, int> _attribLocation;
 		
-		std::string _name;
+		string _name;
 
 		IndexBuffer *_ebo;
         
