@@ -64,7 +64,7 @@ namespace pgl
 			throw invalid_argument("This attribute has already been added in this vertex object.");
 		}
 
-		iter->second = attr.index;
+		_attribLocation[attr.name] = attr.index;
 		glVertexAttribPointer(attr.index, attr.size, attr.type, attr.normalized, attr.stride, (const void *)attr.pointer);
 		glEnableVertexAttribArray(attr.index);
 	}

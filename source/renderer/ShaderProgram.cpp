@@ -166,17 +166,15 @@ namespace pgl
 	* @param name имя матрицы.
 	* @param v матрица.
 	*/
-	void ShaderProgram::uniform(const string_view & name, const mat3 & v)
+	void ShaderProgram::uniform(const string_view &name, const mat3 &v)
 	{
-		assert(_handle);
 		int loc = uniformLocation(name);
 		glUniformMatrix3fv(loc, 1, GL_FALSE, value_ptr(v));
 	}
 
-	void ShaderProgram::uniform(const string_view & name, const mat4 & v)
+	void ShaderProgram::uniform(const string_view &name, const mat4 &v)
 	{
-		assert(_handle);
 		int loc = uniformLocation(name);
-		glUniformMatrix3fv(loc, 1, GL_FALSE, value_ptr(v));
+		glUniformMatrix4fv(loc, 1, GL_FALSE, value_ptr(v));
 	}
 }
