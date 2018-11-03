@@ -21,9 +21,13 @@ int main(int argc, char **argv)
 	Window window("OpenPGL", 800, 600);
 
 
-	CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
-	CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
+//    CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
+//    CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
+    
+    NoiseGenerator2D alg(50.0, 0.8, 0.2, 6);
+    
 	HeightMap map = alg.generate(5, 5);
+    
 	Mesh plane = map.toMesh();
 
 	IndexBuffer *ebo = IndexBuffer::create(plane.triangles().size(), plane.triangles().data());
