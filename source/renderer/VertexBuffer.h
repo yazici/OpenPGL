@@ -59,6 +59,12 @@ namespace pgl
 		*/
         void unbind() const noexcept;
 
+		/**
+		* Возвращает количество элементов в буфере.
+		* @return количество элементов в буфере.
+		*/
+		int size() const noexcept;
+
 	private:
 
 		VertexBuffer();

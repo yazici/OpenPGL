@@ -55,16 +55,53 @@ namespace pgl
         */
         ~VertexObject();
 
+		/**
+		* Привязывает буфер индексов.
+		* 
+		* @param ebo указатель на буфер.
+		* @exception invalid_argument, если указатель ebo равен 0.
+		*/
 		void addIndexBuffer(IndexBuffer *ebo);
 
-		void addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr);
+		/**
+		* Привязывает буфер вершин и настраивает атрибуты вершин, которые ссылаются на буфер.
+		* 
+		* @param buffer указатель на буфер вершин. Не может принимать значения null.
+		* @param attr[1..4] атрибуты вершин, которые будут привязаны к текущему буферу buffer. Атрибуты вершин
+		* не должные содержать одинаковые значения поля name. Атрибуты вершин не должны повторяться и не могут 
+		* быть привязаны дважды.
+		* 
+		* @exception invalid_argument, если buffer указывает на null.
+		* @exception invalid_argument, если атрибут вершины с таким именем уже привязан к VertexObject.
+		*/
+		void addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr1);
 		void addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr1, const AttributeInfo &attr2);
 		void addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr1, const AttributeInfo &attr2, const AttributeInfo &attr3);
 		void addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr1, const AttributeInfo &attr2, const AttributeInfo &attr3, const AttributeInfo &attr4);
+
+		/**
+		* Привязывает буфер вершин и настраивает атрибуты вершин, которые ссылаются на буфер. Вектор атрибутов
+		* может заполняться при помощи initializer_list, поэтому возможен такой вызов функции.
+		* voa->addVertexBuffer(vbo, {AttributeInfo::POSITION, AttributeInfo::COLOR, AttributeInfo::NORMAL, AttributeInfo::TEXCOORD});
+		*
+		* @param buffer указатель на буфер вершин. Не может принимать значения null.
+		* @param attribs вектор атрибутов. Атрибуты вершин, которые будут привязаны к текущему буферу buffer. 
+		* Атрибуты вершин не должные содержать одинаковые значения поля name. Атрибуты вершин не должны повторяться 
+		* и не могут быть привязаны дважды.
+		*
+		* @exception invalid_argument, если buffer указывает на null.
+		* @exception invalid_argument, если атрибут вершины с таким именем уже привязан к VertexObject.
+		*/
 		void addVertexBuffer(VertexBuffer *buffer, const vector<AttributeInfo> &attribs);
 
+		/**
+		* Отрисовывает примитивы с использованием указанной шейдерной программы.
+		*/
 		void draw(const ShaderProgram &sp) const;
 
+		/**
+		* Отрисовывает примитивы с учетом того, что нужная шейдерная программа уже является частью рендера.
+		*/
 		void draw() const;
 
 	private:

@@ -61,7 +61,7 @@ namespace pgl
 		auto iter = _attribLocation.find(attr.name);
 
 		if (iter != _attribLocation.end()) {
-			throw runtime_error("This attribute has already been added in this vertex object.");
+			throw invalid_argument("This attribute has already been added in this vertex object.");
 		}
 
 		iter->second = attr.index;
@@ -69,7 +69,7 @@ namespace pgl
 		glEnableVertexAttribArray(attr.index);
 	}
 
-	void VertexObject::addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr)
+	void VertexObject::addVertexBuffer(VertexBuffer *buffer, const AttributeInfo &attr1)
 	{
 		assert(_handle);
 
@@ -77,7 +77,7 @@ namespace pgl
 		buffer->bind();
 		glBindVertexArray(_handle);
 
-		_addAttributeInfo(attr);
+		_addAttributeInfo(attr1);
 
 		buffer->unbind();
 		glBindVertexArray(0);

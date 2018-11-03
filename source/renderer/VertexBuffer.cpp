@@ -19,7 +19,7 @@ namespace pgl
 		return vbo;
 	}
 
-	VertexBuffer::VertexBuffer() : 
+	VertexBuffer::VertexBuffer() :
 		_handle(0),
 		_sizePerVertex(0),
 		_vertNumber(0),
@@ -81,4 +81,9 @@ namespace pgl
     {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+
+	int VertexBuffer::size() const noexcept
+	{
+		return _vertNumber;
+	}
 }
