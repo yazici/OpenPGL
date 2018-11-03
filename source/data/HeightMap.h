@@ -2,6 +2,8 @@
 #define _DATA_HEIGHTMAP_H
 
 #include <vector>
+
+#include "data/Mesh.h"
 #include "data/Texture.h"
 
 namespace pgl
@@ -59,6 +61,8 @@ namespace pgl
         * @return текстура с картой высот.
         */
 		Texture texture() const;
+
+		Mesh toMesh() const;
 
 	private:
 

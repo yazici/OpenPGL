@@ -55,6 +55,19 @@ namespace pgl
 		return Texture(_width, _height, Texture::PixelFormat::BLACK_WHITE, &_map[0]);
 	}
 
+	Mesh HeightMap::toMesh() const
+	{
+		Mesh plane = Mesh::createPlane(_width, 8.0f);
+
+		for (int y = 0; y < _height; ++y) {
+			for (int x = 0; x < _width; ++x) {
+				plane.vertex(y * _width + x).y = _map[y * _width + x];
+			}
+		}
+
+		return plane;
+	}
+
 	float HeightMap::depth(size_t x, size_t y) const noexcept
 	{
 		return _map[y * _width + x];

@@ -5,7 +5,7 @@
 
 namespace pgl
 {
-    Mesh Mesh::CreatePlane(size_t divisions, float planeSize)
+    Mesh Mesh::createPlane(size_t divisions, float planeSize)
     {
         size_t size = divisions + 1;
         size_t cVert = size * size;
@@ -25,7 +25,7 @@ namespace pgl
                                                  y * divisionSize - halfPlaneSize);
 
                 plane._normals[line + x] = vec3(0.0f, 1.0f, 0.0f);
-                plane._uv[line + x] = vec2((float)x / divisions, 1.0f - y / divisions);
+                plane._uv[line + x] = vec2((float)x / divisions, 1.0f - (float)y / divisions);
 
                 if (x < divisions && y < divisions) {
                     GLuint tLeft = (GLuint)(y * size + x);

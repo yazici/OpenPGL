@@ -45,7 +45,7 @@ namespace pgl
                     // Полученное значение приводится от 0 до 1
                     float result = (sum + _surfaceDepth) / 2.0f;
                     result = (result > 1.0f ? 1.0f : (result < 0.0f ? 0.0f : result));
-                    map.depth(i, j, (GLubyte) ( result * 255 ));
+                    map.depth(i, j, result);
                     freq *= _lacunarity;
                     amplitude *= _persistence;
                 }

@@ -22,7 +22,7 @@ namespace pgl
         * @param planeSize размер стороны плоскости.
         * @return возвращает созданный меш.
         */
-        static Mesh CreatePlane(size_t divisions, float planeSize);
+        static Mesh createPlane(size_t divisions, float planeSize);
 
         /**
         * Конструктор с заданными параметрами для создания меша.
