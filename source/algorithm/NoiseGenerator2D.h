@@ -47,6 +47,16 @@ namespace pgl
          */
         HeightMap generate(int w, int h) const override;
         
+        // TODO: Не решён вопрос с _seed и функциями распределения.
+        
+        /**
+         * Фукция шума.
+         *
+         * @param st место положение точки
+         * @return значение шума
+         */
+        static float PerlineNoise (vec2 st);
+        
     protected:
         float _lacunarity;
         float _persistence;
