@@ -24,9 +24,9 @@ int main(int argc, char **argv)
 //    CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
 //    CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
     
-    NoiseGenerator2D alg(50.0, 0.8, 0.2, 6);
+    NoiseGenerator2D alg(2.0, 0.79, 0.2, 11, {12.0, 3.0});
     
-	HeightMap map = alg.generate(5, 5);
+	HeightMap map = alg.generate(50, 60);
     
 	Mesh plane = map.toMesh();
 

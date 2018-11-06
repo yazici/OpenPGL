@@ -15,6 +15,8 @@
 #include "data/HeightMap.h"
 #include "algorithm/MapGenerator.h"
 
+#include <vector>
+
 namespace pgl
 {
     using glm::vec2;
@@ -47,17 +49,12 @@ namespace pgl
          */
         HeightMap generate(int w, int h) const override;
         
-        // TODO: Не решён вопрос с _seed и функциями распределения.
-        
-        /**
-         * Фукция шума.
-         *
-         * @param st место положение точки
-         * @return значение шума
-         */
-        static float PerlineNoise (vec2 st);
+        // TODO: Не решён вопрос с функциями распределения.
         
     protected:
+        
+        float PerlineNoise (vec2 st, const vector<uint32_t>& permutation, const vector<vec2>& gradient) const;
+        
         float _lacunarity;
         float _persistence;
         float _surfaceDepth;
