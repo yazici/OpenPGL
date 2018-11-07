@@ -8,13 +8,9 @@
 
 #include "NoiseGenerator2D.h"
 
-#include <glm/gtc/noise.hpp>
+#include <glm/detail/_noise.hpp>
 
 #include <random>
-
-#include <glm/gtc/random.hpp>
-
-#include <iostream>
 
 namespace pgl
 {
@@ -24,15 +20,13 @@ namespace pgl
     using glm::mix;
     using glm::fract;
 
-    float NoiseGenerator2D::PerlineNoise(vec2 st, const vector<uint32_t>& permutation, const vector<vec2>& gradient) const
+    float NoiseGenerator2D::PerlineNoise(vec2 st) const
     {
         tvec2<int> b0, b1;
         vec2 r0, r1, s;
         
-        /**
-         * Находим координаты левой верхней вершины квадрата,
-         * затем находим локальные координаты точки внутри квадрата.
-         */
+        //Находим координаты левой верхней вершины квадрата,
+        //затем находим локальные координаты точки внутри квадрата.
         b0 = floor(st);
         r0 = fract(st);
         
@@ -42,26 +36,27 @@ namespace pgl
         // Будем интерполировать локальну координату с помощью криаой Гунтиса.
         s = r0 * r0 * (vec2(3.0) - vec2(2.0) * r0);
         
-        /**
-         * Далее будем извлекать градиент для всех вершин квадрата.
-         */
-        size_t i = permutation[b0.x], j = permutation[b1.x];
-        size_t  b00 = permutation[i + b0.y], b01 = permutation[i + b1.y], b10 = permutation[j + b0.y], b11 = permutation[j + b1.y];
+         // Далее будем извлекать градиент для всех вершин квадрата.
+        size_t i = glm::detail::permute(b0.x) % _gradient.size(), j = glm::detail::permute(b1.x) % _gradient.size();
+        
+        size_t  b00 , b01, b10, b11;
+        
+        b00 = glm::detail::permute(i + b0.y) % _gradient.size();
+        b01 = glm::detail::permute(i + b1.y)  % _gradient.size();
+        b10 = glm::detail::permute(j + b0.y) % _gradient.size();
+        b11 = glm::detail::permute(j + b1.y) % _gradient.size();
         
         float a, b, u, v;
         
-        /**
-         * Вычисляем скалаярное произведение между которыми будем итерполировать,
-         * а затем производим линейную интерполяцию
-         */
-        
-        u = r0.x * gradient[b00].x + r0.y * gradient[b00].y;
-        v = r1.x * gradient[b10].x + r0.y * gradient[b10].y;
+        // Вычисляем скалаярное произведение между которыми будем итерполировать,
+        //а затем производим линейную интерполяцию
+        u = r0.x * _gradient[b00].x + r0.y * _gradient[b00].y;
+        v = r1.x * _gradient[b10].x + r0.y * _gradient[b10].y;
         
         a = mix(u, v, s.x);
         
-        u = r0.x * gradient[b01].x + r1.y * gradient[b01].y;
-        v = r1.x * gradient[b11].x + r1.y * gradient[b11].y;
+        u = r0.x * _gradient[b01].x + r1.y * _gradient[b01].y;
+        v = r1.x * _gradient[b11].x + r1.y * _gradient[b11].y;
         
         b = mix(u, v, s.x);
         
@@ -74,28 +69,24 @@ namespace pgl
         _persistence(persistence),
         _surfaceDepth(surfaceDepth),
         _octave(octave),
-        _shift(shift)
+        _shift(shift),
+        _gradient(rand() % 1000 + 1)
     {
-    }
-    
-    HeightMap NoiseGenerator2D::generate(int w, int h) const
-    {
-        HeightMap map(w, h);
-        
         // TODO: Данная функция расспределения здесь временна т. к. мы еще не о
         // пределили механизм передачи разных функций распределения
         std::random_device rd;  //Will be used to obtain a seed for the random number engine
         std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
         std::normal_distribution<> dis(-1.0, 1.0);
         
-        vector<uint32_t> permutation(w * h * 2);
-        vector<vec2> gradient(w * h * 2);
-        
-        for (size_t i = 0; i < gradient.size(); i++) {
-            permutation[i] = rand() % (w * h);
-            gradient[i].x = dis(gen);
-            gradient[i].y = dis(gen);
+        for (size_t i = 0; i < _gradient.size(); i++) {
+            _gradient[i].x = dis(gen);
+            _gradient[i].y = dis(gen);
         }
+    }
+    
+    HeightMap NoiseGenerator2D::generate(int w, int h) const
+    {
+        HeightMap map(w, h);
         
         for(int i = 0; i < w; i++) {
             for(int j = 0; j < h; j++) {
@@ -108,7 +99,7 @@ namespace pgl
                 for(int oct = 0; oct < _octave; oct++ ) {
                     glm::vec2 p (x * freq, y * freq);
                     p += _shift;
-                    sum += PerlineNoise(p, permutation, gradient) * amplitude;
+                    sum += PerlineNoise(p) * amplitude;
                     
                     // Полученное значение приводится от 0 до 1
                     float result = (sum + _surfaceDepth) / 2.0f;

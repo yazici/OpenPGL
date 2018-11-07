@@ -20,6 +20,7 @@
 namespace pgl
 {
     using glm::vec2;
+    using std::vector;
     
     class NoiseGenerator2D : public MapGenerator
     {
@@ -53,13 +54,14 @@ namespace pgl
         
     protected:
         
-        float PerlineNoise (vec2 st, const vector<uint32_t>& permutation, const vector<vec2>& gradient) const;
+        float PerlineNoise (vec2 st) const;
         
         float _lacunarity;
         float _persistence;
         float _surfaceDepth;
         uint8_t _octave;
         vec2 _shift;
+        vector<vec2> _gradient;
     };
 }
 
