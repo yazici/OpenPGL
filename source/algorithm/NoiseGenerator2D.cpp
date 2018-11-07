@@ -19,6 +19,7 @@ namespace pgl
     using glm::smoothstep;
     using glm::mix;
     using glm::fract;
+    using glm::floor;
     using glm::detail::permute;
 
     float NoiseGenerator2D::PerlineNoise(vec2 st) const
@@ -43,7 +44,7 @@ namespace pgl
         size_t  b00 , b01, b10, b11;
         
         b00 = permute(i + b0.y) % _gradient.size();
-        b01 = permute(i + b1.y)  % _gradient.size();
+        b01 = permute(i + b1.y) % _gradient.size();
         b10 = permute(j + b0.y) % _gradient.size();
         b11 = permute(j + b1.y) % _gradient.size();
         
@@ -98,7 +99,7 @@ namespace pgl
                 float amplitude = _persistence;
                 
                 for(int oct = 0; oct < _octave; oct++ ) {
-                    glm::vec2 p (x * freq, y * freq);
+                    vec2 p (x * freq, y * freq);
                     p += _shift;
                     sum += PerlineNoise(p) * amplitude;
                     
