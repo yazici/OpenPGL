@@ -10,7 +10,7 @@
 
 namespace pgl
 {
-	HeightMap::HeightMap(size_t w, size_t h, const float *data)
+	HeightMap::HeightMap(int w, int h, const float *data)
 	{
 		_init(w, h, data);
 	}
@@ -20,7 +20,7 @@ namespace pgl
 		_init(hm._width, hm._height, hm._map.data());
 	}
 
-	void HeightMap::_init(size_t w, size_t h, const float *data)
+	void HeightMap::_init(int w, int h, const float *data)
 	{
 		if (0 == w) {
 			throw std::invalid_argument("The width of map can't be zero.");
@@ -40,12 +40,12 @@ namespace pgl
 		assert(_map.size() == w * h);
 	}
 
-	size_t HeightMap::width() const noexcept
+	int HeightMap::width() const noexcept
 	{
 		return _width;
 	}
 
-	size_t HeightMap::height() const noexcept
+	int HeightMap::height() const noexcept
 	{
 		return _height;
 	}
@@ -57,7 +57,7 @@ namespace pgl
 
 	Mesh HeightMap::toMesh() const
 	{
-		Mesh plane = Mesh::createPlane(_width, 8.0f);
+		Mesh plane = Mesh::createPlane(_width, _height, 0.5f);
 
 		for (int y = 0; y < _height; ++y) {
 			for (int x = 0; x < _width; ++x) {
@@ -68,12 +68,12 @@ namespace pgl
 		return plane;
 	}
 
-	float HeightMap::depth(size_t x, size_t y) const noexcept
+	float HeightMap::depth(int x, int y) const noexcept
 	{
 		return _map[y * _width + x];
 	}
 
-	void HeightMap::depth(size_t x, size_t y, float v) noexcept
+	void HeightMap::depth(int x, int y, float v) noexcept
 	{
 		_map[y * _width + x] = v;
 	}

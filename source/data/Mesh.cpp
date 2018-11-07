@@ -5,48 +5,45 @@
 
 namespace pgl
 {
-    Mesh Mesh::createPlane(size_t divisions, float planeSize)
-    {
-        size_t size = divisions + 1;
-        size_t cVert = size * size;
-        size_t cTriangl = divisions * divisions * 6u;
-        Mesh plane(cVert, cTriangl);
+	Mesh Mesh::createPlane(int w, int h, float divisionSize)
+	{
+		int countVertex = (w + 1) * (h + 1);
+		int countIndex = 6 * w * h;
+		Mesh p(countVertex, countIndex);
 
-        float halfPlaneSize = 0.5f * planeSize;
-        float divisionSize = planeSize / divisions;
-        size_t triangleOff = 0;
+		float startX = 0.5f * w * divisionSize;
+		float startY = 0.5f * h * divisionSize;
+		int triangleOff = 0;
 
-        for (size_t y = 0; y < size; ++y) {
-            size_t line = y * size;
+		for (int y = 0; y <= h; ++y) {
+			int line = y * (w + 1);
 
-            for (size_t x = 0; x < size; ++x) {
-                plane._vertices[line + x] = vec3(x * divisionSize - halfPlaneSize,
-                                                 0.0,
-                                                 y * divisionSize - halfPlaneSize);
+			for (int x = 0; x <= w; ++x) {
+				p._vertices[line + x] = vec3(x * divisionSize - startX, 0.0f, y * divisionSize - startY);
+				p._normals[line + x] = vec3(0.0f, 1.0f, 0.0f);
+				p._uv[line + x] = vec2((float)x / w, 1.0f - (float)y / h);
 
-                plane._normals[line + x] = vec3(0.0f, 1.0f, 0.0f);
-                plane._uv[line + x] = vec2((float)x / divisions, 1.0f - (float)y / divisions);
 
-                if (x < divisions && y < divisions) {
-                    GLuint tLeft = (GLuint)(y * size + x);
-                    GLuint bLeft = (GLuint)((y + 1) * size + x);
-                    // Правый верхний треугольник.
-                    plane._triangles[triangleOff   ]  = tLeft;
-                    plane._triangles[triangleOff + 1] = tLeft + 1;
-                    plane._triangles[triangleOff + 2] = bLeft + 1;
-                    // Левый нижний треугольник.
-                    plane._triangles[triangleOff + 3] = tLeft;
-                    plane._triangles[triangleOff + 4] = bLeft + 1;
-                    plane._triangles[triangleOff + 5] = bLeft;
-                    triangleOff += 6;
-                }
-            }
-        }
+				if (x < w && y < h) {
+					GLuint tLeft = (GLuint)(y * (w + 1) + x);
+					GLuint bLeft = (GLuint)((y + 1) * (w + 1) + x);
+					// Правый верхний треугольник.
+					p._triangles[triangleOff] = tLeft;
+					p._triangles[triangleOff + 1] = tLeft + 1;
+					p._triangles[triangleOff + 2] = bLeft + 1;
+					// Левый нижний треугольник.
+					p._triangles[triangleOff + 3] = tLeft;
+					p._triangles[triangleOff + 4] = bLeft + 1;
+					p._triangles[triangleOff + 5] = bLeft;
+					triangleOff += 6;
+				}
+			}
+		}
 
-        return std::move(plane);
-    }
+		return p;
+	}
 
-    Mesh::Mesh(size_t cVertices, size_t cTriangles)
+    Mesh::Mesh(int cVertices, int cTriangles)
     {
         if (0 >= cVertices) {
             throw std::invalid_argument("The argument cVertices must be greater than 0.");
@@ -85,22 +82,22 @@ namespace pgl
     /**
     * Сеттеры для инкапсулированных данных.
     */
-    vec3 & Mesh::vertex(size_t i)
+    vec3 & Mesh::vertex(int i)
     {
         return _vertices[i];
     }
 
-    vec3 & Mesh::normal(size_t i)
+    vec3 & Mesh::normal(int i)
     {
         return _normals[i];
     }
 
-    vec2 & Mesh::uv(size_t i)
+    vec2 & Mesh::uv(int i)
     {
         return _uv[i];
     }
 
-    GLuint & Mesh::triangle(size_t i)
+	GLuint & Mesh::triangle(int i)
     {
         return _triangles[i];
     }
@@ -108,22 +105,22 @@ namespace pgl
     /**
     * Геттеры для инкапсулированных данных.
     */
-    const vec3 & Mesh::vertex(size_t i) const
+    const vec3 & Mesh::vertex(int i) const
     {
         return _vertices[i];
     }
 
-    const vec3 & Mesh::normal(size_t i) const
+    const vec3 & Mesh::normal(int i) const
     {
         return _normals[i];
     }
 
-    const vec2 & Mesh::uv(size_t i) const
+    const vec2 & Mesh::uv(int i) const
     {
         return _uv[i];
     }
 
-    GLuint Mesh::triangle(size_t i) const
+    GLuint Mesh::triangle(int i) const
     {
         return _triangles[i];
     }
