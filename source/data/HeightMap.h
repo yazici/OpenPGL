@@ -19,7 +19,7 @@ namespace pgl
         * @param h высота карты
         * @param data массив данных
         */
-		HeightMap(size_t w, size_t h, const float *data = nullptr);
+		HeightMap(int w, int h, const float *data = nullptr);
 
         /**
         * Конструктор копирования. Полностью копирует карту высот.
@@ -30,13 +30,13 @@ namespace pgl
         * Возвращает ширину карты.
         * @return ширина.
         */
-		size_t width() const noexcept;
+		int width() const noexcept;
 
         /**
         * Возвращает высоту карты.
         * @return высота.
         */
-		size_t height() const noexcept;
+		int height() const noexcept;
         
         /**
         * Метод с помощью которой можно узнать высоту точки.
@@ -45,7 +45,7 @@ namespace pgl
         * @param y координата по оси ордината
         * @return высота точки на карте по координате (x, y)
         */
-		float depth(size_t x, size_t y) const noexcept;
+		float depth(int x, int y) const noexcept;
         
         /**
         * Метод с помощью которой можно указать высоту точки.
@@ -54,7 +54,7 @@ namespace pgl
         * @param y координата по оси ордината
         * @param v высота точки по координате (x, y)
         */
-		void depth(size_t x, size_t y, float v) noexcept;
+		void depth(int x, int y, float v) noexcept;
 
         /**
         * Возвращает черно-белую текстуру, которая является картой высот.
@@ -66,12 +66,12 @@ namespace pgl
 
 	private:
 
-		void _init(size_t w, size_t h, const float *data);
+		void _init(int w, int h, const float *data);
 
 	private:
 		std::vector<float> _map;
-		size_t _width;
-		size_t _height;
+		int _width;
+		int _height;
 	};
 }
 

@@ -21,15 +21,19 @@ int main(int argc, char **argv)
 	Window window("OpenPGL", 800, 600);
 
 
-//    CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
-//    CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
+	CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
+	CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
     
+<<<<<<< HEAD
     NoiseGenerator2D alg(5.5, .8, 0.2, 2, {12.0, 3.0});
+=======
+    //NoiseGenerator2D alg(5.0, 0.8, 0.2, 3, {12.0, 3.0});
+>>>>>>> ed78fafe7229af7c79f7b9ac4a67806f8833273c
     
-	HeightMap map = alg.generate(60, 70);
+	HeightMap map = alg.generate(70, 70);
     
 	Mesh plane = map.toMesh();
-
+	
 	IndexBuffer *ebo = IndexBuffer::create(plane.triangles().size(), plane.triangles().data());
 	VertexBuffer *position = VertexBuffer::create(sizeof(vec3), plane.vertices().size(), plane.vertices().data());
 
@@ -46,9 +50,11 @@ int main(int argc, char **argv)
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	mat4 translate = glm::translate(mat4(1.0), vec3(0.0, -1.0, -5.0));
+	mat4 m_translate = glm::translate(mat4(1.0), vec3(0.0, -1.0, -5.0));
 	mat4 perspectiveProj(glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 200.0f));
 	mat4 cameraPos = glm::lookAt(vec3(0.0f, 2.0f, 0.0f), vec3(0.0f, 0.0f, -5.0f), vec3(0.0f, 1.0f, 0.0f));
+	bool b_rotate = true;
+	float radian = 0.0f, scale = 0.5;
 	glViewport(0, 0, 800, 600);
 
 	while (stay) {
@@ -63,12 +69,28 @@ int main(int argc, char **argv)
 					glViewport(0, 0, w, h);
 					break;
 				}
-			}
+			} else if (event.type == SDL_KEYDOWN) {
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_m:
+					b_rotate = !b_rotate;
+					break;
+				case SDLK_l:
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+					break;
+				case SDLK_p:
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+					break;
+				default:
+					break;
+				}
+			} 
 		}
-		
-		float radian = SDL_GetTicks() * 1.0f / 1000.0f;
-		mat4 rotate = glm::rotate(translate, radian, vec3(0.0f, 1.0f, 0.0f));
-		mat4 mv = translate * rotate;
+	
+		radian = b_rotate ? SDL_GetTicks() * 1.0f / 1000.0f : radian;
+		mat4 m_rotate = glm::rotate(m_translate, radian, vec3(0.0f, 1.0f, 0.0f));
+		mat4 m_scale = glm::scale(mat4(1.0), vec3(scale));
+		mat4 mv = m_translate * m_rotate * m_scale;
 		shader.uniform("uMVP", perspectiveProj * cameraPos * mv);
 
 		glClear(GL_COLOR_BUFFER_BIT);

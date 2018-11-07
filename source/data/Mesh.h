@@ -16,13 +16,14 @@ namespace pgl
     public:
         
         /**
-        * Создает квадратную плоскость со стороной planeSize.
+        * Создает плоскость со сторонами w и h.
         *
-        * @param divisions разрещение плоскости в полигонах.
-        * @param planeSize размер стороны плоскости.
+        * @param w ширина плоскости в полигонах.
+        * @param h высота плоскости в полигонах.
+        * @param divisionSize размер квадратного полигона.
         * @return возвращает созданный меш.
         */
-        static Mesh createPlane(size_t divisions, float planeSize);
+		static Mesh createPlane(int w, int h, float divisionSize);
 
         /**
         * Конструктор с заданными параметрами для создания меша.
@@ -30,7 +31,7 @@ namespace pgl
         * @param cTriangles количество треугольных полигонов в меше.
         * @throws std::invalid_argument в случае, если хотя бы один из аргументов меньше или равен 0.
         */
-        Mesh(size_t cVertices, size_t cTriangles);
+        Mesh(int cVertices, int cTriangles);
 
         /**
         * Конструктор копирования.
@@ -50,19 +51,19 @@ namespace pgl
         * Сеттеры для инкапсулированных данных.
         * @param i индекс данных.
         */
-        vec3 &vertex(size_t i);
-        vec3 &normal(size_t i);
-        vec2 &uv(size_t i);
-        GLuint &triangle(size_t i);
+        vec3 &vertex(int i);
+        vec3 &normal(int i);
+        vec2 &uv(int i);
+        GLuint &triangle(int i);
         
         /**
         * Геттеры для инкапсулированных данных.
         * @param i индекс данных.
         */
-        const vec3 &vertex(size_t i) const;
-        const vec3 &normal(size_t i) const;
-        const vec2 &uv(size_t i) const;
-        GLuint triangle(size_t i) const;
+        const vec3 &vertex(int i) const;
+        const vec3 &normal(int i) const;
+        const vec2 &uv(int i) const;
+        GLuint triangle(int i) const;
 
         /**
         * Геттеры для получения массивов данных.
