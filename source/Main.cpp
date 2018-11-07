@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     
     NoiseGenerator2D alg(2.0, 0.79, 0.2, 11, {12.0, 3.0});
     
-	HeightMap map = alg.generate(50, 60);
+	HeightMap map = alg.generate(60, 60);
     
 	Mesh plane = map.toMesh();
 
@@ -49,11 +49,20 @@ int main(int argc, char **argv)
 	mat4 translate = glm::translate(mat4(1.0), vec3(0.0, -1.0, -5.0));
 	mat4 perspectiveProj(glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 200.0f));
 	mat4 cameraPos = glm::lookAt(vec3(0.0f, 2.0f, 0.0f), vec3(0.0f, 0.0f, -5.0f), vec3(0.0f, 1.0f, 0.0f));
+	glViewport(0, 0, 800, 600);
 
 	while (stay) {
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
 				stay = false;
+			} else if (event.type == SDL_WINDOWEVENT) {
+				switch (event.window.event)
+				{
+				case SDL_WINDOWEVENT_RESIZED:
+					auto[w, h] = window.size();
+					glViewport(0, 0, w, h);
+					break;
+				}
 			}
 		}
 		
