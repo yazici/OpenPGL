@@ -19,6 +19,7 @@ namespace pgl
     using glm::smoothstep;
     using glm::mix;
     using glm::fract;
+    using glm::detail::permute;
 
     float NoiseGenerator2D::PerlineNoise(vec2 st) const
     {
@@ -37,14 +38,14 @@ namespace pgl
         s = r0 * r0 * (vec2(3.0) - vec2(2.0) * r0);
         
          // Далее будем извлекать градиент для всех вершин квадрата.
-        size_t i = glm::detail::permute(b0.x) % _gradient.size(), j = glm::detail::permute(b1.x) % _gradient.size();
+        size_t i = permute(b0.x) % _gradient.size(), j = permute(b1.x) % _gradient.size();
         
         size_t  b00 , b01, b10, b11;
         
-        b00 = glm::detail::permute(i + b0.y) % _gradient.size();
-        b01 = glm::detail::permute(i + b1.y)  % _gradient.size();
-        b10 = glm::detail::permute(j + b0.y) % _gradient.size();
-        b11 = glm::detail::permute(j + b1.y) % _gradient.size();
+        b00 = permute(i + b0.y) % _gradient.size();
+        b01 = permute(i + b1.y)  % _gradient.size();
+        b10 = permute(j + b0.y) % _gradient.size();
+        b11 = permute(j + b1.y) % _gradient.size();
         
         float a, b, u, v;
         
