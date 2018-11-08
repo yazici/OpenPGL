@@ -21,6 +21,7 @@ namespace pgl
         */
 		HeightMap(int w, int h, const float *data = nullptr);
 
+		HeightMap(int w, int h, const float **data);
         /**
         * Конструктор копирования. Полностью копирует карту высот.
         */
@@ -62,7 +63,7 @@ namespace pgl
         */
 		Texture texture() const;
 
-		Mesh toMesh() const;
+		Mesh toMesh(float divSize = 1.0f) const;
 
 	private:
 
