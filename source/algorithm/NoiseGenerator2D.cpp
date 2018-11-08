@@ -65,24 +65,30 @@ namespace pgl
         return mix(a, b, s.y);
     }
     
+    double convert(double value,double From1,double From2,double To1,double To2)
+    {
+        return (value-From1)/(From2-From1)*(To2-To1)+To1;
+    }
+    
     NoiseGenerator2D::NoiseGenerator2D(float lacunarity, float persistence, float surfaceDepth, uint8_t octave, vec2 shift, int seed) :
         MapGenerator(seed),
         _lacunarity(lacunarity),
         _persistence(persistence),
         _surfaceDepth(surfaceDepth),
         _octave(octave),
-        _shift(shift),
-        _gradient(rand() % 1000 + 1)
+        _shift(shift)
     {
         // TODO: Данная функция расспределения здесь временна т. к. мы еще не о
         // пределили механизм передачи разных функций распределения
-        std::random_device rd;  //Will be used to obtain a seed for the random number engine
-        std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-        std::normal_distribution<> dis(-1.0, 1.0);
+        std::mt19937 gen(_seed);
+        std::uniform_int_distribution<> g(-1, 1);
+        std::uniform_int_distribution<> getQuantity(500, 1500);
+        
+        _gradient.resize(getQuantity(gen));
         
         for (size_t i = 0; i < _gradient.size(); i++) {
-            _gradient[i].x = dis(gen);
-            _gradient[i].y = dis(gen);
+            _gradient[i].x = g(gen);
+            _gradient[i].y = g(gen);
         }
     }
     
@@ -101,16 +107,17 @@ namespace pgl
                 for(int oct = 0; oct < _octave; oct++ ) {
                     vec2 p (x * freq, y * freq);
                     p += _shift;
-                    sum += PerlineNoise(p) * amplitude;
+                    sum += PerlineNoise(p) * amplitude; 
                     
                     // Полученное значение приводится от 0 до 1
-                    float result = (sum + _surfaceDepth) / 2.0f;
+                    float result = (sum) / 2.0f;
                     result = (result > 1.0f ? 1.0f : (result < 0.0 ? 0.0 : result));
-                    map.depth(i, j, result);
+                    map.depth(i, j, convert(result, 0, 1, 0, _surfaceDepth));
                     
                     freq *= _lacunarity;
                     amplitude *= _persistence;
                 }
+                
             }
         }
         

@@ -78,10 +78,10 @@ namespace pgl
             void blue(GLubyte b);
             void alpha(GLubyte a);
             
-            GLfloat red();
-            GLfloat green();
-            GLfloat blue();
-            GLfloat alpha();
+            GLfloat red() const;
+            GLfloat green() const;
+            GLfloat blue() const;
+            GLfloat alpha() const;
             
             
         private:

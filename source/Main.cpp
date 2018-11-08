@@ -20,17 +20,14 @@ int main(int argc, char **argv)
 	sys::InitSystem::init();
 	Window window("OpenPGL", 800, 600);
 
+//
+//    CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
+//    CellularAutomata alg(.1f, 1u, 1u, 0u, al);
 
-	CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
-	CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
+    NoiseGenerator2D alg(3.0, 0.5, 18, 10, {1.0, 3.0}, 0);
+
     
-<<<<<<< HEAD
-    NoiseGenerator2D alg(5.5, .8, 0.2, 2, {12.0, 3.0});
-=======
-    //NoiseGenerator2D alg(5.0, 0.8, 0.2, 3, {12.0, 3.0});
->>>>>>> ed78fafe7229af7c79f7b9ac4a67806f8833273c
-    
-	HeightMap map = alg.generate(70, 70);
+	HeightMap map = alg.generate(60, 100);
     
 	Mesh plane = map.toMesh();
 	

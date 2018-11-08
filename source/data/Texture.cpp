@@ -244,19 +244,19 @@ namespace pgl
     
     void Texture::Texel::alpha(GLubyte a)
     {
-        if (_format == PixelFormat::BLACK_WHITE) {
-            throw runtime_error("Error pixel format BLACK_WHITE");
+        if (_format != PixelFormat::BGRA && _format != PixelFormat::RGBA) {
+            throw runtime_error("Error pixel format not RGBA or BGRA");
         }
         
         _texel[3] = a;
     }
     
-    GLfloat Texture::Texel::red()
+    GLfloat Texture::Texel::red() const 
     {
         return _texel[(_format == PixelFormat::BGR || _format == PixelFormat::BGRA ? 2 : 0)];
     }
     
-    GLfloat Texture::Texel::green()
+    GLfloat Texture::Texel::green() const
     {
         if (_format == PixelFormat::BLACK_WHITE) {
             throw runtime_error("Error pixel format BLACK_WHITE");
@@ -265,7 +265,7 @@ namespace pgl
         return _texel[1];
     }
     
-    GLfloat Texture::Texel::blue()
+    GLfloat Texture::Texel::blue() const
     {
         if (_format == PixelFormat::BLACK_WHITE) {
             throw runtime_error("Error pixel format BLACK_WHITE");
@@ -274,10 +274,10 @@ namespace pgl
         return _texel[(_format == PixelFormat::BGR || _format == PixelFormat::BGRA ? 0 : 2)];
     }
     
-    GLfloat Texture::Texel::alpha()
+    GLfloat Texture::Texel::alpha() const
     {
-        if (_format == PixelFormat::BLACK_WHITE) {
-            throw runtime_error("Error pixel format BLACK_WHITE");
+        if (_format != PixelFormat::BGRA && _format != PixelFormat::RGBA) {
+            throw runtime_error("Error pixel format not RGBA or BGRA");
         }
         
         return _texel[3];
