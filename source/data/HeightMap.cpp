@@ -15,6 +15,32 @@ namespace pgl
 		_init(w, h, data);
 	}
 
+	HeightMap::HeightMap(int w, int h, const float **data)
+	{
+		if (0 == w) {
+			throw std::invalid_argument("The width of map can't be zero.");
+		} else if (0 == h) {
+			throw std::invalid_argument("The height of map can't be zero.");
+		}
+
+		_width = w;
+		_height = h;
+
+		if (data) {
+			_map.resize(w * h);
+
+			for (int y = 0; y < h; ++y) {
+				for (int x = 0; x < w; ++x) {
+					_map[y * w + x] = data[y][x];
+				}
+			}
+		} else {
+			_map.assign(w * h, 0.0f);
+		}
+
+		assert(_map.size() == w * h);
+	}
+
 	HeightMap::HeightMap(const HeightMap &hm)
 	{
 		_init(hm._width, hm._height, hm._map.data());
@@ -55,9 +81,9 @@ namespace pgl
 		return Texture(_width, _height, Texture::PixelFormat::BLACK_WHITE, &_map[0]);
 	}
 
-	Mesh HeightMap::toMesh() const
+	Mesh HeightMap::toMesh(float divSize) const
 	{
-		Mesh plane = Mesh::createPlane(_width, _height, 0.5f);
+		Mesh plane = Mesh::createPlane(_width - 1, _height - 1, divSize);
 
 		for (int y = 0; y < _height; ++y) {
 			for (int x = 0; x < _width; ++x) {
