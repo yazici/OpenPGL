@@ -24,8 +24,14 @@ namespace pgl
     }
     
     TextureRender::TextureRender(PixelFormat storFrom, uint32_t width, uint32_t height) :
-        TextureRender(create(storFrom, width, height))
+        _width(width),
+        _height(height),
+        _locked(false),
+        _sorageFormat(storFrom)
     {
+        glGenTextures(1, &_handler);
+        glBindTexture(GL_TEXTURE_2D, _handler);
+        glTexStorage2D(GL_TEXTURE_2D, 1, storFrom, width, height);
     }
     
     TextureRender::TextureRender(TextureRender&& textureRender) :
@@ -38,9 +44,12 @@ namespace pgl
         textureRender._handler = 0;
     }
     
-    TextureRender::TextureRender(const Texture texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height) :
-        TextureRender(create(texture, storFrom, parametr, width, height))
+    TextureRender::TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height) :
+        TextureRender(storFrom, width, height)
     {
+        _locked = true;
+        updateData(texture, parametr);
+        _locked = false;
     }
     
     TextureRender::~TextureRender()
@@ -48,36 +57,6 @@ namespace pgl
         if (_handler) {
             glDeleteTextures(1, &_handler);
         }
-    }
-    
-    TextureRender TextureRender::create(const Texture texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height)
-    {
-        TextureRender textureRender = create(storFrom, width, height);
-        
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, texture._format, GL_FLOAT, texture._data);
-        
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parametr.magFilter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parametr.minFilter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, parametr.wrapS);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, parametr.wrapT);
-        
-        return textureRender;
-    }
-    
-    TextureRender TextureRender::create(TextureRender::PixelFormat storFrom, uint32_t width, uint32_t height)
-    {
-        TextureRender textureRender;
-        
-        glGenTextures(1, &textureRender._handler);
-        textureRender._width = width;
-        textureRender._height = height;
-        textureRender._locked = false;
-        textureRender._sorageFormat = storFrom;
-        
-        glBindTexture(GL_TEXTURE_2D, textureRender._handler);
-        glTexStorage2D(GL_TEXTURE_2D, 1, storFrom, width, height);
-        
-        return textureRender;
     }
     
     void TextureRender::bind(int slot) const noexcept

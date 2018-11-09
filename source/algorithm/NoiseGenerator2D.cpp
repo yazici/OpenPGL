@@ -24,7 +24,7 @@ namespace pgl
 
     float NoiseGenerator2D::PerlineNoise(vec2 st) const
     {
-        tvec2<int> b0, b1;
+        tvec2<size_t> b0, b1;
         vec2 r0, r1, s;
         
         //Находим координаты левой верхней вершины квадрата,
@@ -32,21 +32,21 @@ namespace pgl
         b0 = floor(st);
         r0 = fract(st);
         
-        b1 = b0 + 1;
+        b1 = b0 + tvec2<size_t>(1);
         r1 = r0 - vec2(1.0);
         
         // Будем интерполировать локальну координату с помощью криаой Гунтиса.
         s = r0 * r0 * (vec2(3.0) - vec2(2.0) * r0);
         
          // Далее будем извлекать градиент для всех вершин квадрата.
-        size_t i = permute(b0.x) % _gradient.size(), j = permute(b1.x) % _gradient.size();
+        size_t i = permute<size_t>(b0.x) % _gradient.size(), j = permute<size_t>(b1.x) % _gradient.size();
         
         size_t  b00 , b01, b10, b11;
         
-        b00 = permute(i + b0.y) % _gradient.size();
-        b01 = permute(i + b1.y) % _gradient.size();
-        b10 = permute(j + b0.y) % _gradient.size();
-        b11 = permute(j + b1.y) % _gradient.size();
+        b00 = permute<size_t>(i + b0.y) % _gradient.size();
+        b01 = permute<size_t>(i + b1.y) % _gradient.size();
+        b10 = permute<size_t>(j + b0.y) % _gradient.size();
+        b11 = permute<size_t>(j + b1.y) % _gradient.size();
         
         float a, b, u, v;
         
@@ -111,7 +111,7 @@ namespace pgl
                     
                     // Полученное значение приводится от 0 до 1
                     float result = (sum) / 2.0f;
-                    result = (result > 1.0f ? 1.0f : (result < 0.0 ? 0.0 : result));
+                    result = (result > 1.0f ? 1.0f : (result < -1.0 ? -1.0 : result));
                     map.depth(i, j, convert(result, 0, 1, 0, _surfaceDepth));
                     
                     freq *= _lacunarity;

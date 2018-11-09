@@ -17,12 +17,12 @@ namespace pgl
     using namespace std;
     
     Texture::Texture() :
-        _data(nullptr),
+        _name("no name"),
         _width(0),
         _height(0),
         _bpp(1),
-        _name("no name"),
-        _format(Texture::PixelFormat::BLACK_WHITE)
+        _format(Texture::PixelFormat::BLACK_WHITE),
+        _data(nullptr)
     {
     }
     
@@ -66,69 +66,44 @@ namespace pgl
         return size;
     }
     
-    Texture::Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format) :
-        Texture(create(name, width, height, format, nullptr))
-    {
-    }
-    
-    Texture::Texture(uint32_t width, uint32_t height, PixelFormat format) :
-        Texture("no name", width, height, format)
-    {
-    }
-    
     Texture::Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const float* data) :
-        Texture(create(name, width, height, format, data))
+        _name(name),
+        _width(width),
+        _height(height),
+        _bpp(pixelSizeof(format)),
+        _format(format),
+        _data(new GLfloat[width * height * _bpp])
     {
+        if (data) {
+            memcpy(_data, data, width * height * _bpp);
+        }
     }
     
     Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, const float* data) :
-        Texture (create(width, height, format, data))
+        Texture ("no name", width, height, format, data)
     {
     }
     
     Texture::Texture(const Texture& texture) :
-        _data(new GLfloat [texture._width * texture._height * pixelSizeof(texture._format)]),
+        _name(texture._name),
         _width(texture._width),
         _height(texture._height),
-        _bpp(texture._bpp),
-        _name(texture._name),
-        _format(texture._format)
+        _bpp(pixelSizeof(texture._format)),
+        _format(texture._format),
+        _data(new GLfloat[_width * _height * _bpp])
     {
-        memcpy(_data, texture._data, _width * _height);
+        memcpy(_data, texture._data, _width * _height * _bpp);
     }
     
     Texture::Texture(Texture&& texture) :
-        _data(texture._data),
+        _name(texture._name),
         _width(texture._width),
         _height(texture._height),
-        _bpp(texture._bpp),
-        _name(texture._name),
-        _format(texture._format)
+        _bpp(pixelSizeof(texture._format)),
+        _format(texture._format),
+        _data(texture._data)
     {
         texture._data = nullptr;
-    }
-    
-    Texture Texture::create(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const float* data)
-    {
-        Texture texture;
-        
-        texture._name = name;
-        texture._width = width;
-        texture._height = height;
-        texture._bpp = pixelSizeof(format);
-        texture._format = format;
-        texture._data = new GLfloat [width * height * texture._bpp];
-        
-        if (data) {
-            memcpy(texture._data, data, width * height * texture._bpp);
-        }
-        
-        return texture;
-    }
-    
-    Texture Texture::create(uint32_t width, uint32_t height, PixelFormat format, const float* data)
-    {
-        return create("no name", width, height, format, data);
     }
     
     void Texture::data(const float* ptrData, uint32_t width, uint32_t height)

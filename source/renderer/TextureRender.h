@@ -106,35 +106,11 @@ namespace pgl
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        TextureRender(const Texture texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
+        TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
         
         TextureRender(const TextureRender&) = delete;
         
         ~TextureRender();
-        
-        /**
-         * Функция преднаязначенная для создание объектов типа TextureRender.
-         *
-         * Примечание !!!
-         * Выделеннуя в GPU память нельзя будет изменить.
-         *
-         * @param texture текстура которую нужно выводить
-         * @param storFrom формат хранения текстуры
-         * @param width ширина текстуры.
-         * @param height высота текстуры
-         */
-        static TextureRender create(const Texture texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
-        
-        /**
-         * Функция преднаязначенная для создание объектов типа TextureRender.
-         * В данном случае, при создании объекта будет только выделяться память в GPU под текстуру.
-         * Для того что бы в дальнейшем в этот объект загрузить текстуру воспользуйтесь методом updateData.
-         *
-         * @param storFrom формат хранения текстуры
-         * @param width ширина текстуры.
-         * @param height высота текстуры
-         */
-        static TextureRender create(PixelFormat storFrom, uint32_t width, uint32_t height);
         
         /**
          * Метод который делает текстуру активной и задаёт ей текструный слот.

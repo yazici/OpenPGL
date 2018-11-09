@@ -93,26 +93,6 @@ namespace pgl
         Texture();
         
         /**
-         * Конструктор выделяющий текстуру нужного размера.
-         *
-         *
-         * @param name имя текстуры
-         * @param width ширина текстуры
-         * @param height высота текстуры
-         * @param format формат в котором представляется пиксель в массиве
-         */
-        Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format);
-        
-        /**
-         * Конструктор выделяющий текстуру нужного размера.
-         *
-         * @param width ширина текстуры
-         * @param height высота текстуры
-         * @param format формат в котором представляется пиксель в массиве
-         */
-        Texture(uint32_t width, uint32_t height, PixelFormat format);
-        
-        /**
          * Конструктор.
          *
          * @param name имя текстуры
@@ -121,7 +101,7 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const float* data);
+        Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const float* data = nullptr);
         
         /**
          * Конструктор.
@@ -131,34 +111,13 @@ namespace pgl
          * @param format формат в котором представляется пиксель в массиве
          * @param data указатель на массив данных
          */
-        Texture(uint32_t width, uint32_t height, PixelFormat format, const float* data);
+        Texture(uint32_t width, uint32_t height, PixelFormat format, const float* data = nullptr);
         
         Texture(Texture&& texture);
         
         Texture(const Texture&);
         
         ~Texture();
-        
-        /**
-         * Функция предназначенная для создания текструы.
-         *
-         * @param name имя текстуры
-         * @param width ширина текстуры
-         * @param height высота текстуры
-         * @param format формат в котором представляется пиксель в массиве
-         * @param data указатель на массив данных
-         */
-        static Texture create(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const float* data);
-        
-        /**
-         * Функция предназначенная для создания текструы.
-         *
-         * @param width ширина текстуры
-         * @param height высота текстуры
-         * @param format формат в котором представляется пиксель в массиве
-         * @param data указатель на массив данных
-         */
-        static Texture create(uint32_t width, uint32_t height, PixelFormat format, const float* data);
         
         /**
          * Метод предназначенный для обновления данных текстуры.
@@ -172,8 +131,8 @@ namespace pgl
         uint32_t width() const noexcept;
         uint32_t height() const noexcept;
         PixelFormat pixelFormat() const noexcept;
-        
         string_view name() const noexcept;
+        
         void name(string_view name);
         
         /**
@@ -199,12 +158,12 @@ namespace pgl
         const Texel at(uint32_t x, uint32_t y) const;
         
     protected:
-        GLfloat* _data;
+        string _name;
         GLuint _width;
         GLuint _height;
         GLuint _bpp;
-        string _name;
         PixelFormat _format;
+        GLfloat* _data;
     };
 }
 
