@@ -10,7 +10,11 @@
 
 namespace pgl
 {
-    TextureParameter::TextureParameter(GLenum MinFilter, GLenum MagFilter, GLenum WrapS, GLenum WrapT)
+    TextureParameter::TextureParameter(GLenum MinFilter, GLenum MagFilter, GLenum WrapS, GLenum WrapT) :
+        minFilter(MinFilter),
+        magFilter(MagFilter),
+        wrapS(WrapS),
+        wrapT(WrapT)
     {
     }
     
@@ -101,13 +105,13 @@ namespace pgl
     {
         if (_locked && _handler) {
             glBindTexture(GL_TEXTURE_2D, _handler);
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, texture._format, GL_UNSIGNED_BYTE, texture._data);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, texture._format, GL_FLOAT, texture._data);
             
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parametr.magFilter);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parametr.minFilter);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, parametr.wrapS);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, parametr.wrapT);
-
+            
         }
     }
 }

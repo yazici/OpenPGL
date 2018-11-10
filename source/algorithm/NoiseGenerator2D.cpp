@@ -111,7 +111,7 @@ namespace pgl
                     
                     // Полученное значение приводится от 0 до 1
                     float result = (sum) / 2.0f;
-                    result = (result > 1.0f ? 1.0f : (result < -1.0 ? -1.0 : result));
+                    result = (result > 1.0f ? 1.0f : (result < 0.0 ? 0.0 : result));
                     map.depth(i, j, convert(result, 0, 1, 0, _surfaceDepth));
                     
                     freq *= _lacunarity;

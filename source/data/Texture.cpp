@@ -11,18 +11,20 @@
 
 #include <stdexcept>
 
+#include <iterator>
+
 namespace pgl
 {
     
     using namespace std;
     
     Texture::Texture() :
-        _name("no name"),
-        _width(0),
-        _height(0),
-        _bpp(1),
-        _format(Texture::PixelFormat::BLACK_WHITE),
-        _data(nullptr)
+    _name("no name"),
+    _width(0),
+    _height(0),
+    _bpp(1),
+    _format(Texture::PixelFormat::BLACK_WHITE),
+    _data(nullptr)
     {
     }
     
@@ -32,9 +34,9 @@ namespace pgl
      * @param format формат пикселя
      * @return размер пикселя
      */
-    size_t pixelSizeof (Texture::PixelFormat format)
+    uint32_t pixelSizeof (Texture::PixelFormat format)
     {
-        size_t size = 1;
+        uint32_t size = 1;
         
         switch (format) {
             case Texture::PixelFormat::RGB : {
@@ -67,41 +69,41 @@ namespace pgl
     }
     
     Texture::Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const float* data) :
-        _name(name),
-        _width(width),
-        _height(height),
-        _bpp(pixelSizeof(format)),
-        _format(format),
-        _data(new GLfloat[width * height * _bpp])
+    _name(name),
+    _width(width),
+    _height(height),
+    _bpp(pixelSizeof(format)),
+    _format(format),
+    _data(new GLfloat[width * height * _bpp])
     {
         if (data) {
-            memcpy(_data, data, width * height * _bpp);
+            std::copy(data, data + (width * height * _bpp), _data);
         }
     }
     
     Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, const float* data) :
-        Texture ("no name", width, height, format, data)
+    Texture ("no name", width, height, format, data)
     {
     }
     
     Texture::Texture(const Texture& texture) :
-        _name(texture._name),
-        _width(texture._width),
-        _height(texture._height),
-        _bpp(pixelSizeof(texture._format)),
-        _format(texture._format),
-        _data(new GLfloat[_width * _height * _bpp])
+    _name(texture._name),
+    _width(texture._width),
+    _height(texture._height),
+    _bpp(pixelSizeof(texture._format)),
+    _format(texture._format),
+    _data(new GLfloat[_width * _height * _bpp])
     {
-        memcpy(_data, texture._data, _width * _height * _bpp);
+        std::copy(texture._data, texture._data + (texture._width * texture._height * texture._bpp), _data);
     }
     
     Texture::Texture(Texture&& texture) :
-        _name(texture._name),
-        _width(texture._width),
-        _height(texture._height),
-        _bpp(pixelSizeof(texture._format)),
-        _format(texture._format),
-        _data(texture._data)
+    _name(texture._name),
+    _width(texture._width),
+    _height(texture._height),
+    _bpp(pixelSizeof(texture._format)),
+    _format(texture._format),
+    _data(texture._data)
     {
         texture._data = nullptr;
     }
@@ -226,7 +228,7 @@ namespace pgl
         _texel[3] = a;
     }
     
-    GLfloat Texture::Texel::red() const 
+    GLfloat Texture::Texel::red() const
     {
         return _texel[(_format == PixelFormat::BGR || _format == PixelFormat::BGRA ? 2 : 0)];
     }
