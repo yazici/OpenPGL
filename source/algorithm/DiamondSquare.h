@@ -11,7 +11,7 @@ namespace pgl
 	{
 	public:
 
-		DiamondSquare(float roughness, unsigned int seed = 0);
+		DiamondSquare(float roughness, float maxHeight, unsigned int seed = 0);
 
 		HeightMap generate(int w, int h) const override;
 
@@ -25,6 +25,7 @@ namespace pgl
 
 	private:
 		float _roughness;
+		float _maxHeight;
 	};
 }
 

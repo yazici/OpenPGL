@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 	sys::InitSystem::init();
 	Window window("OpenPGL", 800, 600);
 
-	Mesh water = Mesh::createPlane(1, 1, 260.0f);
+	Mesh water = Mesh::createPlane(1, 1, 290);
 	IndexBuffer *ebo = IndexBuffer::create(water.triangles().size(), water.triangles().data());
 	VertexBuffer *position = VertexBuffer::create(sizeof(vec3), water.vertices().size(), water.vertices().data());
 	VertexBuffer *normal = VertexBuffer::create(sizeof(vec3), water.normals().size(), water.normals().data());
@@ -36,10 +36,10 @@ int main(int argc, char **argv)
 
 	//CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
 	//CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
-	//DiamondSquare alg(15.0f);
-	NoiseGenerator2D alg(3.0, 1.1, 35.0f, 3, {-4.0, 14.0});
-	HeightMap map = alg.generate(256, 256);
-	Mesh plane = map.toMesh(1.0f);
+	DiamondSquare alg(0.5f, 50.0);
+	//NoiseGenerator2D alg(2.2, 1.2, 45.0f, 3, {-4.0, 14.0});
+	HeightMap map = alg.generate(513, 513);
+	Mesh plane = map.toMesh(0.5f);
 
 	ebo = IndexBuffer::create(plane.triangles().size(), plane.triangles().data());
 	position = VertexBuffer::create(sizeof(vec3), plane.vertices().size(), plane.vertices().data());
@@ -53,8 +53,8 @@ int main(int argc, char **argv)
 	ShaderProgram shader("shaders/ADS.vert", "shaders/ADS.frag");
 	shader.use();
 
-	vec3 cameraPosition(0.0f, 60.0f, 180.0f);
-	vec3 lightPosition(30.0f, 50.0f, 0.0f);
+	vec3 cameraPosition(0.0f, 180.0f, 350.0f);
+	vec3 lightPosition(30.0f, 120.0f, 0.0f);
 	vec3 terrainIntensity(0.15f, 0.8f, 0.1f);
 	vec3 waterIntensity(0.15f, 0.1f, 0.8f);
 	vec3 ka(0.2f);
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	
 	mat4 s = scale(mat4(0.2f), vec3(1.0f));
 	mat4 view = lookAt(cameraPosition, vec3(0.0f, 0.0, -1.0f), vec3(0.0f, 1.0f, 0.0f));
-	mat4 projection = perspective(radians(45.0f), (float)800 / 600, 0.1f, 400.0f);
+	mat4 projection = perspective(radians(45.0f), (float)800 / 600, 0.1f, 800.0f);
 	float radian = 0.0f;
 
 	bool b_rotate = true;
