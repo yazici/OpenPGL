@@ -83,36 +83,36 @@ namespace pgl
 	void ShaderProgram::uniform(int loc, const vec2 &v)
 	{
 		assert(_handle);
-		glUniform2fv(loc, 1, &v.x);
+		glUniform2fv(loc, 1, value_ptr(v));
 	}
 
 	void ShaderProgram::uniform(int loc, const ivec2 &v)
 	{
 		assert(_handle);
-		glUniform2iv(loc, 1, &v.x);
+		glUniform2iv(loc, 1, value_ptr(v));
 	}
 	void ShaderProgram::uniform(int loc, const vec3 &v)
 	{
 		assert(_handle);
-		glUniform3fv(loc, 1, &v.x);
+		glUniform3fv(loc, 1, value_ptr(v));
 	}
 
 	void ShaderProgram::uniform(int loc, const ivec3 &v)
 	{
 		assert(_handle);
-		glUniform3iv(loc, 1, &v.x);
+		glUniform3iv(loc, 1, value_ptr(v));
 	}
 
 	void ShaderProgram::uniform(int loc, const vec4 &v)
 	{
 		assert(_handle);
-		glUniform4fv(loc, 1, &v.x);
+		glUniform4fv(loc, 1, value_ptr(v));
 	}
 
 	void ShaderProgram::uniform(int loc, const ivec4 &v)
 	{
 		assert(_handle);
-		glUniform4iv(loc, 1, &v.x);
+		glUniform4iv(loc, 1, value_ptr(v));
 	}
 
 

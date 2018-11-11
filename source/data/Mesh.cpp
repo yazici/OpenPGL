@@ -23,18 +23,17 @@ namespace pgl
 				p._normals[line + x] = vec3(0.0f, 1.0f, 0.0f);
 				p._uv[line + x] = vec2((float)x / w, 1.0f - (float)y / h);
 
-
 				if (x < w && y < h) {
 					GLuint tLeft = (GLuint)(y * (w + 1) + x);
 					GLuint bLeft = (GLuint)((y + 1) * (w + 1) + x);
 					// Правый верхний треугольник.
-					p._triangles[triangleOff] = tLeft;
+					p._triangles[triangleOff] = bLeft;
 					p._triangles[triangleOff + 1] = tLeft + 1;
-					p._triangles[triangleOff + 2] = bLeft + 1;
+					p._triangles[triangleOff + 2] = tLeft;
 					// Левый нижний треугольник.
-					p._triangles[triangleOff + 3] = tLeft;
+					p._triangles[triangleOff + 3] = bLeft;
 					p._triangles[triangleOff + 4] = bLeft + 1;
-					p._triangles[triangleOff + 5] = bLeft;
+					p._triangles[triangleOff + 5] = tLeft + 1;
 					triangleOff += 6;
 				}
 			}

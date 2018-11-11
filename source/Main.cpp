@@ -1,8 +1,11 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
-#include <glm/gtc/matrix_transform.hpp>
 
-#include <chrono>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtx/normal.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "algorithm/NoiseGenerator2D.h"
 #include "algorithm/CellularAutomata.h"
@@ -15,53 +18,66 @@
 #include "renderer/VertexObject.h"
 
 using namespace pgl;
+using namespace glm;
 
 int main(int argc, char **argv)
 {
 	sys::InitSystem::init();
 	Window window("OpenPGL", 800, 600);
 
-	Mesh water = Mesh::createPlane(1, 1, 2100.0f);
+	Mesh water = Mesh::createPlane(1, 1, 260.0f);
 	IndexBuffer *ebo = IndexBuffer::create(water.triangles().size(), water.triangles().data());
 	VertexBuffer *position = VertexBuffer::create(sizeof(vec3), water.vertices().size(), water.vertices().data());
+	VertexBuffer *normal = VertexBuffer::create(sizeof(vec3), water.normals().size(), water.normals().data());
 	VertexObject *waterVao = VertexObject::create("water");
 	waterVao->addIndexBuffer(ebo);
 	waterVao->addVertexBuffer(position, AttributeInfo::POSITION);
+	waterVao->addVertexBuffer(normal, AttributeInfo::NORMAL);
 
 	//CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
 	//CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
-    NoiseGenerator2D alg(3.0, 1.1, 120.0f, 3, {-4.0, 14.0});
-//  DiamondSquare alg(15.0f);
-	HeightMap map = alg.generate(2048, 2048);
+	//DiamondSquare alg(15.0f);
+	NoiseGenerator2D alg(3.0, 1.1, 35.0f, 3, {-4.0, 14.0});
+	HeightMap map = alg.generate(256, 256);
 	Mesh plane = map.toMesh(1.0f);
 
 	ebo = IndexBuffer::create(plane.triangles().size(), plane.triangles().data());
 	position = VertexBuffer::create(sizeof(vec3), plane.vertices().size(), plane.vertices().data());
+	normal = VertexBuffer::create(sizeof(vec3), plane.normals().size(), plane.normals().data());
 
 	VertexObject *vao = VertexObject::create("plane");
 	vao->addIndexBuffer(ebo);
 	vao->addVertexBuffer(position, AttributeInfo::POSITION);
+	vao->addVertexBuffer(normal, AttributeInfo::NORMAL);
 
-	ShaderProgram shader("shaders/wtf.vert", "shaders/wtf.frag");
+	ShaderProgram shader("shaders/ADS.vert", "shaders/ADS.frag");
 	shader.use();
 
-	SDL_Event event;
-	bool stay = true;
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	vec3 cameraPosition(0.0f, 60.0f, 180.0f);
+	vec3 lightPosition(30.0f, 50.0f, 0.0f);
+	vec3 terrainIntensity(0.15f, 0.8f, 0.1f);
+	vec3 waterIntensity(0.15f, 0.1f, 0.8f);
+	vec3 ka(0.2f);
+	vec3 kd(0.7f);
+	vec3 ks(0.3f);
+	float shininess = 8.0f;
+	
+	mat4 s = scale(mat4(0.2f), vec3(1.0f));
+	mat4 view = lookAt(cameraPosition, vec3(0.0f, 0.0, -1.0f), vec3(0.0f, 1.0f, 0.0f));
+	mat4 projection = perspective(radians(45.0f), (float)800 / 600, 0.1f, 400.0f);
+	float radian = 0.0f;
 
-	mat4 m_translate = glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f));
-	mat4 perspectiveProj(glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 1000.0f));
-	mat4 cameraPos = glm::lookAt(vec3(0.0f, 40.0f, 256.0f), vec3(0.0f, 0.0f, -100.0f), vec3(0.0f, 1.0f, 0.0f));
 	bool b_rotate = true;
-	float radian = 0.0f, scale = 0.2f;
+	SDL_Event event;
+	bool run = true;
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glViewport(0, 0, 800, 600);
+	glEnable(GL_DEPTH_TEST);
 
-	while (stay) {
+	while (run) {
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
-				stay = false;
+				run = false;
 			} else if (event.type == SDL_WINDOWEVENT) {
 				switch (event.window.event)
 				{
@@ -89,19 +105,27 @@ int main(int argc, char **argv)
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		radian = b_rotate ? SDL_GetTicks() * 1.0f / 1000.0f : radian;
-		mat4 m_rotate = glm::rotate(mat4(1.0f), radian, vec3(0.0f, 1.0f, 0.0f));
-		mat4 m_scale = glm::scale(mat4(1.0), vec3(scale));
-		mat4 mv = m_translate * m_rotate * m_scale;
-		shader.uniform("uMVP", perspectiveProj * cameraPos * mv);
-		shader.uniform("uColor", vec3(0.01, 0.48, 0.1));
-		vao->draw();
+		radian = b_rotate ? SDL_GetTicks() * 25.0f / 1000.0f : radian;
+		mat4 r = rotate(mat4(1.0f), radians(radian), vec3(0.0f, 1.0f, 0.0f));
+		mat4 model = r * s;
+		mat4 mv = view * model;
+		mat3 normalMatrix = mat3(transpose(inverse(mv)));
+		mat4 mvp = projection * mv;
 
-		mat4 t = glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f));
-		mat4 s = glm::scale(mat4(2.0), vec3(scale));
-		shader.uniform("uColor", vec3(0.0f, 0.0f, 0.8f));
-		shader.uniform("uMVP", perspectiveProj * cameraPos * t * m_rotate * s);
-        waterVao->draw();
+		shader.uniform("uMVP", mvp);
+		shader.uniform("uModelView", mv);
+		shader.uniform("uNormalMatrix", normalMatrix);
+		shader.uniform("uLightPosition", lightPosition);
+
+		shader.uniform("uIntensity", terrainIntensity);
+		shader.uniform("uKa", ka);
+		shader.uniform("uKd", kd);
+		shader.uniform("uKs", ks);
+		shader.uniform("uShininess", shininess);
+
+		vao->draw();
+		shader.uniform("uIntensity", waterIntensity);
+		waterVao->draw();
 
 		window.present();
 	}
