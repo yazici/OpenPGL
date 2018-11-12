@@ -104,6 +104,14 @@ namespace pgl
 		*/
 		void draw() const;
 
+        void bind() {
+            glBindVertexArray(_handle);
+        }
+        
+        void unbind() {
+            glBindVertexArray(0);
+        }
+        
 	private:
 
 		VertexObject();

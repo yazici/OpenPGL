@@ -74,9 +74,9 @@ namespace pgl
          */
         enum PixelFormat: GLenum
         {
-            RGB = GL_RGB8,
-            RGBA = GL_RGBA8,
-            BLACK_WHITE = GL_R8
+            RGB = GL_RGB32F,
+            RGBA = GL_RGBA32F,
+            BLACK_WHITE = GL_R32F
         };
         
         TextureRender();

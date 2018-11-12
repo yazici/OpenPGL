@@ -20,7 +20,7 @@
 
 #include <tuple>
 
-#include "Sys/InitSystem.h"
+#include "sys/InitSystem.h"
 
 namespace pgl
 {

@@ -23,10 +23,9 @@ set(RENDERER_HEADER
 set(SHADERS
     ${CMAKE_SOURCE_DIR}/shaders/outputHeightMap.frag
     ${CMAKE_SOURCE_DIR}/shaders/outputHeightMap.vert
-    ${CMAKE_SOURCE_DIR}/shaders/PhongLighting.frag
-    ${CMAKE_SOURCE_DIR}/shaders/PhongLighting.vert
+    ${CMAKE_SOURCE_DIR}/shaders/ADS.frag
+    ${CMAKE_SOURCE_DIR}/shaders/halfWayADS.frag
+    ${CMAKE_SOURCE_DIR}/shaders/ADS.vert
     ${CMAKE_SOURCE_DIR}/shaders/rednerTexture.frag
     ${CMAKE_SOURCE_DIR}/shaders/rednerTexture.vert
-    ${CMAKE_SOURCE_DIR}/shaders/wtf.frag
-    ${CMAKE_SOURCE_DIR}/shaders/wtf.vert
     )
