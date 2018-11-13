@@ -73,6 +73,8 @@ namespace pgl
         const vector<vec2> &uvs() const;
         const vector<GLuint> &triangles() const;
 
+		void calculateNormal();
+
         // TODO: operator = (const &)
         Mesh &operator =(const Mesh &m);
         // TODO: operator = (const &&)

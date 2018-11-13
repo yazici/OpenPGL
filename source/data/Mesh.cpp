@@ -1,7 +1,10 @@
 #include <stdexcept>
 #include <utility>
 
-#include "Mesh.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/normal.hpp>
+
+#include "data/Mesh.h"
 
 namespace pgl
 {
@@ -26,14 +29,14 @@ namespace pgl
 				if (x < w && y < h) {
 					GLuint tLeft = (GLuint)(y * (w + 1) + x);
 					GLuint bLeft = (GLuint)((y + 1) * (w + 1) + x);
-					// Правый верхний треугольник.
-					p._triangles[triangleOff] = bLeft;
-					p._triangles[triangleOff + 1] = tLeft + 1;
-					p._triangles[triangleOff + 2] = tLeft;
-					// Левый нижний треугольник.
-					p._triangles[triangleOff + 3] = bLeft;
-					p._triangles[triangleOff + 4] = bLeft + 1;
-					p._triangles[triangleOff + 5] = tLeft + 1;
+					// Правый нижний треугольник.
+					p._triangles[triangleOff    ] = bLeft;
+					p._triangles[triangleOff + 1] = bLeft + 1;
+					p._triangles[triangleOff + 2] = tLeft + 1;
+					// Левый верхний треугольник.
+					p._triangles[triangleOff + 3] = tLeft + 1;
+					p._triangles[triangleOff + 4] = tLeft;
+					p._triangles[triangleOff + 5] = bLeft;
 					triangleOff += 6;
 				}
 			}
@@ -146,6 +149,22 @@ namespace pgl
     {
         return _triangles;
     }
+
+	void Mesh::calculateNormal()
+	{
+		int size = _triangles.size();
+
+		for (int i = 0; i < size; i += 3) {
+			vec3 &p1 = _vertices[_triangles[i    ]];
+			vec3 &p2 = _vertices[_triangles[i + 1]];
+			vec3 &p3 = _vertices[_triangles[i + 2]];
+			vec3 n = triangleNormal(p1, p2, p3);
+
+			_normals[_triangles[i    ]] += n;
+			_normals[_triangles[i + 1]] += n;
+			_normals[_triangles[i + 2]] += n;
+		}
+	}
 
     Mesh &Mesh::operator =(const Mesh &m)
     {

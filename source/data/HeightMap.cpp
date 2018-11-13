@@ -91,6 +91,7 @@ namespace pgl
 			}
 		}
 
+		plane.calculateNormal();
 		return plane;
 	}
 

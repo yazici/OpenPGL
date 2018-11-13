@@ -36,9 +36,9 @@ int main(int argc, char **argv)
     
     //CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
     //CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
-//    DiamondSquare alg(0.5f, 50.0);
-    NoiseGenerator2D alg(2.0, 0.6, 240, 12, {-4.0, 14.0});
-    HeightMap map = alg.generate(512, 512);
+	DiamondSquare alg(0.5f, 50.0);
+    //NoiseGenerator2D alg(2.0, 0.6, 240, 12, {-4.0, 14.0});
+    HeightMap map = alg.generate(513, 513);
     Mesh plane = map.toMesh(1.0f);
     
     ebo = IndexBuffer::create(plane.triangles().size(), plane.triangles().data());
@@ -62,12 +62,12 @@ int main(int argc, char **argv)
     vec3 ks(0.3f);
     float shininess = 8.0f;
     
-    mat4 s = scale(mat4(0.2f), vec3(1.0f));
+    mat4 s = scale(mat4(1.0f), vec3(1.0f));
     mat4 view = lookAt(cameraPosition, vec3(0.0f, 0.0, -1.0f), vec3(0.0f, 1.0f, 0.0f));
     mat4 projection = perspective(radians(45.0f), (float)800 / 600, 0.1f, 800.0f);
     float radian = 0.0f;
     
-    bool b_rotate = true;
+    bool b_rotate = false;
     SDL_Event event;
     bool run = true;
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -111,8 +111,10 @@ int main(int argc, char **argv)
         mat4 mv = view * model;
         mat3 normalMatrix = mat3(transpose(inverse(mv)));
         mat4 mvp = projection * mv;
+		lightPosition.x = 250.0f * cos(SDL_GetTicks() / 1000.0f);
+		lightPosition.z = 250.0f * sin(SDL_GetTicks() / 1000.0f);
         
-        shader.uniform("uMVP", mvp);
+		shader.uniform("uMVP", mvp);
         shader.uniform("uModelView", mv);
         shader.uniform("uNormalMatrix", normalMatrix);
         shader.uniform("uLightPosition", lightPosition);
