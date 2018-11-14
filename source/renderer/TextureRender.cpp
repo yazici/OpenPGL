@@ -23,7 +23,7 @@ namespace pgl
         _width(0),
         _height(0),
         _locked(false),
-        _sorageFormat(TextureRender::BLACK_WHITE)
+        _sorageFormat(TextureRender::BLACK_WHITE32_F)
     {
     }
     
@@ -54,6 +54,24 @@ namespace pgl
         _locked = true;
         updateData(texture, parametr);
         _locked = false;
+    }
+    
+    TextureRender::TextureRender(const TextureRender& copy) :
+        TextureRender(copy._sorageFormat, copy.width(), copy.height())
+    {
+        GLuint fbo;
+        glGenFramebuffers(1, &fbo);
+        
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, copy._handler, 0);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, _handler, 0);
+        glDrawBuffer(GL_COLOR_ATTACHMENT1);
+        
+        glBlitFramebuffer(0, 0, _width, _handler, 0, 0, _width, _handler, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDeleteFramebuffers(1, &fbo);
     }
     
     TextureRender::~TextureRender()

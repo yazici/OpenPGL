@@ -74,9 +74,42 @@ namespace pgl
          */
         enum PixelFormat: GLenum
         {
-            RGB = GL_RGB32F,
-            RGBA = GL_RGBA32F,
-            BLACK_WHITE = GL_R32F
+            RGBA32_F = GL_RGBA32F,
+            RGBA16_F = GL_RGBA16F,
+            RGBA32_U = GL_RGBA32UI,
+            RGBA16_U = GL_RGBA16UI,
+            RGBA8_U = GL_RGBA8UI,
+            RGBA32_S = GL_RGBA32I,
+            RGBA16_S = GL_RGBA16I,
+            RGBA8_S = GL_RGBA8I,
+            
+            RGB32_F = GL_RGB32F,
+            RGB16_F = GL_RGB16F,
+            RGB32_S = GL_RGB32I,
+            RGB16_S = GL_RGB16I,
+            RGB8_S = GL_RGB8I,
+            RGB32_U = GL_RGB32UI,
+            RGB16_U = GL_RGB16UI,
+            RGB8_U = GL_RGB8UI,
+            
+            
+            RG32_F = GL_RG32F,
+            RG16_F = GL_RG16F,
+            RG32_U = GL_RG32UI,
+            RG16_U = GL_RG16UI,
+            RG8_U = GL_RG8UI,
+            RG32_S = GL_RG32I,
+            RG16_S = GL_RG16I,
+            RG8_S = GL_RG8I,
+            
+            BLACK_WHITE32_F = GL_R32F,
+            BLACK_WHITE16_F = GL_R16F,
+            BLACK_WHITE32_U = GL_R32UI,
+            BLACK_WHITE16_U = GL_R16UI,
+            BLACK_WHITE8_U = GL_R8UI,
+            BLACK_WHITE32_S = GL_R32I,
+            BLACK_WHITE16_S = GL_R16I,
+            BLACK_WHITE8_S = GL_R8I
         };
         
         TextureRender();
@@ -108,7 +141,7 @@ namespace pgl
          */
         TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
         
-        TextureRender(const TextureRender&) = delete;
+        TextureRender(const TextureRender&);
         
         ~TextureRender();
         

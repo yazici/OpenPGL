@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     sys::InitSystem::init();
     Window window("OpenPGL", 800, 600);
     
-    Mesh water = Mesh::createPlane(1, 1, 2000);
+    Mesh water = Mesh::createPlane(1, 1, 700);
     IndexBuffer *ebo = IndexBuffer::create(water.triangles().size(), water.triangles().data());
     VertexBuffer *position = VertexBuffer::create(sizeof(vec3), water.vertices().size(), water.vertices().data());
     VertexBuffer *normal = VertexBuffer::create(sizeof(vec3), water.normals().size(), water.normals().data());
@@ -34,12 +34,12 @@ int main(int argc, char **argv)
     waterVao->addVertexBuffer(position, AttributeInfo::POSITION);
     waterVao->addVertexBuffer(normal, AttributeInfo::NORMAL);
     
-    //CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
-    //CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
-	DiamondSquare alg(0.5f, 50.0);
-    //NoiseGenerator2D alg(2.0, 0.6, 240, 12, {-4.0, 14.0});
-    HeightMap map = alg.generate(513, 513);
-    Mesh plane = map.toMesh(1.0f);
+//    CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
+//    CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
+//    DiamondSquare alg(0.5f, 50.0);
+    NoiseGenerator2D alg(2.0, 0.6, 240, 12, {-4.0, 14.0});
+    HeightMap map = alg.generate(2049, 2049);
+    Mesh plane = map.toMesh(.2f);
     
     ebo = IndexBuffer::create(plane.triangles().size(), plane.triangles().data());
     position = VertexBuffer::create(sizeof(vec3), plane.vertices().size(), plane.vertices().data());
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     mat4 projection = perspective(radians(45.0f), (float)800 / 600, 0.1f, 800.0f);
     float radian = 0.0f;
     
-    bool b_rotate = false;
+    bool b_rotate = true;
     SDL_Event event;
     bool run = true;
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
