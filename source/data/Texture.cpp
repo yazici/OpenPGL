@@ -263,7 +263,10 @@ namespace pgl
     const Texture& Texture::operator = (const Texture &tex)
     {
         if (_width * _height * _bpp != tex._width * tex._height * tex._bpp) {
-            delete [] _data;
+            if (_data) {
+                delete [] _data;
+            }
+            
             _data = new GLfloat [tex._width * tex._height * tex._bpp];
         }
         
