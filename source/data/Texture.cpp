@@ -19,12 +19,12 @@ namespace pgl
     using namespace std;
     
     Texture::Texture() :
-    _name("no name"),
-    _width(0),
-    _height(0),
-    _bpp(1),
-    _format(Texture::PixelFormat::BLACK_WHITE),
-    _data(nullptr)
+        _name("no name"),
+        _width(0),
+        _height(0),
+        _bpp(1),
+        _format(Texture::PixelFormat::BLACK_WHITE),
+        _data(nullptr)
     {
     }
     
@@ -69,41 +69,41 @@ namespace pgl
     }
     
     Texture::Texture(const string_view& name, uint32_t width, uint32_t height, PixelFormat format, const float* data) :
-    _name(name),
-    _width(width),
-    _height(height),
-    _bpp(pixelSizeof(format)),
-    _format(format),
-    _data(new GLfloat[width * height * _bpp])
+        _name(name),
+        _width(width),
+        _height(height),
+        _bpp(pixelSizeof(format)),
+        _format(format),
+        _data(new GLfloat[width * height * _bpp])
     {
         if (data) {
-            std::copy(data, data + (width * height * _bpp), _data);
+            copy(data, data + (width * height * _bpp), _data);
         }
     }
     
     Texture::Texture(uint32_t width, uint32_t height, PixelFormat format, const float* data) :
-    Texture ("no name", width, height, format, data)
+        Texture ("no name", width, height, format, data)
     {
     }
     
     Texture::Texture(const Texture& texture) :
-    _name(texture._name),
-    _width(texture._width),
-    _height(texture._height),
-    _bpp(pixelSizeof(texture._format)),
-    _format(texture._format),
-    _data(new GLfloat[_width * _height * _bpp])
+        _name(texture._name),
+        _width(texture._width),
+        _height(texture._height),
+        _bpp(pixelSizeof(texture._format)),
+        _format(texture._format),
+        _data(new GLfloat[_width * _height * _bpp])
     {
-        std::copy(texture._data, texture._data + (texture._width * texture._height * texture._bpp), _data);
+        copy(texture._data, texture._data + (texture._width * texture._height * texture._bpp), _data);
     }
     
     Texture::Texture(Texture&& texture) :
-    _name(texture._name),
-    _width(texture._width),
-    _height(texture._height),
-    _bpp(pixelSizeof(texture._format)),
-    _format(texture._format),
-    _data(texture._data)
+        _name(texture._name),
+        _width(texture._width),
+        _height(texture._height),
+        _bpp(pixelSizeof(texture._format)),
+        _format(texture._format),
+        _data(texture._data)
     {
         texture._data = nullptr;
     }
@@ -258,5 +258,95 @@ namespace pgl
         }
         
         return _texel[3];
+    }
+    
+    const Texture& Texture::operator = (const Texture &tex)
+    {
+        if (_width * _height * _bpp != tex._width * tex._height * tex._bpp) {
+            delete [] _data;
+            _data = new GLfloat [tex._width * tex._height * tex._bpp];
+        }
+        
+        _name = tex._name;
+        _width = tex._width;
+        _height = tex._height;
+        _bpp = tex._bpp;
+        _format = tex._format;
+        
+        copy(tex._data, tex._data + (_width * _height * _bpp), _data);
+        
+        return *this;
+    }
+    
+    Texture& Texture::operator |= (const Texture &tex)
+    {
+        size_t size1 = tex._width * tex._height, size2 = _width * _height;
+        bool f = true;
+        
+        for (size_t i = 0, j = 0, size = (size1 < size2 ? size1 : size2); i < size; i += _bpp, f = true) {
+            for (j = 0; j < _bpp && f; j++) {
+                f = _data[i + j] > tex._data[i + j];
+            }
+            
+            for (j = 0; j < _bpp; j++) {
+                _data[i + j] = f ? _data[i] : tex._data[i];
+            }
+        }
+        
+        return *this;
+    }
+    
+    Texture Texture::operator | (const Texture &tex) const
+    {
+        Texture temp(*this);
+        return (temp |= tex);
+    }
+    
+    Texture& Texture::operator &= (const Texture &tex)
+    {
+        size_t size1 = tex._width * tex._height, size2 = _width * _height;
+        bool f = true;
+        
+        for (size_t i = 0, j = 0, size = (size1 < size2 ? size1 : size2); i < size; i += _bpp, f = true) {
+            for (j = 0; j < _bpp && f; j++) {
+                f = _data[i + j] == tex._data[i + j];
+            }
+            
+            for (j = 0; j < _bpp; j++) {
+                _data[i + j] = f ? _data[i + j] : 0;
+            }
+        }
+        
+        return *this;
+    }
+    
+    Texture Texture::operator & (const Texture &tex) const
+    {
+        Texture temp(*this);
+        return (temp &= tex);
+    }
+    
+    Texture& Texture::operator /= (const Texture &tex)
+    {
+        size_t size1 = tex._width * tex._height, size2 = _width * _height;
+        bool f = true;
+        
+        for (size_t i = 0, j = 0, size = (size1 < size2 ? size1 : size2); i < size; i += _bpp, f = true) {
+            for (j = 0; j < _bpp && f; j++) {
+                f = _data[i] != tex._data[i];
+            }
+            
+            for (j = 0; j < _bpp; j++) {
+                _data[i + j] = f ? _data[i + j] : 0;
+            }
+        }
+        
+        return *this;
+    }
+    
+    Texture Texture::operator / (const Texture &tex) const
+    {
+        Texture temp(*this);
+        return (temp /= tex);
     }
 }

@@ -157,6 +157,33 @@ namespace pgl
         Texel at(uint32_t x, uint32_t y);
         const Texel at(uint32_t x, uint32_t y) const;
         
+        const Texture& operator = (const Texture& tex);
+        
+        /**
+         * Перегрузка операторов побитового или.
+         *
+         * Эти операторы необходимы для объединения  2-х текстур.
+         */
+        Texture& operator |= (const Texture& tex);
+        Texture operator | (const Texture& tex) const;
+        
+        /**
+         * Перегрузка операторов побитового и.
+         *
+         * Эти операторы необходимы для выделения мест пересечения 2-х текстур.
+         */
+        Texture& operator &= (const Texture& tex);
+        Texture operator & (const Texture& tex) const;
+        
+        /**
+         * Перегрузка операторов деления.
+         *
+         * Эти операторы необходимы для выделения таких мест
+         * вкоторые входит только текстура this и не входит текстура tex.
+         */
+        Texture& operator /= (const Texture& tex);
+        Texture operator / (const Texture& tex) const;
+        
     protected:
         string _name;
         GLuint _width;
