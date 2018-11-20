@@ -70,7 +70,7 @@ namespace pgl
         return (value-From1)/(From2-From1)*(To2-To1)+To1;
     }
     
-    NoiseGenerator2D::NoiseGenerator2D(float lacunarity, float persistence, float surfaceDepth, uint8_t octave, vec2 shift, int seed) :
+    NoiseGenerator2D::NoiseGenerator2D(function<float (size_t)> lacunarity, function<float (size_t)> persistence, float surfaceDepth, uint8_t octave, vec2 shift, int seed) :
         MapGenerator(seed),
         _lacunarity(lacunarity),
         _persistence(persistence),
@@ -101,8 +101,8 @@ namespace pgl
                 float x = (1.0f / (w - 1)) * i;
                 float y = (1.0f / (h - 1)) * j;
                 float sum = 0.0f;
-                float freq = _lacunarity;
-                float amplitude = _persistence;
+                float freq = _lacunarity(0);
+                float amplitude = _persistence(0);
                 
                 for(int oct = 0; oct < _octave; oct++ ) {
                     vec2 p (x * freq, y * freq);
@@ -114,8 +114,8 @@ namespace pgl
                     result = (result > 2.0f ? 2.0f : (result < -2.0 ? -2.0 : result));
                     map.depth(i, j, convert(result, 0, 1, 0, _surfaceDepth));
                     
-                    freq *= _lacunarity;
-                    amplitude *= _persistence;
+                    freq *= _lacunarity(oct);
+                    amplitude *= _persistence(oct);
                 }
                 
             }

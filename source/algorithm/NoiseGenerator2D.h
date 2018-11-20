@@ -17,10 +17,13 @@
 
 #include <vector>
 
+#include <functional>
+
 namespace pgl
 {
     using glm::vec2;
     using std::vector;
+    using std::function;
     
     class NoiseGenerator2D : public MapGenerator
     {
@@ -35,7 +38,7 @@ namespace pgl
          * @param surfaceDepth влияет на уровень поверхности над уровнем воды
          * @param octave количество суммирований волн (чем больше octave тем реалистичней результат)
          */
-        NoiseGenerator2D(float lacunarity = 2.0f, float persistence = 0.5f, float surfaceDepth = 0.0f, uint8_t octave = 1, vec2 shift = {0.0f, 0.0f}, int seed = 0);
+        NoiseGenerator2D(function<float (size_t)> lacunarity, function<float (size_t)> persistence , float surfaceDepth = 0.0f, uint8_t octave = 1, vec2 shift = {0.0f, 0.0f}, int seed = 0);
         
         /**
          * Генерирует карту высот размером w*h.
@@ -56,8 +59,8 @@ namespace pgl
         
         float PerlineNoise (vec2 st) const;
         
-        float _lacunarity;
-        float _persistence;
+        function<float (size_t)> _lacunarity;
+        function<float (size_t)> _persistence;
         float _surfaceDepth;
         uint8_t _octave;
         vec2 _shift;
