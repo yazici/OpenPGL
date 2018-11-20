@@ -78,7 +78,7 @@ namespace pgl
 
 	Texture HeightMap::texture() const
 	{
-		return Texture(_width, _height, Texture::PixelFormat::BLACK_WHITE, &_map[0]);
+		return Texture(_width, _height, &_map[0]);
 	}
 
 	Mesh HeightMap::toMesh(float divSize) const

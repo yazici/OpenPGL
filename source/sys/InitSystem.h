@@ -5,8 +5,8 @@
 //  Created by Асиф Мамедов on 26.10.2018.
 //
 
-#ifndef _INIT_SYSTEM_H_
-#define _INIT_SYSTEM_H_
+#ifndef _SYS_INIT_SYSTEM_H_
+#define _SYS_INIT_SYSTEM_H_
 
 #include <SDL2/SDL.h>
 
@@ -59,4 +59,4 @@ namespace pgl::sys
     };
 }
 
-#endif // !_INIT_SYSTEM_H_
+#endif // !_SYS_INIT_SYSTEM_H_

@@ -11,67 +11,49 @@
 namespace pgl
 {
     TextureParameter::TextureParameter(GLenum MinFilter, GLenum MagFilter, GLenum WrapS, GLenum WrapT) :
-        minFilter(MinFilter),
-        magFilter(MagFilter),
-        wrapS(WrapS),
-        wrapT(WrapT)
+    minFilter(MinFilter),
+    magFilter(MagFilter),
+    wrapS(WrapS),
+    wrapT(WrapT)
     {
     }
     
-    TextureRender::TextureRender() :
-        _handler(0),
-        _width(0),
-        _height(0),
-        _locked(false),
-        _sorageFormat(TextureRender::BLACK_WHITE32_F)
+    TextureRender::TextureRender() noexcept :
+    _handler(0),
+    _width(0),
+    _height(0),
+    _locked(false),
+    _sorageFormat(TextureRender::BLACK_WHITE32_F)
     {
     }
     
-    TextureRender::TextureRender(PixelFormat storFrom, uint32_t width, uint32_t height) :
-        _width(width),
-        _height(height),
-        _locked(false),
-        _sorageFormat(storFrom)
+    TextureRender::TextureRender(PixelFormat storFrom, uint32_t width, uint32_t height) noexcept :
+    _width(width),
+    _height(height),
+    _locked(false),
+    _sorageFormat(storFrom)
     {
         glGenTextures(1, &_handler);
         glBindTexture(GL_TEXTURE_2D, _handler);
         glTexStorage2D(GL_TEXTURE_2D, 1, storFrom, width, height);
     }
     
-    TextureRender::TextureRender(TextureRender&& textureRender) :
-        _handler(textureRender._handler),
-        _width(textureRender._width),
-        _height(textureRender._height),
-        _locked(false),
-        _sorageFormat(textureRender._sorageFormat)
+    TextureRender::TextureRender(TextureRender&& textureRender) noexcept :
+    _handler(textureRender._handler),
+    _width(textureRender._width),
+    _height(textureRender._height),
+    _locked(false),
+    _sorageFormat(textureRender._sorageFormat)
     {
         textureRender._handler = 0;
     }
     
-    TextureRender::TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height) :
-        TextureRender(storFrom, width, height)
+    TextureRender::TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height) noexcept :
+    TextureRender(storFrom, width, height)
     {
         _locked = true;
         updateData(texture, parametr);
         _locked = false;
-    }
-    
-    TextureRender::TextureRender(const TextureRender& copy) :
-        TextureRender(copy._sorageFormat, copy.width(), copy.height())
-    {
-        GLuint fbo;
-        glGenFramebuffers(1, &fbo);
-        
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        
-        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, copy._handler, 0);
-        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, _handler, 0);
-        glDrawBuffer(GL_COLOR_ATTACHMENT1);
-        
-        glBlitFramebuffer(0, 0, _width, _handler, 0, 0, _width, _handler, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-        
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glDeleteFramebuffers(1, &fbo);
     }
     
     TextureRender::~TextureRender()
@@ -123,7 +105,7 @@ namespace pgl
     {
         if (_locked && _handler) {
             glBindTexture(GL_TEXTURE_2D, _handler);
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, texture._format, GL_FLOAT, texture._data);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height, GL_RGBA, GL_FLOAT, texture._data);
             
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parametr.magFilter);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parametr.minFilter);

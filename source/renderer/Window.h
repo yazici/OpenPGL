@@ -5,8 +5,8 @@
 //  Created by Асиф Мамедов on 26.10.2018.
 //
 
-#ifndef _WINDOW_H_
-#define _WINDOW_H_
+#ifndef _RENDERER_WINDOW_H_
+#define _RENDERER_WINDOW_H_
 
 #include <string>
 #include <string_view>
@@ -141,4 +141,4 @@ namespace pgl
 
 }
 
-#endif // !_WINDOW_H_
+#endif // !_RENDERER_WINDOW_H_

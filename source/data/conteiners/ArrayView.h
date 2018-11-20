@@ -7,9 +7,9 @@
 //
 
 
-#ifndef _ARRA_VIEW_H
-#define _ARRA_VIEW_H
+#ifndef _DATA_ARRA_VIEW_H
+#define _DATA_ARRA_VIEW_H
 
 #include "ArrayView.inl"
 
-#endif // !_ARRA_VIEW_H
+#endif // !_DATA_ARRA_VIEW_H

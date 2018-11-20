@@ -112,7 +112,7 @@ namespace pgl
             BLACK_WHITE8_S = GL_R8I
         };
         
-        TextureRender();
+        TextureRender() noexcept;
         
         /**
          * Конструктор выделяющий необходимое количество памяти для текстуры в GPU.
@@ -124,9 +124,9 @@ namespace pgl
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        TextureRender(PixelFormat storFrom, uint32_t width, uint32_t height);
+        TextureRender(PixelFormat storFrom, uint32_t width, uint32_t height) noexcept;
         
-        TextureRender(TextureRender&& texureRender);
+        TextureRender(TextureRender&& texureRender) noexcept;
         
         /**
          * Конструктор.
@@ -139,9 +139,9 @@ namespace pgl
          * @param width ширина текстуры.
          * @param height высота текстуры
          */
-        TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height);
+        TextureRender(const Texture& texture, PixelFormat storFrom, TextureParameter parametr, uint32_t width, uint32_t height) noexcept;
         
-        TextureRender(const TextureRender&);
+        TextureRender(const TextureRender&) = delete;
         
         ~TextureRender();
         
