@@ -10,6 +10,8 @@
 
 #include "data/Texture.h"
 
+#include <GL/glew.h>
+
 namespace pgl
 {
     

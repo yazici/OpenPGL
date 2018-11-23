@@ -30,7 +30,7 @@ namespace pgl
         _name(name),
         _width(width),
         _height(height),
-        _data(new GLfloat[width * height * 4])
+        _data(new float[width * height * 4])
     {
         if (data) {
             copy(data, data + (width * height * 4), _data);
@@ -46,7 +46,7 @@ namespace pgl
         _name(texture._name),
         _width(texture._width),
         _height(texture._height),
-        _data(new GLfloat[_width * _height * 4])
+        _data(new float[_width * _height * 4])
     {
         copy(texture._data, texture._data + (texture._width * texture._height * 4), _data);
     }
@@ -71,7 +71,7 @@ namespace pgl
                 delete [] _data;
             }
             
-            _data = new GLfloat[width * height * 4];
+            _data = new float[width * height * 4];
         }
         
         _width = width;
@@ -108,22 +108,22 @@ namespace pgl
     }
     
     
-    ArrayView<GLfloat> Texture::line(uint32_t x)
+    ArrayView<float> Texture::line(uint32_t x)
     {
         if (x >= _width) {
             throw invalid_argument("Crossing the array");
         }
         
-        return ArrayView<GLfloat> (_data +(_width * x * 4), _data +(_width * x) + (_height * 4 - 1));
+        return ArrayView<float> (_data +(_width * x * 4), _data +(_width * x) + (_height * 4 - 1));
     }
     
-    const ArrayView<GLfloat> Texture::line(uint32_t x) const
+    const ArrayView<float> Texture::line(uint32_t x) const
     {
         if (x >= _width) {
             throw invalid_argument("Crossing the array");
         }
         
-        return ArrayView<GLfloat> (_data +(_width * x * 4), _data +(_width * x) + (_height * 4 - 1));
+        return ArrayView<float> (_data +(_width * x * 4), _data +(_width * x) + (_height * 4 - 1));
     }
     
     Texture::Texel Texture::at(uint32_t x, uint32_t y)
@@ -144,42 +144,42 @@ namespace pgl
         return Texel(&_data[(x * _width + y) * 4]);
     }
     
-    void Texture::Texel::red(GLubyte r) noexcept
+    void Texture::Texel::red(uint8_t r) noexcept
     {
         _texel[0] = r;
     }
     
-    void Texture::Texel::green(GLubyte g) noexcept
+    void Texture::Texel::green(uint8_t g) noexcept
     {
         _texel[1] = g;
     }
     
-    void Texture::Texel::blue(GLubyte b) noexcept
+    void Texture::Texel::blue(uint8_t b) noexcept
     {
         _texel[2] = b;
     }
     
-    void Texture::Texel::alpha(GLubyte a) noexcept
+    void Texture::Texel::alpha(uint8_t a) noexcept
     {
         _texel[3] = a;
     }
     
-    GLfloat Texture::Texel::red() const noexcept
+    float Texture::Texel::red() const noexcept
     {
         return _texel[0];
     }
     
-    GLfloat Texture::Texel::green() const noexcept
+    float Texture::Texel::green() const noexcept
     {
         return _texel[1];
     }
     
-    GLfloat Texture::Texel::blue() const noexcept
+    float Texture::Texel::blue() const noexcept
     {
         return _texel[2];
     }
     
-    GLfloat Texture::Texel::alpha() const noexcept
+    float Texture::Texel::alpha() const noexcept
     {
         return _texel[3];
     }
@@ -201,7 +201,7 @@ namespace pgl
                 delete [] _data;
             }
             
-            _data = new GLfloat [tex._width * tex._height * 4];
+            _data = new float [tex._width * tex._height * 4];
         }
         
         _name = tex._name;

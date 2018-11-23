@@ -18,6 +18,7 @@
 #include "renderer/VertexObject.h"
 
 #include <functional>
+#include <cmath>
 
 using namespace pgl;
 using namespace glm;
@@ -41,8 +42,13 @@ int main(int argc, char **argv)
 //    CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
 //    DiamondSquare alg(0.5f, 50.0);
     
-    function<float (size_t)> l = [](size_t i) {return 2.0f;};
-    function<float (size_t)> f = [](size_t i) {return 0.6f;};
+    function<float (size_t)> l = [](size_t i) {
+        return 2.0f;
+    };
+    
+    function<float (size_t)> f = [](size_t i) {
+        return 0.6f;
+    };
     NoiseGenerator2D alg(l, f, 240, 12, {-4.0, 14.0});
     HeightMap map = alg.generate(2049, 2049);
     Mesh plane = map.toMesh(.2f);

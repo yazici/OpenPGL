@@ -9,7 +9,6 @@
 #ifndef _DATA_TEXTURE_H
 #define _DATA_TEXTURE_H
 
-#include <GL/glew.h>
 #include <string>
 
 #include <data/conteiners/ArrayView.h>
@@ -39,24 +38,24 @@ namespace pgl
              *
              * @param texel указатель на тексель
              */
-            Texel(GLfloat* texel) :
+            Texel(float* texel) :
             _texel(texel)
             {
             }
             
-            void red(GLubyte r) noexcept;
-            void green(GLubyte g) noexcept;
-            void blue(GLubyte b) noexcept;
-            void alpha(GLubyte a) noexcept;
+            void red(uint8_t r) noexcept;
+            void green(uint8_t g) noexcept;
+            void blue(uint8_t b) noexcept;
+            void alpha(uint8_t a) noexcept;
             
-            GLfloat red() const noexcept;
-            GLfloat green() const noexcept;
-            GLfloat blue() const noexcept;
-            GLfloat alpha() const noexcept;
+            float red() const noexcept;
+            float green() const noexcept;
+            float blue() const noexcept;
+            float alpha() const noexcept;
             
             
         private:
-            GLfloat* _texel;
+            float* _texel;
         };
         
         
@@ -111,8 +110,8 @@ namespace pgl
          * @throw invalid_argument возникает в случе если произошёл выход за границы срезки
          * @return срезка
          */
-        ArrayView<GLfloat> line(uint32_t x);
-        const ArrayView<GLfloat> line(uint32_t x) const;
+        ArrayView<float> line(uint32_t x);
+        const ArrayView<float> line(uint32_t x) const;
         
         /**
          * Метод с помощью которого можно получать доступ к отдельным тексклям.
@@ -163,9 +162,9 @@ namespace pgl
         
     protected:
         string _name;
-        GLuint _width;
-        GLuint _height;
-        GLfloat* _data;
+        uint32_t _width;
+        uint32_t _height;
+        float* _data;
     };
 }
 
