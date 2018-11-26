@@ -18,27 +18,31 @@ namespace pgl
     
     using namespace std;
     
-    Texture::Texture() :
+    using glm::mix;
+    
+    Texture::Texture(const vec4& backgroundColor) :
         _name("no name"),
         _width(0),
         _height(0),
-        _data(nullptr)
+        _data(nullptr),
+        _backgroundColor(backgroundColor)
     {
     }
     
-    Texture::Texture(const string_view& name, uint32_t width, uint32_t height, const float* data) :
+    Texture::Texture(const string_view& name, uint32_t width, uint32_t height, const float* data, const vec4& backgroundColor) :
         _name(name),
         _width(width),
         _height(height),
-        _data(new float[width * height * 4])
+        _data(new float[width * height * 4]),
+        _backgroundColor(backgroundColor)
     {
         if (data) {
             copy(data, data + (width * height * 4), _data);
         }
     }
     
-    Texture::Texture(uint32_t width, uint32_t height, const float* data) :
-        Texture ("no name", width, height, data)
+    Texture::Texture(uint32_t width, uint32_t height, const float* data, const vec4& backgroundColor) :
+        Texture ("no name", width, height, data, backgroundColor)
     {
     }
     
@@ -46,7 +50,8 @@ namespace pgl
         _name(texture._name),
         _width(texture._width),
         _height(texture._height),
-        _data(new float[_width * _height * 4])
+        _data(new float[_width * _height * 4]),
+        _backgroundColor(texture._backgroundColor)
     {
         copy(texture._data, texture._data + (texture._width * texture._height * 4), _data);
     }
@@ -55,7 +60,8 @@ namespace pgl
         _name(texture._name),
         _width(texture._width),
         _height(texture._height),
-        _data(texture._data)
+        _data(texture._data),
+        _backgroundColor(texture._backgroundColor)
     {
         texture._data = nullptr;
     }
@@ -95,6 +101,16 @@ namespace pgl
     uint32_t Texture::height() const noexcept
     {
         return _height;
+    }
+    
+    void Texture::backgroundColor(const vec4 &color)
+    {
+        _backgroundColor = color;
+    }
+    
+    vec4 Texture::backgroundColor() const noexcept
+    {
+        return _backgroundColor;
     }
     
     string_view Texture::name() const noexcept
@@ -191,6 +207,31 @@ namespace pgl
         for (size_t i = 0, size = (size1 < size2 ? size1 : size2) * 4; i < size; i++) {
             _data[i] *= a1;
             _data[i] += tex._data[i] * a1;
+        }
+    }
+    
+    void Texture::blend(const Texture &tex, float a)
+    {
+        size_t size1 = _width * _height, size2 = tex._width * tex._height;
+        
+        for (size_t i = 0, size = (size1 < size2 ? size1 : size2) * 4; i < size; i++) {
+             _data[i] = mix(_data[i], tex._data[i], a);
+        }
+    }
+    
+    void Texture::cmbination(const Texture &tex)
+    {
+        size_t size1 = _width * _height, size2 = tex._width * tex._height;
+        
+        for (size_t i = 0, size = size1 < size2 ? size1 : size2; i < size; i += 4) {
+            if (_data[i] != _backgroundColor.r && _data[i + 1] != _backgroundColor.g && _data[i + 2] != _backgroundColor.b && _data[i + 3] != _backgroundColor.a) {
+                if (_data[i] != tex._data[i] && _data[i + 1] != tex._data[i + 1] && _data[i + 2] != tex._data[i + 2] && _data[i + 3] != tex._data[i + 3]) {
+                    _data[i] = tex._data[i];
+                    _data[i + 1] = tex._data[i + 1];
+                    _data[i + 2] = tex._data[i + 2];
+                    _data[i + 3] = tex._data[i + 3];
+                }
+            }
         }
     }
     
