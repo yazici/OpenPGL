@@ -43,7 +43,7 @@ namespace pgl
              * @param texel указатель на тексель
              */
             Texel(float* texel) :
-            _texel(texel)
+                _texel(texel)
             {
             }
             
@@ -62,7 +62,11 @@ namespace pgl
             float* _texel;
         };
         
-        
+        /**
+         * Конструктор.
+         *
+         * @param backgroundColor цвето заднего фона.
+         */
         Texture(const vec4& backgroundColor = {0.0f, 0.0f, 0.0f, 0.0f});
         
         /**
@@ -85,6 +89,25 @@ namespace pgl
          * @param backgroundColor цвет заднего фона
          */
         Texture(uint32_t width, uint32_t height, const float* data = nullptr, const vec4& backgroundColor = {0.0f, 0.0f, 0.0f, 0.0f});
+        
+        /**
+         * Конструктор.
+         *
+         * @param name имя текстуры
+         * @param width ширина текстуры
+         * @param height высота текстуры
+         * @param backgroundColor цвет заднего фона
+         */
+        Texture(const string_view& name, uint32_t width, uint32_t height, const vec4& backgroundColor = {0.0f, 0.0f, 0.0f, 0.0f});
+        
+        /**
+         * Конструктор.
+         *
+         * @param width ширина текстуры
+         * @param height высота текстуры
+         * @param backgroundColor цвет заднего фона
+         */
+        Texture(uint32_t width, uint32_t height, const vec4& backgroundColor = {0.0f, 0.0f, 0.0f, 0.0f});
         
         Texture(Texture&& texture);
         
@@ -158,7 +181,7 @@ namespace pgl
          *
          * @param tex текстура с которрой нужно объединятся
          */
-        void cmbination(const Texture& tex);
+        void combination(const Texture& tex);
         
         const Texture& operator = (const Texture& tex);
         

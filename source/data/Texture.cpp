@@ -46,6 +46,22 @@ namespace pgl
     {
     }
     
+    Texture::Texture(const string_view& name, uint32_t width, uint32_t height, const vec4& backgroundColor) :
+        Texture(name, width, height, nullptr, backgroundColor)
+    {
+        for (size_t i = 0, size = width * height * 4; i < size; i += 4) {
+            _data[i] = backgroundColor.r;
+            _data[i + 1] = backgroundColor.g;
+            _data[i + 2] = backgroundColor.b;
+            _data[i + 3] = backgroundColor.a;
+        }
+    }
+    
+    Texture::Texture(uint32_t width, uint32_t height, const vec4& backgroundColor) :
+        Texture("no name", width, height, backgroundColor)
+    {
+    }
+    
     Texture::Texture(const Texture& texture) :
         _name(texture._name),
         _width(texture._width),
@@ -219,11 +235,11 @@ namespace pgl
         }
     }
     
-    void Texture::cmbination(const Texture &tex)
+    void Texture::combination(const Texture &tex)
     {
         size_t size1 = _width * _height, size2 = tex._width * tex._height;
         
-        for (size_t i = 0, size = size1 < size2 ? size1 : size2; i < size; i += 4) {
+        for (size_t i = 0, size = (size1 < size2 ? size1 : size2) * 4; i < size; i += 4) {
             if (_data[i] != _backgroundColor.r && _data[i + 1] != _backgroundColor.g && _data[i + 2] != _backgroundColor.b && _data[i + 3] != _backgroundColor.a) {
                 if (_data[i] != tex._data[i] && _data[i + 1] != tex._data[i + 1] && _data[i + 2] != tex._data[i + 2] && _data[i + 3] != tex._data[i + 3]) {
                     _data[i] = tex._data[i];
