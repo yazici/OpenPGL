@@ -1,23 +1,25 @@
 
 set(RENDERER_SOURCE
-    renderer/IndexBuffer.cpp
+    renderer/Window.cpp
     renderer/Shader.cpp
-    renderer/ShaderProgram.cpp
-    renderer/TextureRender.cpp
     renderer/VertexBuffer.cpp
     renderer/VertexObject.cpp
-    renderer/Window.cpp
+    renderer/ElementBuffer.cpp
+    renderer/AttributeInfo.cpp
+    renderer/ShaderProgram.cpp
+    renderer/TextureRender.cpp
     )
 
 set(RENDERER_HEADER
-    renderer/IndexBuffer.h
+    renderer/Window.h
     renderer/Shader.h
-    renderer/ShaderProgram.h
-    renderer/TextureRender.h
+    renderer/Window.inl
     renderer/VertexBuffer.h
     renderer/VertexObject.h
-    renderer/Window.h
-    renderer/Window.inl
+    renderer/ElementBuffer.h
+    renderer/AttributeInfo.h
+    renderer/ShaderProgram.h
+    renderer/TextureRender.h
     )
 
 set(SHADERS

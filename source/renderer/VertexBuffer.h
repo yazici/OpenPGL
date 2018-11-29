@@ -1,82 +1,74 @@
-#ifndef _RENDERER_VERTEXBUFFER_H
-#define _RENDERER_VERTEXBUFFER_H
+#ifndef _RENDERER_VERTEX_BUFFER
+#define _RENDERER_VERTEX_BUFFER
 
+#include <memory>
 #include <GL/glew.h>
 
 namespace pgl
 {
-    class VertexBuffer
-    {
-    public:
-        
-		/**
-		* Создает новое хранилище данных размером sizePerVertex * vertNum. Старое хранилище
-		* данных будет безвозвратно удалено.
-		*
-		* @param sizePerVertex размер вершины.
-		* @param vertNum количество вершин.
-		* @param usage задает ожидаемый шаблон использования буфера данных.
-		* @param data указатель на данные, которые будут скопированы в буфер данных.
-		* Если указатель NULL, то буфер указанного размера sizePerVertex * vertNum все равно будет создан.
-		* @return возвращается указатель на созданный объект.
-		*/
-		static VertexBuffer *create(int sizePerVertex, int vertNum, const void *data = nullptr, GLenum usage = GL_STATIC_DRAW);
+	enum DrawMode : GLenum
+	{
+		STATIC_DRAW  = GL_STATIC_DRAW,
+		DYNAMIC_DRAW = GL_DYNAMIC_DRAW,
+		STREAM_DRAW  = GL_STREAM_DRAW
+	};
+
+	class VertexBuffer;
+	typedef std::unique_ptr<VertexBuffer> VboPtr;
+
+	class VertexBuffer
+	{
+	public:
 
 		/**
-		* Деструктор объекта. Вызывает операцию очищения буфера данных.
-		*/
-        ~VertexBuffer();
-		
-		/**
 		* Создает новое хранилище данных размером sizePerVertex * vertNum. Старое хранилище
 		* данных будет безвозвратно удалено.
 		*
-		* @param sizePerVertex размер вершины.
-		* @param vertNum количество вершин.
-		* @param usage задает ожидаемый шаблон использования буфера данных.
+		* @param size размер вершины.
+		* @param number количество вершин.
+		* @param mode задает ожидаемый шаблон использования буфера данных.
 		* @param data указатель на данные, которые будут скопированы в буфер данных.
-		* Если указатель NULL, то буфер указанного размера sizePerVertex * vertNum все равно будет создан.
+		* Если указатель NULL, то буфер указанного размера size * number все равно будет создан.
+		* @return возвращается указатель на созданный объект.
 		*/
-		void newData(int sizePerVertex, int vertNum, const void *data = nullptr, GLenum usage = GL_STATIC_DRAW);
+		static VboPtr create(unsigned int number, unsigned int size, const void *data = nullptr, DrawMode mode = STATIC_DRAW);
+
+		~VertexBuffer();
 
 		/**
 		* Обновляет данные в созданом буфере. Обновлению подлежат только данные, которые
 		* хранятся в буфере, сам буфер не будет создан заного или перераспределен.
 		*
 		* @param offset смещение в вершинах от начала буфера где начнется обновление данных.
-		* @param len количество вершин, подлежащих обновлению. 
+		* @param number количество вершин, подлежащих обновлению.
 		* @param data указатель на данные, которые будут скопированы в буфер.
 		*/
-		void updateData(int offset, int len, const void *data);
-			
+		void update(unsigned int offset, unsigned int number, const void *data);
+
 		/**
-		* Привязывает буфер к цели GL_ARRAY_BUFFER. 
+		* Привязывает буфер.
 		*/
-        void bind() const noexcept;
+		void bind() const;
 
 		/**
 		* Отвязывает буфер.
 		*/
-        void unbind() const noexcept;
-
-		/**
-		* Возвращает количество элементов в буфере.
-		* @return количество элементов в буфере.
-		*/
-		int size() const noexcept;
+		void unbind() const;
 
 	private:
 
-		VertexBuffer();
+		VertexBuffer(unsigned int number, unsigned int size, DrawMode mode, const void *data);
 
-		VertexBuffer(const VertexBuffer &v) = delete;
+		VertexBuffer(const VertexBuffer &) = delete;
 
-    private:
-        GLuint _handle;
-		int _sizePerVertex;
-		int _vertNumber;
-		GLenum _usage;
-    };
+		void init(unsigned int number, unsigned int size, DrawMode mode, const void *data);
+
+	private:
+		DrawMode _mode;
+		unsigned int _buffer;
+		unsigned int _number;
+		unsigned int _size;
+	};
 }
 
-#endif //!_RENDERER_VERTEXBUFFER_H
+#endif // !_RENDERER_VERTEX_BUFFER

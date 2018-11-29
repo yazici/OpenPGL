@@ -14,8 +14,9 @@
 #include "data/Mesh.h"
 #include "renderer/Window.h"
 #include "renderer/VertexBuffer.h"
-#include "renderer/IndexBuffer.h"
+#include "renderer/ElementBuffer.h"
 #include "renderer/VertexObject.h"
+#include "renderer/ShaderProgram.h"
 
 #include <functional>
 #include <cmath>
@@ -30,11 +31,11 @@ int main(int argc, char **argv)
     Window window("OpenPGL", 800, 600);
     
     Mesh water = Mesh::createPlane(1, 1, 700);
-    IndexBuffer *ebo = IndexBuffer::create(water.triangles().size(), water.triangles().data());
-    VertexBuffer *position = VertexBuffer::create(sizeof(vec3), water.vertices().size(), water.vertices().data());
-    VertexBuffer *normal = VertexBuffer::create(sizeof(vec3), water.normals().size(), water.normals().data());
-    VertexObject *waterVao = VertexObject::create("water");
-    waterVao->addIndexBuffer(ebo);
+	EboPtr ebo = ElementBuffer::create(water.triangles().size(), water.triangles().data());
+    VboPtr position = VertexBuffer::create(sizeof(vec3), water.vertices().size(), water.vertices().data());
+    VboPtr normal = VertexBuffer::create(sizeof(vec3), water.normals().size(), water.normals().data());
+    VaoPtr waterVao = VertexObject::create();
+    waterVao->addElementBuffer(ebo);
     waterVao->addVertexBuffer(position, AttributeInfo::POSITION);
     waterVao->addVertexBuffer(normal, AttributeInfo::NORMAL);
     
@@ -50,22 +51,22 @@ int main(int argc, char **argv)
         return 0.6f;
     };
     NoiseGenerator2D alg(l, f, 240, 12, {-4.0, 14.0});
-    HeightMap map = alg.generate(2049, 2049);
+    HeightMap map = alg.generate(513, 513);
     Mesh plane = map.toMesh(.2f);
     
-    ebo = IndexBuffer::create(plane.triangles().size(), plane.triangles().data());
+    ebo = ElementBuffer::create(plane.triangles().size(), plane.triangles().data());
     position = VertexBuffer::create(sizeof(vec3), plane.vertices().size(), plane.vertices().data());
     normal = VertexBuffer::create(sizeof(vec3), plane.normals().size(), plane.normals().data());
     
-    VertexObject *vao = VertexObject::create("plane");
-    vao->addIndexBuffer(ebo);
+    VaoPtr vao = VertexObject::create();
+    vao->addElementBuffer(ebo);
     vao->addVertexBuffer(position, AttributeInfo::POSITION);
     vao->addVertexBuffer(normal, AttributeInfo::NORMAL);
     
     ShaderProgram shader("shaders/ADS.vert", "shaders/ADS.frag");
     shader.use();
     
-    vec3 cameraPosition(0.0f, 180.0f, 350.0f);
+    vec3 cameraPosition(0.0f, 0.0f, 0.0f);
     vec3 lightPosition(30.0f, 120.0f, 0.0f);
     vec3 terrainIntensity(0.15f, 0.8f, 0.1f);
     vec3 waterIntensity(0.15f, 0.1f, 0.8f);

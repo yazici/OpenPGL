@@ -1,59 +1,139 @@
-#include <fstream>
 #include <stdexcept>
 #include <cassert>
+#include <fstream>
+#include <sstream>
 
-#include "Shader.h"
+#include <renderer/Shader.h>
 
 namespace pgl
 {
-	Shader::Shader(ShaderType type, const string_view &path) :
-		_type(type),
-		_handle(0)
+	using namespace std;
+
+	Shader::Shader()
+		: _shader(0)
 	{
-		string source = LoadFromFile(path);
-		_path.assign(path.data());
-		Compile(source);
 	}
 
-	void Shader::Compile(const string_view &source)
+	/**
+	* Создает и компилирует шейдер.
+	* @param type тип шейдера.
+	* @param path путь к файлу с исходным кодом.
+	*/
+	Shader::Shader(ShaderType type, const string_view &path)
+		: _type(type), 
+		  _path(path),
+		  _shader(0)
 	{
-		_handle = glCreateShader(_type);
+		string source = loadFromFile(path);
+		compile(source);
+	}
 
-		if (!_handle) {
-			throw runtime_error("Shader can't be created.");
+	Shader::Shader(const Shader &s)
+		//: Shader(s._type, s._path)
+	{
+		_type = s._type;
+		_path = s._path;
+		_shader = 0;
+
+		// При копировании объекта, созданного при помощи конструктора по умолчанию,
+		// будет выброшено исключение "The file can't be opened.", потому что _path.length()
+		// равна 0. Для правильного копирования "пустых" объектов необходима конструкция...
+		if (_path.length() > 0) {
+			compile(_type, _path);
+		}
+	}
+
+	Shader::Shader(Shader &&s)
+		: _path(s._path),
+		  _type(s._type)
+	{
+		_shader = s._shader;
+		s._shader = 0;
+	}
+
+	/**
+	* Удяляет шейдерный объект.
+	*/
+	Shader::~Shader()
+	{
+		glDeleteShader(_shader);
+	}
+
+	void Shader::compile(ShaderType type, const std::string_view &path)
+	{
+		if (_shader) {
+			throw runtime_error("The shader is already compiled.");
 		}
 
-		const char *data = source.data();
-		glShaderSource(_handle, 1, &data, nullptr);
-		glCompileShader(_handle);
+		_type = type;
+		_path = path;
+		string source = loadFromFile(path);
+		compile(source);
+	}
+
+	/**
+	* Компилирует шейдер с заданным исходным кодом.
+	* @param s исходный код шейдера.
+	*/
+	void Shader::compile(const string_view &s)
+	{
+		assert(!_shader);
+		
+		const char *source = s.data();
+		_shader = glCreateShader(_type);
+
+		if (!_shader) {
+			throw runtime_error("Shader can't be created. OpenGL can't allocate resources.");
+		}
+
+		glShaderSource(_shader, 1, &source, nullptr);
+		glCompileShader(_shader);
+		auto e = getError();
+
+		if (e) {
+			stringstream msg;
+			msg << "Shader can't be compiled. Log: " << e.value();
+			throw runtime_error(msg.str());
+		}
+	}
+
+	/**
+	* Возврашает строку, содержащую текст ошибки или nullopt.
+	* @return текст ошибки или nullopt, если ошибки не было.
+	*/
+	optional<string> Shader::getError() const
+	{
+		assert(_shader);
 
 		GLint status = 0;
-		glGetShaderiv(_handle, GL_COMPILE_STATUS, &status);
+		glGetShaderiv(_shader, GL_COMPILE_STATUS, &status);
 		
 		if (!status) {
-			glGetShaderiv(_handle, GL_INFO_LOG_LENGTH, &status);
+			glGetShaderiv(_shader, GL_INFO_LOG_LENGTH, &status);
 			string error(status, '\0');
-			glGetShaderInfoLog(_handle, status, nullptr, &error[0]);
-			glDeleteShader(_handle);
-			_handle = 0;
-			throw runtime_error(error);
+			glGetShaderInfoLog(_shader, status, nullptr, &error[0]);
+			return error;
 		}
+		
+		return nullopt;
 	}
 
-	string Shader::LoadFromFile(const string_view &path)
+	/**
+	* Загружает исходный код из файла.
+	* @param path путь к файлу с исходным кодом.
+	* @return текст, загруженный из файла path.
+	*/
+	string Shader::loadFromFile(const string_view &path) const
 	{
 		ifstream file(path.data());
 
-		if (!file) {
-			throw runtime_error("File can't be opened.");
+		if (file) {
+			auto buf = file.rdbuf();
+			stringstream s;
+			s << buf;
+			return s.str();
 		}
 
-		auto buf = file.rdbuf();
-		auto size = buf->pubseekoff(0, file.end);
-		buf->pubseekoff(0, file.beg);
-		string source((unsigned int)size, '\0');
-		buf->sgetn(&source[0], size);
-
-		return source;
+		throw invalid_argument("The file can't be opened.");
 	}
 }
