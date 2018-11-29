@@ -73,7 +73,8 @@ int main(int argc, char **argv)
     function<float (size_t)> f = [](size_t i) {
         return 0.5f;
     };
-    NoiseGenerator2D alg(l, f, 0.4, 6, {-4.0, 14.0}, 1);
+    
+    NoiseGenerator2D alg(l, f, 0.5, 12, {-4.0, 14.0}, 1);
     HeightMap map = alg.generate(512, 512);
     
     Texture texture = map.texture();
