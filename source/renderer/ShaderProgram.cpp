@@ -50,6 +50,7 @@ namespace pgl
 	*/
 	void ShaderProgram::use() const
 	{
+		glUseProgram(_program);
 	}
 
 	/**

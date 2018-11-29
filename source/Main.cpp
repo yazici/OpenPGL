@@ -44,15 +44,15 @@ int main(int argc, char **argv)
 //    DiamondSquare alg(0.5f, 50.0);
     
     function<float (size_t)> l = [](size_t i) {
-        return 2.0f;
+        return 1.2f;
     };
     
     function<float (size_t)> f = [](size_t i) {
-        return 0.6f;
+        return 0.8f;
     };
     NoiseGenerator2D alg(l, f, 240, 12, {-4.0, 14.0});
-    HeightMap map = alg.generate(513, 513);
-    Mesh plane = map.toMesh(.2f);
+    HeightMap map = alg.generate(1025, 1025);
+    Mesh plane = map.toMesh(.4f);
     
     ebo = ElementBuffer::create(plane.triangles().size(), plane.triangles().data());
     position = VertexBuffer::create(sizeof(vec3), plane.vertices().size(), plane.vertices().data());
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     ShaderProgram shader("shaders/ADS.vert", "shaders/ADS.frag");
     shader.use();
     
-    vec3 cameraPosition(0.0f, 0.0f, 0.0f);
+    vec3 cameraPosition(0.0f, 120.0f, 350.0f);
     vec3 lightPosition(30.0f, 120.0f, 0.0f);
     vec3 terrainIntensity(0.15f, 0.8f, 0.1f);
     vec3 waterIntensity(0.15f, 0.1f, 0.8f);
