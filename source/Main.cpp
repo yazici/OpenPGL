@@ -32,123 +32,74 @@ int main(int argc, char **argv)
 {
     sys::InitSystem::init();
     Window window("OpenPGL", 800, 600);
-
-    Mesh water = Mesh::createPlane(1, 1, 700);
-    EboPtr ebo = ElementBuffer::create(water.triangles().size(), water.triangles().data());
-    VboPtr position = VertexBuffer::create(sizeof(vec3), water.vertices().size(), water.vertices().data());
-    VboPtr normal = VertexBuffer::create(sizeof(vec3), water.normals().size(), water.normals().data());
-    VaoPtr waterVao = VertexObject::create();
-    waterVao->addElementBuffer(ebo);
-    waterVao->addVertexBuffer(position, AttributeInfo::POSITION);
-    waterVao->addVertexBuffer(normal, AttributeInfo::NORMAL);
-
-//    CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
-//    CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
-//    DiamondSquare alg(0.5f, 50.0);
-
+    
+    GLfloat pos[] = {
+        -1.0f, -1.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f
+    };
+    
+    GLfloat texCoord[] = {
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f
+    };
+    
+    GLuint indices[] {
+        1, 0, 2,
+        3, 0, 2
+    };
+    
+    EboPtr ebo = ElementBuffer::create(6, indices);
+    
+    VboPtr posBuf = VertexBuffer::create(4, 12, pos);
+    VboPtr texCoordBuf = VertexBuffer::create(4, 8, texCoord);
+    
+    VaoPtr vao = VertexObject::create();
+    
+    vao->addElementBuffer(ebo);
+    vao->addVertexBuffer(posBuf, AttributeInfo::POSITION);
+    vao->addVertexBuffer(texCoordBuf, AttributeInfo::TEXCOORD);
+    
+    ShaderProgram shader("/Users/asifmamedov/Desktop/PCG/OpenPGL/source/renderer/shaders/rednerTexture.vert", "/Users/asifmamedov/Desktop/PCG/OpenPGL/source/renderer/shaders/rednerTexture.frag");
+    shader.use();
+    
     function<float (size_t)> l = [](size_t i) {
         return 2.0f;
     };
-
+    
     function<float (size_t)> f = [](size_t i) {
         return 0.5f;
     };
-    NoiseGenerator2D alg(l, f, 500, 12, {-4.0, 14.0});
-    HeightMap map = alg.generate(4096, 4096);
-    Mesh plane = map.toMesh(.2f);
-
-    ebo = ElementBuffer::create(plane.triangles().size(), plane.triangles().data());
-    position = VertexBuffer::create(sizeof(vec3), plane.vertices().size(), plane.vertices().data());
-    normal = VertexBuffer::create(sizeof(vec3), plane.normals().size(), plane.normals().data());
-
-    VaoPtr vao = VertexObject::create();
-    vao->addElementBuffer(ebo);
-    vao->addVertexBuffer(position, AttributeInfo::POSITION);
-    vao->addVertexBuffer(normal, AttributeInfo::NORMAL);
-
-    ShaderProgram shader("shaders/ADS.vert", "shaders/ADS.frag");
-    shader.use();
-
-    vec3 cameraPosition(0.0f, 120.0f, 350.0f);
-    vec3 lightPosition(30.0f, 120.0f, 0.0f);
-    vec3 terrainIntensity(0.15f, 0.8f, 0.1f);
-    vec3 waterIntensity(0.15f, 0.1f, 0.8f);
-    vec3 ka(0.2f);
-    vec3 kd(0.7f);
-    vec3 ks(0.3f);
-    float shininess = 8.0f;
-
-    mat4 s = scale(mat4(1.0f), vec3(1.0f));
-    mat4 view = lookAt(cameraPosition, vec3(0.0f, 0.0, -1.0f), vec3(0.0f, 1.0f, 0.0f));
-    mat4 projection = perspective(radians(45.0f), (float)800 / 600, 0.1f, 800.0f);
-    float radian = 0.0f;
-
-    bool b_rotate = true;
+    NoiseGenerator2D alg(l, f, 0.4, 6, {-4.0, 14.0}, 1);
+    HeightMap map = alg.generate(512, 512);
+    
+    Texture texture = map.texture();
+    
+    TextureRender renderTexture (texture, TextureRender::RGBA16_F, TextureParameter(), texture.width(), texture.height());
+    
+    renderTexture.bind();
+    shader.uniform("tex", 0);
+    
     SDL_Event event;
     bool run = true;
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glViewport(0, 0, 800, 600);
-    glEnable(GL_DEPTH_TEST);
-
+    
+    window.clearColor(0.0f, 0.0f, 0.0f);
+    
     while (run) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                 run = false;
-            } else if (event.type == SDL_WINDOWEVENT) {
-                switch (event.window.event)
-                {
-                    case SDL_WINDOWEVENT_RESIZED:
-                        auto[w, h] = window.size();
-                        glViewport(0, 0, w, h);
-                        break;
-                }
-            } else if (event.type == SDL_KEYDOWN) {
-                switch (event.key.keysym.sym)
-                {
-                    case SDLK_m:
-                        b_rotate = !b_rotate;
-                        break;
-                    case SDLK_l:
-                        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                        break;
-                    case SDLK_p:
-                        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                        break;
-                    default:
-                        break;
-                }
             }
         }
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        radian = b_rotate ? SDL_GetTicks() * 25.0f / 1000.0f : radian;
-        mat4 r = rotate(mat4(1.0f), radians(radian), vec3(0.0f, 1.0f, 0.0f));
-        mat4 model = r * s;
-        mat4 mv = view * model;
-        mat3 normalMatrix = mat3(transpose(inverse(mv)));
-        mat4 mvp = projection * mv;
-        lightPosition.x = 250.0f * cos(SDL_GetTicks() / 1000.0f);
-        lightPosition.z = 250.0f * sin(SDL_GetTicks() / 1000.0f);
-
-        shader.uniform("uMVP", mvp);
-        shader.uniform("uModelView", mv);
-        shader.uniform("uNormalMatrix", normalMatrix);
-        shader.uniform("uLightPosition", lightPosition);
-
-        shader.uniform("uIntensity", terrainIntensity);
-        shader.uniform("uKa", ka);
-        shader.uniform("uKd", kd);
-        shader.uniform("uKs", ks);
-        shader.uniform("uShininess", shininess);
-
+        
+        window.clear();
         vao->draw();
-        shader.uniform("uIntensity", waterIntensity);
-        waterVao->draw();
-
         window.present();
     }
-
-    sys::InitSystem::quit();
     
+    sys::InitSystem::quit();
     return 0;
 }

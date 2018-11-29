@@ -96,6 +96,31 @@ namespace pgl
     {
         HeightMap map(w, h);
         
+//        for(int i = 0; i < w; i++) {
+//            for(int j = 0 ; j < h; j++) {
+//                float x = (1.0f / (w - 1)) * i;
+//                float y = (1.0f / (h - 1)) * j;
+//                float sum = 0.0f;
+//                float freq = _lacunarity(0);
+//                float amplitude = _persistence(0);
+//
+//                for(int oct = 0; oct < _octave; oct++ ) {
+//                    glm::vec2 p (x * freq, y * freq);
+//                    p += _shift;
+//
+//                    sum += PerlineNoise(p) * amplitude;
+//
+//                    // Полученное значение приводится от 0 до 1
+//                    float result = (sum) / 2.0f;
+//
+//                    result = (result > 2.0f ? 2.0f : (result < -2.0 ? -2.0 : result));
+//                    map.depth(i, j, convert(result, 0, 1, 0, _surfaceDepth));
+//                    freq *= _lacunarity(oct);
+//                    amplitude *= _persistence(oct);
+//                }
+//            }
+//        }
+        
         for(int i = 0; i < w; i++) {
             for(int j = 0 ; j < h; j++) {
                 float x = (1.0f / (w - 1)) * i;
@@ -107,14 +132,13 @@ namespace pgl
                 for(int oct = 0; oct < _octave; oct++ ) {
                     glm::vec2 p (x * freq, y * freq);
                     p += _shift;
-                    
                     sum += PerlineNoise(p) * amplitude;
                     
                     // Полученное значение приводится от 0 до 1
-                    float result = (sum) / 2.0f;
+                    float result = (sum + _surfaceDepth) / 2.0f;
+                    result = (result > 1.0f ? 1.0f : (result < 0.0 ? 0.0 : result));
                     
-                    result = (result > 2.0f ? 2.0f : (result < -2.0 ? -2.0 : result));
-                    map.depth(i, j, convert(result, 0, 1, 0, _surfaceDepth));
+                    map.depth(i, j, result);
                     freq *= _lacunarity(oct);
                     amplitude *= _persistence(oct);
                 }
