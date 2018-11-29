@@ -92,7 +92,8 @@ namespace pgl
 
 		if (e) {
 			stringstream msg;
-			msg << "Shader can't be compiled. Log: " << e.value();
+            // TODO: Почему то не работает
+			//msg << "Shader can't be compiled. Log: " << e.value();
 			throw runtime_error(msg.str());
 		}
 	}

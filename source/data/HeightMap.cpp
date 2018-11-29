@@ -8,6 +8,8 @@
 #include <cassert>
 #include "data/HeightMap.h"
 
+#include <iostream>
+
 namespace pgl
 {
 	HeightMap::HeightMap(int w, int h, const float *data)
@@ -78,7 +80,15 @@ namespace pgl
 
 	Texture HeightMap::texture() const
 	{
-		return Texture(_width, _height, &_map[0]);
+        Texture tex(_width, _height, {0.0f, 0.0f, 0.0f, 0.0f});
+        
+        for (size_t i = 0; i < _width; i++) {
+            for (size_t j = 0; j < _height; j++) {
+                tex.at(i, j).red(_map[i * _height + j]);
+            }
+        }
+        
+		return tex;
 	}
 
 	Mesh HeightMap::toMesh(float divSize) const

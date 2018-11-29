@@ -32,7 +32,8 @@ namespace pgl
 
 		if (e) {
 			stringstream msg;
-			msg << "Program can't be linked. Log: " << e.value();
+            // TODO: Почему то не работает
+			//msg << "Program can't be linked. Log: " << e.value();
 			throw runtime_error(msg.str());
 		}
 	}

@@ -176,22 +176,22 @@ namespace pgl
         return Texel(&_data[(x * _width + y) * 4]);
     }
     
-    void Texture::Texel::red(uint8_t r) noexcept
+    void Texture::Texel::red(float r) noexcept
     {
         _texel[0] = r;
     }
     
-    void Texture::Texel::green(uint8_t g) noexcept
+    void Texture::Texel::green(float g) noexcept
     {
         _texel[1] = g;
     }
     
-    void Texture::Texel::blue(uint8_t b) noexcept
+    void Texture::Texel::blue(float b) noexcept
     {
         _texel[2] = b;
     }
     
-    void Texture::Texel::alpha(uint8_t a) noexcept
+    void Texture::Texel::alpha(float a) noexcept
     {
         _texel[3] = a;
     }
@@ -240,13 +240,11 @@ namespace pgl
         size_t size1 = _width * _height, size2 = tex._width * tex._height;
         
         for (size_t i = 0, size = (size1 < size2 ? size1 : size2) * 4; i < size; i += 4) {
-            if (_data[i] != _backgroundColor.r && _data[i + 1] != _backgroundColor.g && _data[i + 2] != _backgroundColor.b && _data[i + 3] != _backgroundColor.a) {
-                if (_data[i] != tex._data[i] && _data[i + 1] != tex._data[i + 1] && _data[i + 2] != tex._data[i + 2] && _data[i + 3] != tex._data[i + 3]) {
-                    _data[i] = tex._data[i];
-                    _data[i + 1] = tex._data[i + 1];
-                    _data[i + 2] = tex._data[i + 2];
-                    _data[i + 3] = tex._data[i + 3];
-                }
+            if (tex._data[i] != _backgroundColor.r && tex._data[i + 1] != _backgroundColor.g && tex._data[i + 2] != _backgroundColor.b && tex._data[i + 3] != _backgroundColor.a) {
+                _data[i] = tex._data[i];
+                _data[i + 1] = tex._data[i + 1];
+                _data[i + 2] = tex._data[i + 2];
+                _data[i + 3] = tex._data[i + 3];
             }
         }
     }
