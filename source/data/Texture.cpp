@@ -164,7 +164,7 @@ namespace pgl
             throw invalid_argument("Crossing the array");
         }
         
-        return Texel(&_data[(x * _width + y) * 4]);
+        return Texel(&_data[(x * 4 * _height) + (y * 4)]);
     }
     
     const Texture::Texel Texture::at(uint32_t x, uint32_t y) const
@@ -173,7 +173,7 @@ namespace pgl
             throw invalid_argument("Crossing the array");
         }
         
-        return Texel(&_data[(x * _width + y) * 4]);
+        return Texel(&_data[(x * 4 * _height) + (y * 4)]);
     }
     
     void Texture::Texel::red(float r) noexcept
