@@ -85,6 +85,9 @@ namespace pgl
         for (size_t i = 0; i < _width; i++) {
             for (size_t j = 0; j < _height; j++) {
                 tex.at(i, j).red(_map[i * _height + j]);
+                tex.at(i, j).green(_map[i * _height + j]);
+                tex.at(i, j).blue(_map[i * _height + j]);
+                tex.at(i, j).alpha(_map[i * _height + j]);
             }
         }
         

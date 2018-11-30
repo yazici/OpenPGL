@@ -21,6 +21,8 @@
 #include "data/Texture.h"
 #include "renderer/TextureRender.h"
 
+#include "SOIL2/SOIL2.h"
+
 #include <functional>
 #include <cmath>
 
@@ -69,13 +71,17 @@ int main(int argc, char **argv)
     function<float (size_t)> l = [](size_t i) {
         return 2.0f;
     };
-    
+
     function<float (size_t)> f = [](size_t i) {
         return 0.5f;
     };
+
+    NoiseGenerator2D alg(l, f, 0.4, 6, {-4.0, 14.0}, 1);
     
-    NoiseGenerator2D alg(l, f, 0.5, 12, {-4.0, 14.0}, 1);
-    HeightMap map = alg.generate(512, 512);
+//    CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
+//    CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
+    
+    HeightMap map = alg.generate(800, 500);
     
     Texture texture = map.texture();
     
