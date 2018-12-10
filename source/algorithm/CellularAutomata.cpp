@@ -72,13 +72,11 @@ namespace pgl
 
 				for (int x = 0; x < map.width(); x++) {
 
-					neighbours = 0;
 					neighbours = _func(x, y, map);
 
 					if (neighbours >= _birth) {
 						newMap.depth(x, y, 1.0);
 					}
-
 					else if (neighbours <= _death) {
 						newMap.depth(x, y, 0.0);
 					}

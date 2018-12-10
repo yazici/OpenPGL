@@ -35,6 +35,23 @@ namespace pgl
 		* @return количество соседей точки по окрестности фон Неймана.
 		*/
 		static int FonNeymanNeighbourhood(int x, int y, HeightMap &map);
+        
+        static int TraTaTa(int x, int y, HeightMap &m)
+        {
+            int neighbour = 0;
+            
+            for (int lx = -1; lx < 2; ++lx) {
+                for (int ly = -1; ly < 2; ++ly) {
+                    if (lx != 0 || ly != 0) {
+                        if (x + lx >= 0 && ly + y >= 0 && ly + y < m.height() && lx + x < m.width()) {
+                            neighbour += m.depth(x + lx, y + ly);
+                        }
+                    }
+                }
+            }
+            
+            return neighbour;
+        }
 
 	private:
 		CountNeighbours _func;

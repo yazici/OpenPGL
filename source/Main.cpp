@@ -33,7 +33,7 @@ using namespace std;
 int main(int argc, char **argv)
 {
     sys::InitSystem::init();
-    Window window("OpenPGL", 800, 600);
+    unique_ptr<Window> window (new Window("OpenPGL", 800, 600));
     
     GLfloat pos[] = {
         -1.0f, -1.0f, 0.0f,
@@ -65,8 +65,8 @@ int main(int argc, char **argv)
     vao->addVertexBuffer(posBuf, AttributeInfo::POSITION);
     vao->addVertexBuffer(texCoordBuf, AttributeInfo::TEXCOORD);
     
-    ShaderProgram shader("/Users/asifmamedov/Desktop/PCG/OpenPGL/source/renderer/shaders/rednerTexture.vert", "/Users/asifmamedov/Desktop/PCG/OpenPGL/source/renderer/shaders/rednerTexture.frag");
-    shader.use();
+    unique_ptr<ShaderProgram> shader(new ShaderProgram("/Users/asifmamedov/Desktop/PCG/OpenPGL/source/renderer/shaders/rednerTexture.vert", "/Users/asifmamedov/Desktop/PCG/OpenPGL/source/renderer/shaders/rednerTexture.frag"));
+    shader->use();
     
     function<float (size_t)> l = [](size_t i) {
         return 2.0f;
@@ -76,24 +76,26 @@ int main(int argc, char **argv)
         return 0.5f;
     };
 
-    NoiseGenerator2D alg(l, f, 0.4, 6, {-4.0, 14.0}, 1);
+//    unique_ptr<NoiseGenerator2D> alg (new NoiseGenerator2D (l, f, 0.4, 6, {-4.0, 14.0}, 1));
     
-//    CellularAutomata::CountNeighbours al = CellularAutomata::FonNeymanNeighbourhood;
-//    CellularAutomata alg(0.01f, 2u, 1u, 0u, al);
+    CellularAutomata::CountNeighbours al = CellularAutomata::TraTaTa;
+    CellularAutomata alg(0.4f, 4u, 3u, 3u, al, 50u);
     
-    HeightMap map = alg.generate(800, 500);
+    unique_ptr<HeightMap> map (new HeightMap (alg.generate(64, 64)));
     
-    Texture texture = map.texture();
+    unique_ptr<Texture> texture (new Texture(map->texture()));
     
-    TextureRender renderTexture (texture, TextureRender::RGBA16_F, TextureParameter(), texture.width(), texture.height());
+    TextureParameter par(GL_NEAREST, GL_NEAREST);
     
-    renderTexture.bind();
-    shader.uniform("tex", 0);
+    unique_ptr<TextureRender> renderTexture (new TextureRender(*texture, TextureRender::RGBA16_F, par, texture->width(), texture->height()));
+    
+    renderTexture->bind();
+    shader->uniform("tex", 0);
     
     SDL_Event event;
     bool run = true;
     
-    window.clearColor(0.0f, 0.0f, 0.0f);
+    window->clearColor(0.0f, 0.0f, 0.0f);
     
     while (run) {
         while (SDL_PollEvent(&event)) {
@@ -102,9 +104,9 @@ int main(int argc, char **argv)
             }
         }
         
-        window.clear();
+        window->clear();
         vao->draw();
-        window.present();
+        window->present();
     }
     
     sys::InitSystem::quit();
